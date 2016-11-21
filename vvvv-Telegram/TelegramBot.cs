@@ -170,24 +170,39 @@ namespace VVVV.Nodes
             BC.StartReceiving();
         }
 
-        private async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
+        public Message RetrieveTextMessage()
+        {
+            if (lastMessage == null || lastMessage.Type != MessageType.TextMessage) return null;
+
+            if (ReceivedMessage)
+            {
+                ReceivedMessage = false;
+                return lastMessage;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)   // TODO: remove async, handle multiple messages
         {
             ReceivedMessage = true;
-
+            
             var message = messageEventArgs.Message;
             this.lastMessage = message;
             
-            if (message == null || message.Type != MessageType.TextMessage) return;
+//            if (message == null || message.Type != MessageType.TextMessage) return;
 
-            var usage = @"Usage:
-/inline   - send inline keyboard
-/keyboard - send custom keyboard
-/photo    - send a photo
-/request  - request location or contact
-";
+//            var usage = @"Usage:
+///inline   - send inline keyboard
+///keyboard - send custom keyboard
+///photo    - send a photo
+///request  - request location or contact
+//";
 
-            await BC.SendTextMessageAsync(message.Chat.Id, usage,
-                replyMarkup: new ReplyKeyboardHide());
+//            await BC.SendTextMessageAsync(message.Chat.Id, usage,
+//                replyMarkup: new ReplyKeyboardHide());
         }
     }
 
