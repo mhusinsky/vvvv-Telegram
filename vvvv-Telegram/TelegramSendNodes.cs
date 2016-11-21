@@ -74,7 +74,7 @@ namespace VVVV.Nodes
 
             FStopwatch.SliceCount = FClient.SliceCount;
             FSending.SliceCount = FClient.SliceCount;
-
+            FTime.SliceCount = FClient.SliceCount;
 
             for (int i=0; i < FClient.SliceCount; i++)
             {
@@ -99,7 +99,7 @@ namespace VVVV.Nodes
                     }
                 }
 
-                FSending[i] = FTime[i] < FStopwatch[i].ElapsedMilliseconds;
+                FSending[i] = FTime[i] < FStopwatch[i].ElapsedMilliseconds / 1000.0;
                 FTime[i] = FStopwatch[i].ElapsedMilliseconds / 1000.0;
             }
 
