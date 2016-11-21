@@ -24,6 +24,48 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace VVVV.Nodes
 {
+    public enum ReplyMarkupEnum
+    {
+        none,
+        ForceReply,
+        ReplyKeyboardHide
+    }
+
+    #region PluginInfo
+    [PluginInfo(Name = "KeyboardMarkup", Category = "Telegram", Version = "0.1", Help = "Creates Custom Keyboards", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramKeyboardMarkupNode : IPluginEvaluate
+    {
+        [Input("Colums")]
+        public ISpread<int> FColumnSize;
+
+        [Input("String")]
+        public ISpread<String> FText;
+
+        [Output("Keyboard")]
+        public ISpread<IReplyMarkup> FMarkup;
+
+        public void Evaluate(int SpreadMax)
+        {
+            FMarkup.SliceCount = 1;
+
+            //var keyboard = new ReplyKeyboardMarkup(new[]
+            //{
+            //    new [] // first row
+            //    {
+            //        new KeyboardButton("1.1"),
+            //        new KeyboardButton("1.2"),
+            //    },
+            //    new [] // last row
+            //    {
+            //        new KeyboardButton("2.1"),
+            //        new KeyboardButton("2.2"),
+            //    }
+            //});
+
+        }
+    }
+
     public abstract class TelegramSendNode : IPluginEvaluate
     {
         #region fields & pins
@@ -32,6 +74,12 @@ namespace VVVV.Nodes
 
         [Input("ChatId")]
         public IDiffSpread<int> FChatId;
+
+        [Input("ReplyMarkup")]
+        public IDiffSpread<ReplyMarkupEnum> FReplyMarkup;
+
+        [Input("Keyboard")]
+        public IDiffSpread<IReplyMarkup> FReplyKeyboard;
 
         [Input("Send", IsBang = true, DefaultValue = 0, IsSingle = true)]
         public IDiffSpread<bool> FSend;
@@ -119,9 +167,22 @@ namespace VVVV.Nodes
 
         protected override async Task sendMessageAsync(int i)
         {
-            await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, null, ParseMode.Default);
+            await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, getReplyMarkup(FReplyMarkup[i]), ParseMode.Default);
             FStopwatch[i].Stop();
             FLogger.Log(LogType.Debug, "Bot " + i + ": MessageSent");
+        }
+
+        protected IReplyMarkup getReplyMarkup(ReplyMarkupEnum rm)
+        {
+            switch ((int)rm)
+            {
+                case 0: return null;
+                case 1: return new ForceReply();
+                case 2: return new ReplyKeyboardHide();
+
+            }
+
+            return null;
         }
 
     }
