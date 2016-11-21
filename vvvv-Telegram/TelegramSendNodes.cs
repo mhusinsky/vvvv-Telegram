@@ -41,8 +41,8 @@ namespace VVVV.Nodes
 
         [Output("Bot Name")]
         public ISpread<String> FBotName;
-        [Output("Sent", IsBang = true)]
-        public ISpread<bool> FSent;
+        [Output("Sending")]
+        public ISpread<bool> FSending;
         [Output("Send Time")]
         public ISpread<double> FTime;
 
@@ -73,13 +73,15 @@ namespace VVVV.Nodes
         {
 
             FStopwatch.SliceCount = FClient.SliceCount;
-            FSent.SliceCount = FClient.SliceCount;
+            FSending.SliceCount = FClient.SliceCount;
 
 
             for (int i=0; i < FClient.SliceCount; i++)
             {
-                if (FStopwatch[i] == null) FStopwatch[i] = new Stopwatch();
-                if(FSent[i]) FSent[i] = false;
+                if (FStopwatch[i] == null)
+                    FStopwatch[i] = new Stopwatch();
+                if(FSending[i])
+                    FSending[i] = false;
 
 
                 if (FSend[i])
@@ -96,8 +98,9 @@ namespace VVVV.Nodes
                         FLogger.Log(LogType.Debug, "Bot " + i + ": Cannot Send Text, client not connected");
                     }
                 }
-                
-                FTime[i] = FStopwatch[i].ElapsedMilliseconds;
+
+                FSending[i] = FTime[i] < FStopwatch[i].ElapsedMilliseconds;
+                FTime[i] = FStopwatch[i].ElapsedMilliseconds / 1000.0;
             }
 
         }
@@ -116,10 +119,9 @@ namespace VVVV.Nodes
 
         protected override async Task sendMessageAsync(int i)
         {
-            //FTask[i] = Task<Message>.Factory.StartNew(() => FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, null, ParseMode.Default).Result);
             await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, null, ParseMode.Default);
             FStopwatch[i].Stop();
-            FSent[i] = true;    // TODO: only do when sending was actually successful
+            FLogger.Log(LogType.Debug, "Bot " + i + ": MessageSent");
         }
 
     }
@@ -146,7 +148,7 @@ namespace VVVV.Nodes
 
                 await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i]);
                 FStopwatch[i].Stop();
-                FSent[i] = true;    // TODO: only do when sending was actually successful
+                FLogger.Log(LogType.Debug, "Bot " + i + ": PhotoSent");
 
                 // Exception when trying to access the stream from vvvv directly
                 // Exception: Bytes to be written to the stream exceed the Content-Length bytes size specified
