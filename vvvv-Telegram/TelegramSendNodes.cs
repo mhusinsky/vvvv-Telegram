@@ -36,34 +36,42 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramKeyboardMarkupNode : IPluginEvaluate
     {
-        [Input("Colums")]
-        public ISpread<int> FColumnSize;
-
         [Input("String")]
-        public ISpread<String> FText;
+        public ISpread<ISpread<String>> FText;
+
+        [Input("Update")]
+        public IDiffSpread<Boolean> FUpdate;
 
         [Output("Keyboard")]
         public ISpread<IReplyMarkup> FMarkup;
+
+        public void OnImportsSatisfied()
+        {
+            FMarkup.SliceCount = 1;
+            FMarkup[0] = new ReplyKeyboardMarkup();
+        }
 
         public void Evaluate(int SpreadMax)
         {
             FMarkup.SliceCount = 1;
 
-            //var keyboard = new ReplyKeyboardMarkup(new[]
-            //{
-            //    new [] // first row
-            //    {
-            //        new KeyboardButton("1.1"),
-            //        new KeyboardButton("1.2"),
-            //    },
-            //    new [] // last row
-            //    {
-            //        new KeyboardButton("2.1"),
-            //        new KeyboardButton("2.2"),
-            //    }
-            //});
-
+            if (FUpdate[0])
+            {
+                KeyboardButton[][] buttons = new KeyboardButton[FText.SliceCount][];
+                
+                for (int i = 0; i < FText.SliceCount; i++)
+                {
+                    buttons[i] = new KeyboardButton[FText[i].SliceCount];
+                    for (int j = 0; j < FText[i].SliceCount; j++)
+                    {
+                        buttons[i][j] = new KeyboardButton(FText[i][j]);
+                    }
+                }
+                FMarkup[0] = new ReplyKeyboardMarkup(buttons);
+            }
         }
+
+
     }
 
     public abstract class TelegramSendNode : IPluginEvaluate
@@ -76,10 +84,10 @@ namespace VVVV.Nodes
         public IDiffSpread<int> FChatId;
 
         [Input("ReplyMarkup")]
-        public IDiffSpread<ReplyMarkupEnum> FReplyMarkup;
+        public IDiffSpread<ReplyMarkupEnum> FReplyMarkupEnum;
 
         [Input("Keyboard")]
-        public IDiffSpread<IReplyMarkup> FReplyKeyboard;
+        public IDiffSpread<IReplyMarkup> FReplyMarkupKeyboard;
 
         [Input("Send", IsBang = true, DefaultValue = 0, IsSingle = true)]
         public IDiffSpread<bool> FSend;
@@ -167,7 +175,11 @@ namespace VVVV.Nodes
 
         protected override async Task sendMessageAsync(int i)
         {
-            await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, getReplyMarkup(FReplyMarkup[i]), ParseMode.Default);
+            if(FReplyMarkupKeyboard[0] == null)
+                await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, getReplyMarkup(FReplyMarkupEnum[i]), ParseMode.Default);
+            else
+                await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, FReplyMarkupKeyboard[0], ParseMode.Default);
+
             FStopwatch[i].Stop();
             FLogger.Log(LogType.Debug, "Bot " + i + ": MessageSent");
         }
