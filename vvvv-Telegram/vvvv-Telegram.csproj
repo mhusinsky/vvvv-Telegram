@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="TelegramReceiveNodes.cs" />
+    <Compile Include="TelegramKeyboardNodes.cs" />
     <Compile Include="TelegramSendNodes.cs" />
     <Compile Include="TelegramBot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
