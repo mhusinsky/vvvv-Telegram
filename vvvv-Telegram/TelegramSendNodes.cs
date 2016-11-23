@@ -18,62 +18,12 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-//using Telegram.Bot.Types.InlineQueryResults;
-//using Telegram.Bot.Types.InputMessageContents;
+using Telegram.Bot.Types.InlineQueryResults;
+using Telegram.Bot.Types.InputMessageContents;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace VVVV.Nodes
 {
-    public enum ReplyMarkupEnum
-    {
-        none,
-        ForceReply,
-        ReplyKeyboardHide
-    }
-
-    #region PluginInfo
-    [PluginInfo(Name = "KeyboardMarkup", Category = "Telegram", Version = "0.1", Help = "Creates Custom Keyboards", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
-    #endregion PluginInfo
-    public class TelegramKeyboardMarkupNode : IPluginEvaluate
-    {
-        [Input("String")]
-        public ISpread<ISpread<String>> FText;
-
-        [Input("Update")]
-        public IDiffSpread<Boolean> FUpdate;
-
-        [Output("Keyboard")]
-        public ISpread<IReplyMarkup> FMarkup;
-
-        public void OnImportsSatisfied()
-        {
-            FMarkup.SliceCount = 1;
-            FMarkup[0] = new ReplyKeyboardMarkup();
-        }
-
-        public void Evaluate(int SpreadMax)
-        {
-            FMarkup.SliceCount = 1;
-
-            if (FUpdate[0])
-            {
-                KeyboardButton[][] buttons = new KeyboardButton[FText.SliceCount][];
-                
-                for (int i = 0; i < FText.SliceCount; i++)
-                {
-                    buttons[i] = new KeyboardButton[FText[i].SliceCount];
-                    for (int j = 0; j < FText[i].SliceCount; j++)
-                    {
-                        buttons[i][j] = new KeyboardButton(FText[i][j]);
-                    }
-                }
-                FMarkup[0] = new ReplyKeyboardMarkup(buttons);
-            }
-        }
-
-
-    }
-
     public abstract class TelegramSendNode : IPluginEvaluate
     {
         #region fields & pins
