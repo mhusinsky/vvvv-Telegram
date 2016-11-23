@@ -92,7 +92,11 @@ namespace VVVV.Nodes
 
                 if (FSend[i])
                 {
-                    if (FClient[i].IsConnected)
+                    if(FClient[i] == null)
+                    {
+                        FLogger.Log(LogType.Debug, "Bot " + i + ": Cannot Send Text, no client available");
+                    }
+                    else if (FClient[i].IsConnected)
                     {
                         // STARTTASK
                         FStopwatch[i].Reset();
