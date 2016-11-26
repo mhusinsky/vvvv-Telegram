@@ -1,6 +1,6 @@
 ﻿using System;
-//using System.Collections.Generic;
-//using System.Linq;
+using System.Collections.Generic;
+using System.Linq;
 //using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,8 +65,6 @@ namespace VVVV.Nodes
         ////int TaskCount = 0;
         readonly Spread<Stopwatch> FStopwatch = new Spread<Stopwatch>();
         
-        //readonly Spread<TelegramBotClient> FClient = new Spread<TelegramBotClient>();
-
         public void OnImportsSatisfied()
         {
             FLogger.Log(LogType.Message, "Init TelegramBot Node");
@@ -88,7 +86,24 @@ namespace VVVV.Nodes
 
             for (int i=0; i < FBotClient.SliceCount; i++)
             {
-
+                if (FBotClient[i] != null)
+                {
+                    // deal with old messages
+                    var last = FBotClient[i].lastMessages;
+                    for (int m = 0; m < last.Count; m++)
+                    {
+                        if (last[m].IsNew)
+                        {
+                            last[m].IsNew = false;
+                        }
+                        else
+                        {
+                            last.RemoveAt(m);   // remove message from last frame
+                        }
+                    }
+                }
+                
+                
                 if (FConnect[i])
                 {
                     FBotClient[i] = new BotClient(FApiKey[i]);
@@ -105,6 +120,7 @@ namespace VVVV.Nodes
 
                 if(FBotClient[i] != null)
                 {
+                    
                     if (FBotClient[i].IsConnected && !FBotClient[i].IsReceiving)
                     {
                         FBotClient[i].StartReceiving();
@@ -125,6 +141,18 @@ namespace VVVV.Nodes
         }
     }
 
+    public class TelegramMessage
+    {
+        public Message message;
+        public bool IsNew;
+
+        public TelegramMessage(Message m)
+        {
+            message = m;
+            IsNew = true;
+        }
+    }
+
     public class BotClient
     {
         public TelegramBotClient BC;
@@ -135,7 +163,7 @@ namespace VVVV.Nodes
         public bool IsReceiving  { get { return BC.IsReceiving; } }
         public bool ReceivedMessage = false;
 
-        public Message lastMessage;
+        public List<TelegramMessage> lastMessages = new List<TelegramMessage>();
 
         public BotClient (string ApiKey)
         {
@@ -154,7 +182,6 @@ namespace VVVV.Nodes
 
                 BC.OnMessage += BotOnMessageReceived;
                 BC.OnMessageEdited += BotOnMessageReceived;
-
             }
         }
 
@@ -170,39 +197,10 @@ namespace VVVV.Nodes
             BC.StartReceiving();
         }
 
-        public Message RetrieveTextMessage()
+        private async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)   // TODO: remove async
         {
-            if (lastMessage == null || lastMessage.Type != MessageType.TextMessage) return null;
-
-            if (ReceivedMessage)
-            {
-                ReceivedMessage = false;
-                return lastMessage;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        private async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)   // TODO: remove async, handle multiple messages
-        {
-            ReceivedMessage = true;
-            
             var message = messageEventArgs.Message;
-            this.lastMessage = message;
-            
-//            if (message == null || message.Type != MessageType.TextMessage) return;
-
-//            var usage = @"Usage:
-///inline   - send inline keyboard
-///keyboard - send custom keyboard
-///photo    - send a photo
-///request  - request location or contact
-//";
-
-//            await BC.SendTextMessageAsync(message.Chat.Id, usage,
-//                replyMarkup: new ReplyKeyboardHide());
+            this.lastMessages.Add(new TelegramMessage (message));
         }
     }
 
