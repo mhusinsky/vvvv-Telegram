@@ -50,6 +50,9 @@ namespace VVVV.Nodes
         [Output("Send Time")]
         public ISpread<double> FTime;
 
+        [Output("Error", Visibility = PinVisibility.OnlyInspector)]
+        public ISpread<String> FError;
+
 
         [Import()]
         public ILogger FLogger;
@@ -78,6 +81,7 @@ namespace VVVV.Nodes
             FStopwatch.SliceCount = FClient.SliceCount;
             FSending.SliceCount = FClient.SliceCount;
             FTime.SliceCount = FClient.SliceCount;
+            FError.SliceCount = FClient.SliceCount;
 
             for (int i=0; i < FClient.SliceCount; i++)
             {
@@ -169,6 +173,23 @@ namespace VVVV.Nodes
             {
                 var fts = new FileToSend(FFileName[i], fileStream);
 
+                try
+                {
+                    await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i]);
+                    FStopwatch[i].Stop();
+                    FLogger.Log(LogType.Debug, "Bot " + i + ": PhotoSent");
+                    FError[i] = "";
+                }
+                catch (Exception e)
+                {
+                    FError[i] = e.Message;
+                }
+                
+            }
+        }
+    }
+
+    #region PluginInfo
                 await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i]);
                 FStopwatch[i].Stop();
                 FLogger.Log(LogType.Debug, "Bot " + i + ": PhotoSent");
