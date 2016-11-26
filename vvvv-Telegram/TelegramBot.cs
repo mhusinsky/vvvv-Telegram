@@ -27,7 +27,7 @@ namespace VVVV.Nodes
    
     
     #region PluginInfo
-    [PluginInfo(Name = "BotClient", Category = "Telegram", Version = "0.1", Help = "Provides Communication with a TelegramBot", Credits = "Based on telegram.bo", Tags = "Network, Telegram, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "BotClient", Category = "Telegram", Version = "", Help = "Provides Communication with a TelegramBot", Credits = "Based on telegram.bo", Tags = "Network, Telegram, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramBotNode : IPluginEvaluate
     {

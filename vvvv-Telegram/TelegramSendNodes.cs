@@ -120,7 +120,7 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendText", Category = "Telegram", Version = "0.1", Help = "Sends Text Messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendText", Category = "Telegram", Version = "", Help = "Sends Text Messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendTextNode : TelegramSendNode
     {
@@ -154,7 +154,7 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendPhoto", Category = "Telegram", Version = "0.1", Help = "Sends Images", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendPhoto", Category = "Telegram", Version = "", Help = "Sends images from files", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendPhotoNode : TelegramSendNode
     {

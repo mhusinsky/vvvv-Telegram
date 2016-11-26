@@ -67,7 +67,7 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "ReceiveText", Category = "Telegram", Version = "0.1", Help = "Receives Text Messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "ReceiveText", Category = "Telegram", Version = "", Help = "Receives Text Messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramReceiveTextNode : TelegramReceiveNode
     {

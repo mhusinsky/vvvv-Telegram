@@ -61,7 +61,7 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "ReplyKeyboard", Category = "Telegram", Version = "0.1", Help = "Creates Custom Keyboards", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "ReplyKeyboard", Category = "Telegram", Version = "", Help = "Creates Custom Keyboards", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramReplyKeyboardNode : TelegramKeyboardNode
     {
@@ -94,7 +94,7 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "InlineKeyboard", Category = "Telegram", Version = "0.1", Help = "Creates Custom Keyboards", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "InlineKeyboard", Category = "Telegram", Version = "", Help = "Creates Custom Keyboards", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramInlineKeyboardNode : TelegramKeyboardNode
     {
