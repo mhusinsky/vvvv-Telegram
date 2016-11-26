@@ -42,8 +42,6 @@ namespace VVVV.Nodes
         [Input("Send", IsBang = true, DefaultValue = 0, IsSingle = true)]
         public IDiffSpread<bool> FSend;
 
-        [Input("Disconnect", IsBang = true, DefaultValue = 0, IsSingle = true)]
-        public IDiffSpread<bool> FCancel;
 
         [Output("Bot Name")]
         public ISpread<String> FBotName;
@@ -144,7 +142,6 @@ namespace VVVV.Nodes
                 case 0: return null;
                 case 1: return new ForceReply();
                 case 2: return new ReplyKeyboardHide();
-
             }
 
             return null;
