@@ -59,10 +59,10 @@ namespace VVVV.Nodes
         public ILogger FLogger;
         #endregion fields & pins
 
-        readonly Spread<Task<User>> FTasks = new Spread<Task<User>>();
-        readonly Spread<CancellationTokenSource> FCts = new Spread<CancellationTokenSource>();
-        readonly Spread<CancellationToken> ct = new Spread<CancellationToken>();
-        //int TaskCount = 0;
+        //readonly Spread<Task<User>> FTasks = new Spread<Task<User>>();
+        //readonly Spread<CancellationTokenSource> FCts = new Spread<CancellationTokenSource>();
+        //readonly Spread<CancellationToken> ct = new Spread<CancellationToken>();
+        ////int TaskCount = 0;
         readonly Spread<Stopwatch> FStopwatch = new Spread<Stopwatch>();
         
         //readonly Spread<TelegramBotClient> FClient = new Spread<TelegramBotClient>();
@@ -73,12 +73,12 @@ namespace VVVV.Nodes
         }
 
 
-
         public void Evaluate(int SpreadMax)
         {
-            FTasks.SliceCount = FApiKey.SliceCount;
-            FCts.SliceCount = FApiKey.SliceCount;
-            ct.SliceCount = FApiKey.SliceCount;
+            //FTasks.SliceCount = FApiKey.SliceCount;
+            //FCts.SliceCount = FApiKey.SliceCount;
+            //ct.SliceCount = FApiKey.SliceCount;
+
             FStopwatch.SliceCount = FApiKey.SliceCount;
             
             FBotName.SliceCount = FApiKey.SliceCount;

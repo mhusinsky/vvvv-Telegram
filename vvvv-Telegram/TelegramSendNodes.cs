@@ -57,9 +57,9 @@ namespace VVVV.Nodes
         public ILogger FLogger;
         #endregion fields & pins
 
-        protected Spread<Task<Message>> FTask = new Spread<Task<Message>>();
-        protected Spread<CancellationTokenSource> FCts = new Spread<CancellationTokenSource>();
-        protected Spread<CancellationToken> ct = new Spread<CancellationToken>();
+        //protected Spread<Task<Message>> FTask = new Spread<Task<Message>>();
+        //protected Spread<CancellationTokenSource> FCts = new Spread<CancellationTokenSource>();
+        //protected Spread<CancellationToken> ct = new Spread<CancellationToken>();
         //int TaskCount = 0;
         protected Spread<Stopwatch> FStopwatch = new Spread<Stopwatch>();
         
@@ -73,7 +73,6 @@ namespace VVVV.Nodes
         {
 
         }
-
 
         public void Evaluate(int SpreadMax)
         {
