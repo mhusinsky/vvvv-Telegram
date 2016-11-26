@@ -1,6 +1,6 @@
 ﻿using System;
-//using System.Collections.Generic;
-//using System.Linq;
+using System.Collections.Generic;
+using System.Linq;
 //using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +9,6 @@ using System.IO;
 using System.ComponentModel.Composition;
 
 using System.Diagnostics;
-
 
 using VVVV.PluginInterfaces.V2;
 using VVVV.Core.Logging;
@@ -30,11 +29,13 @@ namespace VVVV.Nodes
         public ISpread<BotClient> FBotClient;
 
         [Output("User Name")]
-        public ISpread<String> FUserName;
+        public ISpread<ISpread<string>> FUserName;
         [Output("First Name")]
-        public ISpread<String> FFirstName;
+        public ISpread<ISpread<string>> FFirstName;
         [Output("Last Name")]
-        public ISpread<String> FLastName;
+        public ISpread<ISpread<string>> FLastName;
+        [Output("User")]
+        public ISpread<ISpread<User>> FUser;
         [Output("Received", IsBang = true)]
         public ISpread<bool> FReceived;
 
@@ -46,23 +47,60 @@ namespace VVVV.Nodes
 
         public void Evaluate(int SpreadMax)
         {
-
+            
+            setMessagesSliceCount(FBotClient.SliceCount);
+            setUserSliceCount(FBotClient.SliceCount);
             FReceived.SliceCount = FBotClient.SliceCount;
-            FUserName.SliceCount = FBotClient.SliceCount;
-            FFirstName.SliceCount = FBotClient.SliceCount;
-            FLastName.SliceCount = FBotClient.SliceCount;
-            setReceivedMessagesSliceCount(FBotClient.SliceCount);
 
             for (int i = 0; i < FBotClient.SliceCount; i++)
             {
                 FReceived[i] = false;
+                if (FBotClient[i] == null)
+                    return;
                 checkForMessage(i);
             }
 
         }
 
+        protected void setMessagesSliceCount(int botCount)
+        {
+            FReceived.SliceCount = botCount;
+            setMessageTypeSliceCount(botCount);
+        }
+
+        protected void setUserSliceCount(int botCount)
+        {
+            FUser.SliceCount = botCount;
+            FUserName.SliceCount = botCount;
+            FFirstName.SliceCount = botCount;
+            FLastName.SliceCount = botCount;
+        }
+
+        protected void initClientUserSliceCount(int index, int SliceCount)
+        {
+            FUserName[index].SliceCount = SliceCount;
+            FFirstName[index].SliceCount = SliceCount;
+            FLastName[index].SliceCount = SliceCount;
+            FUser[index].SliceCount = SliceCount;
+
+            FUser[index] = new Spread<User>();
+            FUserName[index] = new Spread<string>();
+            FFirstName[index] = new Spread<string>();
+            FLastName[index] = new Spread<string>();
+        }
+
+        protected void setUserData(int index, User from)
+        {
+            FUserName[index].Add(from.Username);
+            FFirstName[index].Add(from.FirstName);
+            FLastName[index].Add(from.LastName);
+
+            FUser[index].Add(from);
+        }
+
         protected abstract void checkForMessage(int i);
-        protected abstract void setReceivedMessagesSliceCount(int SliceCount);
+        protected abstract void setMessageTypeSliceCount(int botCount);
+        protected abstract void initClientReceivedMessages(int index, int SliceCount);
 
     }
 
@@ -71,31 +109,47 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramReceiveTextNode : TelegramReceiveNode
     {
-        [Output("Text", DefaultString = "Your Message")]
-        public ISpread<string> FTextMessage;
+        [Output("Text")]
+        public ISpread<ISpread<string>> FTextMessage;
 
-        protected override void setReceivedMessagesSliceCount(int SliceCount)
+        protected override void setMessageTypeSliceCount(int botCount)
         {
-            FTextMessage.SliceCount = SliceCount;
+            FTextMessage.SliceCount = botCount;
+        }
+
+        protected override void initClientReceivedMessages(int index, int SliceCount)
+        {
+            FTextMessage[index].SliceCount = SliceCount;
+            FTextMessage[index] = new Spread<string>();
         }
 
         protected override void checkForMessage(int i)
         {
+            var last = FBotClient[i].lastMessages;
+            var textMessageCount = last.Where(textMessage => textMessage.message.Type == MessageType.TextMessage).Count();
 
-            if (FBotClient[i] == null)
-                return;
+            if (textMessageCount < 1) return;
 
-            var message = FBotClient[i].RetrieveTextMessage();
-
-            if(message != null)
+            initClientReceivedMessages(i, textMessageCount);
+            initClientUserSliceCount(i, textMessageCount);
+            
+            for(int m=0; m < FBotClient[i].lastMessages.Count; i++ )
             {
-                FTextMessage[i] = message.Text;
-                FUserName[i] = message.From.Username;
-                FFirstName[i] = message.From.FirstName;
-                FLastName[i] = message.From.LastName;
-                FReceived[i] = true;
-                FLogger.Log(LogType.Debug, "Bot " + i + ": Text Message received");
+                var current = FBotClient[i].lastMessages[m].message;
+                if (current.Type == MessageType.TextMessage)
+                {
+                    FTextMessage[i].Add(current.Text);
+                    setUserData(i, current.From);
+
+                    FLogger.Log(LogType.Debug, "Bot " + i + ": Text Message received");
+                    last.RemoveAt(m);
+                }
             }
+            
+            FReceived[i] = true;
+        }
+    }
+
 
         }
 
