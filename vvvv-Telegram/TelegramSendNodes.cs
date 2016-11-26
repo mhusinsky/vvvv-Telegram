@@ -190,12 +190,67 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
+    [PluginInfo(Name = "SendPhotoRaw", Category = "Telegram", Version = "", Help = "Sends images from Raw Stream", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramSendPhotoRawNode : TelegramSendNode
+    {
+        [Input("FileName")]
+        public ISpread<string> FFileName;
+
+        [Input("Image")]
+        public ISpread<Stream> FImage;
+
+        [Input("FCaption", DefaultString = "caption")]
+        public IDiffSpread<string> FCaption;
+
+
+        readonly byte[] FBuffer = new byte[1024];
+        
+        protected override async Task sendMessageAsync(int i)
+        {
+
+            await FClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.UploadPhoto);
+
+            var inputStream = FImage[i];
+            var outputStream = new MemoryStream();
+
+            //reset the positions of the streams
+            inputStream.Position = 0;
+            outputStream.Position = 0;
+            outputStream.SetLength(inputStream.Length);
+
+            var numBytesToCopy = inputStream.Length;
+
+            while (numBytesToCopy > 0)
+            {
+                //make sure we don't read more than we need or more than
+                //our byte buffer can hold
+                var chunkSize = (int)Math.Min(numBytesToCopy, FBuffer.Length);
+                //the stream's read method returns how many bytes have actually
+                //been read into the buffer
+                var numBytesRead = inputStream.Read(FBuffer, 0, chunkSize);
+                //in case nothing has been read we need to leave the loop
+                //as we requested more than there was available
+                if (numBytesRead == 0) break;
+                //write the number of bytes read to the output stream
+                outputStream.Write(FBuffer, 0, numBytesRead);
+                //decrease the total amount of bytes we still need to read
+                numBytesToCopy -= numBytesRead;
+            }
+
+            outputStream.Position = 0;
+
+            var fts = new FileToSend(FFileName[i], outputStream);
+            try
+            {
                 await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i]);
                 FStopwatch[i].Stop();
                 FLogger.Log(LogType.Debug, "Bot " + i + ": PhotoSent");
-
-                // Exception when trying to access the stream from vvvv directly
-                // Exception: Bytes to be written to the stream exceed the Content-Length bytes size specified
+                FError[i] = "";
+            }
+            catch (Exception e)
+            {
+                FError[i] = e.Message;
             }
         }
     }
