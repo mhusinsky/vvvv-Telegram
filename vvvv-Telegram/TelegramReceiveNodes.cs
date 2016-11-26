@@ -150,10 +150,56 @@ namespace VVVV.Nodes
         }
     }
 
+    #region PluginInfo
+    [PluginInfo(Name = "ReceiveLocation", Category = "Telegram", Version = "", Help = "Receives Location Messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramReceiveLocationNode : TelegramReceiveNode
+    {
+        [Output("Longitude")]
+        public ISpread<ISpread<double>> FLong;
+        [Output("Latitude")]
+        public ISpread<ISpread<double>> FLat;
 
+        protected override void setMessageTypeSliceCount(int botCount)
+        {
+            FLong.SliceCount = botCount;
+            FLat.SliceCount = botCount;
         }
 
+        protected override void initClientReceivedMessages(int index, int SliceCount)
+        {
+            FLong[index].SliceCount = SliceCount;
+            FLat[index].SliceCount = SliceCount;
+            FLong[index] = new Spread<double>();
+            FLat[index] = new Spread<double>();
+        }
 
+        protected override void checkForMessage(int i)
+        {
+            var last = FBotClient[i].lastMessages;
+            var locationMessageCount = last.Where(locationMessage => locationMessage.message.Type == MessageType.LocationMessage).Count();
+
+            if (locationMessageCount < 1) return;
+
+            initClientReceivedMessages(i, locationMessageCount);
+            initClientUserSliceCount(i, locationMessageCount);
+
+            for (int m = 0; m < FBotClient[i].lastMessages.Count; i++)
+            {
+                var current = FBotClient[i].lastMessages[m].message;
+                if (current.Type == MessageType.LocationMessage)
+                {
+                    FLong[i].Add(current.Location.Longitude);
+                    FLat[i].Add(current.Location.Latitude);
+                    setUserData(i, current.From);
+
+                    FLogger.Log(LogType.Debug, "Bot " + i + ": Location Message received");
+                    last.RemoveAt(m);
+                }
+            }
+
+            FReceived[i] = true;
+        }
     }
 
 }
