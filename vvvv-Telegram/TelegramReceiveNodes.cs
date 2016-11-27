@@ -12,6 +12,9 @@ using System.Diagnostics;
 
 using VVVV.PluginInterfaces.V2;
 using VVVV.Core.Logging;
+using VVVV.PluginInterfaces.V1;
+using VVVV.Utils.VColor;
+using VVVV.Utils.VMath;
 
 using Telegram.Bot;
 using Telegram.Bot.Args;
@@ -177,24 +180,46 @@ namespace VVVV.Nodes
         protected override void checkForMessage(int i)
         {
             var last = FBotClient[i].lastMessages;
-            var locationMessageCount = last.Where(locationMessage => locationMessage.message.Type == MessageType.LocationMessage).Count();
+            var locationMessages = last.Where(locationMessage => locationMessage.message.Type == MessageType.LocationMessage);
+            int locationMessageCount = locationMessages.Count();
 
             if (locationMessageCount < 1) return;
 
             initClientReceivedMessages(i, locationMessageCount);
             initClientUserSliceCount(i, locationMessageCount);
+            int c = 0;
 
-            for (int m = 0; m < FBotClient[i].lastMessages.Count; i++)
+            foreach (TelegramMessage tm in locationMessages)
             {
-                var current = FBotClient[i].lastMessages[m].message;
-                if (current.Type == MessageType.LocationMessage)
-                {
-                    FLong[i].Add(current.Location.Longitude);
-                    FLat[i].Add(current.Location.Latitude);
-                    setUserData(i, current.From);
+                var m = tm.message;
+                FLong[i].Add(m.Location.Longitude);
+                FLat[i].Add(m.Location.Latitude);
 
-                    FLogger.Log(LogType.Debug, "Bot " + i + ": Location Message received");
-                    last.RemoveAt(m);
+                setUserData(i, m.From);
+
+                c++;
+            }
+
+            FLogger.Log(LogType.Debug, "Bot " + i + ": Location Message received");
+
+            //for (int m = 0; m < FBotClient[i].lastMessages.Count; i++)
+            //{
+            //    var current = FBotClient[i].lastMessages[m].message;
+            //    if (current.Type == MessageType.LocationMessage)
+            //    {
+            //        FLong[i].Add(current.Location.Longitude);
+            //        FLat[i].Add(current.Location.Latitude);
+            //        setUserData(i, current.From);
+
+            //        FLogger.Log(LogType.Debug, "Bot " + i + ": Location Message received");
+            //        last.RemoveAt(m);
+            //    }
+            //}
+
+            FReceived[i] = true;
+        }
+    }
+
     #region PluginInfo
     [PluginInfo(Name = "ReceivePhoto", Category = "Telegram", Version = "", Help = "Receives photo messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
