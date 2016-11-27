@@ -90,7 +90,7 @@ namespace VVVV.Nodes
                 {
                     // deal with old messages
                     var last = FBotClient[i].lastMessages;
-                    for (int m = 0; m < last.Count; m++)
+                    for (int m = last.Count-1; m >= 0; m--)
                     {
                         if (last[m].IsNew)
                         {
