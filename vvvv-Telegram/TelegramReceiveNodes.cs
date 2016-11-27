@@ -129,32 +129,29 @@ namespace VVVV.Nodes
         protected override void checkForMessage(int i)
         {
             var last = FBotClient[i].lastMessages;
-            var textMessageCount = last.Where(textMessage => textMessage.message.Type == MessageType.TextMessage).Count();
+            var textMessages = last.Where(textMessage => textMessage.message.Type == MessageType.TextMessage);
+            int messageCount = textMessages.Count();
 
-            if (textMessageCount < 1) return;
+            if (messageCount < 1) return;
 
-            initClientReceivedMessages(i, textMessageCount);
-            initClientUserSliceCount(i, textMessageCount);
-            
-            for(int m=0; m < FBotClient[i].lastMessages.Count; i++ )
+            initClientReceivedMessages(i, messageCount);
+            initClientUserSliceCount(i, messageCount);
+
+            foreach (TelegramMessage tm in textMessages)
             {
-                var current = FBotClient[i].lastMessages[m].message;
-                if (current.Type == MessageType.TextMessage)
-                {
-                    FTextMessage[i].Add(current.Text);
-                    setUserData(i, current.From);
+                var m = tm.message;
+                FTextMessage[i].Add(m.Text);
 
-                    FLogger.Log(LogType.Debug, "Bot " + i + ": Text Message received");
-                    last.RemoveAt(m);
-                }
+                setUserData(i, m.From);
+                FLogger.Log(LogType.Debug, "Bot " + i + ": Text message received");
             }
-            
+
             FReceived[i] = true;
         }
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "ReceiveLocation", Category = "Telegram", Version = "", Help = "Receives Location Messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "ReceiveLocation", Category = "Telegram", Version = "", Help = "Receives location messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramReceiveLocationNode : TelegramReceiveNode
     {
@@ -181,13 +178,12 @@ namespace VVVV.Nodes
         {
             var last = FBotClient[i].lastMessages;
             var locationMessages = last.Where(locationMessage => locationMessage.message.Type == MessageType.LocationMessage);
-            int locationMessageCount = locationMessages.Count();
+            int messageCount = locationMessages.Count();
 
-            if (locationMessageCount < 1) return;
+            if (messageCount < 1) return;
 
-            initClientReceivedMessages(i, locationMessageCount);
-            initClientUserSliceCount(i, locationMessageCount);
-            int c = 0;
+            initClientReceivedMessages(i, messageCount);
+            initClientUserSliceCount(i, messageCount);
 
             foreach (TelegramMessage tm in locationMessages)
             {
@@ -196,26 +192,9 @@ namespace VVVV.Nodes
                 FLat[i].Add(m.Location.Latitude);
 
                 setUserData(i, m.From);
-
-                c++;
+                FLogger.Log(LogType.Debug, "Bot " + i + ": Location message received");
             }
-
-            FLogger.Log(LogType.Debug, "Bot " + i + ": Location Message received");
-
-            //for (int m = 0; m < FBotClient[i].lastMessages.Count; i++)
-            //{
-            //    var current = FBotClient[i].lastMessages[m].message;
-            //    if (current.Type == MessageType.LocationMessage)
-            //    {
-            //        FLong[i].Add(current.Location.Longitude);
-            //        FLat[i].Add(current.Location.Latitude);
-            //        setUserData(i, current.From);
-
-            //        FLogger.Log(LogType.Debug, "Bot " + i + ": Location Message received");
-            //        last.RemoveAt(m);
-            //    }
-            //}
-
+            
             FReceived[i] = true;
         }
     }
@@ -230,15 +209,14 @@ namespace VVVV.Nodes
         public ISpread<ISpread<Telegram.Bot.Types.File>> FFile;
         [Output("Dimensions")]
         public ISpread<ISpread<Vector2D>> FDimensions;
-        [Output("Message Bin Size")]
-        public ISpread<int> FBin;
-
-
+        [Output("Photo Count")]
+        public ISpread<ISpread<int>> FPhotoCount;
 
         protected override void setMessageTypeSliceCount(int botCount)
         {
             FDimensions.SliceCount = botCount;
             FFile.SliceCount = botCount;
+            FPhotoCount.SliceCount = botCount;
         }
 
         protected override void initClientReceivedMessages(int index, int SliceCount)
@@ -248,62 +226,43 @@ namespace VVVV.Nodes
 
             FFile[index].SliceCount = SliceCount;
             FFile[index] = new Spread<Telegram.Bot.Types.File>();
+
+            FPhotoCount[index].SliceCount = SliceCount;
+            FPhotoCount[index] = new Spread<int>();
         }
 
         protected override void checkForMessage(int i)
         {
             var last = FBotClient[i].lastMessages;
             var photoMessages = last.Where(photoMessage => photoMessage.message.Type == MessageType.PhotoMessage);
-            int count = photoMessages.Count();
+            int messageCount = photoMessages.Count();
 
-            if (photoMessages.Count() < 1) return;
+            if (messageCount < 1) return;
 
-            initClientReceivedMessages(i, count);
-            initClientUserSliceCount(i, count);
-            FBin.SliceCount = count;
-            int c = 0;
+            initClientReceivedMessages(i, messageCount);
+            initClientUserSliceCount(i, messageCount);
+            int counter = 0;
+            
 
             foreach(TelegramMessage tm in photoMessages)
             {
                 var m = tm.message;
                 PhotoSize[] ps = m.Photo;
-                FBin[c] = 0;
-
+                int photoCount = 0;
+                
                 foreach (PhotoSize p in ps)
                 {
                     FDimensions[i].Add(new Vector2D((double)p.Width, (double)p.Height));
                     FFile[i].Add(p);
-                    FBin[c]++;
+                    photoCount++;
                 }
 
+                FPhotoCount[i].Add(photoCount);
                 setUserData(i, m.From);
+                FLogger.Log(LogType.Debug, "Bot " + i + ": Photo message with " + photoCount + " photos received");
 
-                c++;
+                counter++;
             }
-
-            FLogger.Log(LogType.Debug, "Bot " + i + ": Photo message with " + c+1 + " photos received");
-
-            //for (int m = FBotClient[i].lastMessages.Count; m >= 0 ; m--)
-            //{
-            //    var current = FBotClient[i].lastMessages[m].message;
-            //    if (current.Type == MessageType.PhotoMessage)
-            //    {
-            //        PhotoSize[] ps = current.Photo;
-            //        FBin[m] = 0;
-
-            //        foreach(PhotoSize p in ps)
-            //        {
-            //            FDimensions[i].Add(new Vector2D((double)p.Width, (double)p.Height));
-            //            FFile[i].Add(p);
-            //            FBin[m]++;
-            //        }
-
-            //        setUserData(i, current.From);
-
-            //        FLogger.Log(LogType.Debug, "Bot " + i + ": Photo message received");
-            //        last.RemoveAt(m);
-            //    }
-            //}
 
             FReceived[i] = true;
         }
