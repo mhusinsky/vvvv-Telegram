@@ -195,8 +195,90 @@ namespace VVVV.Nodes
 
                     FLogger.Log(LogType.Debug, "Bot " + i + ": Location Message received");
                     last.RemoveAt(m);
+    #region PluginInfo
+    [PluginInfo(Name = "ReceivePhoto", Category = "Telegram", Version = "", Help = "Receives photo messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramReceivePhotoNode : TelegramReceiveNode
+    {
+        
+        [Output("File")]
+        public ISpread<ISpread<Telegram.Bot.Types.File>> FFile;
+        [Output("Dimensions")]
+        public ISpread<ISpread<Vector2D>> FDimensions;
+        [Output("Message Bin Size")]
+        public ISpread<int> FBin;
+
+
+
+        protected override void setMessageTypeSliceCount(int botCount)
+        {
+            FDimensions.SliceCount = botCount;
+            FFile.SliceCount = botCount;
+        }
+
+        protected override void initClientReceivedMessages(int index, int SliceCount)
+        {
+            FDimensions[index].SliceCount = SliceCount;
+            FDimensions[index] = new Spread<Vector2D>();
+
+            FFile[index].SliceCount = SliceCount;
+            FFile[index] = new Spread<Telegram.Bot.Types.File>();
+        }
+
+        protected override void checkForMessage(int i)
+        {
+            var last = FBotClient[i].lastMessages;
+            var photoMessages = last.Where(photoMessage => photoMessage.message.Type == MessageType.PhotoMessage);
+            int count = photoMessages.Count();
+
+            if (photoMessages.Count() < 1) return;
+
+            initClientReceivedMessages(i, count);
+            initClientUserSliceCount(i, count);
+            FBin.SliceCount = count;
+            int c = 0;
+
+            foreach(TelegramMessage tm in photoMessages)
+            {
+                var m = tm.message;
+                PhotoSize[] ps = m.Photo;
+                FBin[c] = 0;
+
+                foreach (PhotoSize p in ps)
+                {
+                    FDimensions[i].Add(new Vector2D((double)p.Width, (double)p.Height));
+                    FFile[i].Add(p);
+                    FBin[c]++;
                 }
+
+                setUserData(i, m.From);
+
+                c++;
             }
+
+            FLogger.Log(LogType.Debug, "Bot " + i + ": Photo message with " + c+1 + " photos received");
+
+            //for (int m = FBotClient[i].lastMessages.Count; m >= 0 ; m--)
+            //{
+            //    var current = FBotClient[i].lastMessages[m].message;
+            //    if (current.Type == MessageType.PhotoMessage)
+            //    {
+            //        PhotoSize[] ps = current.Photo;
+            //        FBin[m] = 0;
+
+            //        foreach(PhotoSize p in ps)
+            //        {
+            //            FDimensions[i].Add(new Vector2D((double)p.Width, (double)p.Height));
+            //            FFile[i].Add(p);
+            //            FBin[m]++;
+            //        }
+
+            //        setUserData(i, current.From);
+
+            //        FLogger.Log(LogType.Debug, "Bot " + i + ": Photo message received");
+            //        last.RemoveAt(m);
+            //    }
+            //}
 
             FReceived[i] = true;
         }
