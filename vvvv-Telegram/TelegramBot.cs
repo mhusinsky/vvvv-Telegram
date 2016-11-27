@@ -86,7 +86,7 @@ namespace VVVV.Nodes
 
             for (int i=0; i < FBotClient.SliceCount; i++)
             {
-                if (FBotClient[i] != null)
+                if (FBotClient[i] != null)  // TODO: move this block after connect?
                 {
                     // deal with old messages
                     var last = FBotClient[i].lastMessages;
@@ -141,6 +141,7 @@ namespace VVVV.Nodes
         }
     }
 
+    // contains the message object and a flag to mark whether it is new or old (and therefore should be deleted)
     public class TelegramMessage
     {
         public Message message;
@@ -197,7 +198,7 @@ namespace VVVV.Nodes
             BC.StartReceiving();
         }
 
-        private async void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)   // TODO: remove async
+        private void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
             var message = messageEventArgs.Message;
             this.lastMessages.Add(new TelegramMessage (message));
