@@ -238,7 +238,7 @@ namespace VVVV.Nodes
                 numBytesToCopy -= numBytesRead;
             }
 
-            outputStream.Position = 0;
+            outputStream.Position = 0;  // seems to be nescessary. otherwise telegram bot api will not send any data
 
             var fts = new FileToSend(FFileName[i], outputStream);
             try
