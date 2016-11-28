@@ -32,22 +32,20 @@ namespace VVVV.Nodes
         [Input("Bots")]
         public ISpread<BotClient> FBotClient;
 
-        [Output("User Name")]
+        [Output("User Name", Visibility = PinVisibility.Hidden)]
         public ISpread<ISpread<string>> FUserName;
-        [Output("First Name")]
+        [Output("First Name", Visibility = PinVisibility.Hidden)]
         public ISpread<ISpread<string>> FFirstName;
-        [Output("Last Name")]
+        [Output("Last Name", Visibility = PinVisibility.Hidden)]
         public ISpread<ISpread<string>> FLastName;
         [Output("User")]
         public ISpread<ISpread<User>> FUser;
         [Output("Received", IsBang = true)]
         public ISpread<bool> FReceived;
 
-
         [Import()]
         public ILogger FLogger;
         #endregion fields & pins
-
 
         public void Evaluate(int SpreadMax)
         {
@@ -200,6 +198,18 @@ namespace VVVV.Nodes
         }
     }
 
+    public class TelegramFile
+    {
+        public Telegram.Bot.Types.File file;
+        public TelegramBotClient botClient;
+
+        public TelegramFile(Telegram.Bot.Types.File f, TelegramBotClient bc)
+        {
+            file = f;
+            botClient = bc;
+        }
+    }
+
     #region PluginInfo
     [PluginInfo(Name = "ReceivePhoto", Category = "Telegram", Version = "", Help = "Receives photo messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
@@ -207,7 +217,7 @@ namespace VVVV.Nodes
     {
         
         [Output("File")]
-        public ISpread<ISpread<Telegram.Bot.Types.File>> FFile;
+        public ISpread<ISpread<TelegramFile>> FFile;
         [Output("Dimensions")]
         public ISpread<ISpread<Vector2D>> FDimensions;
         [Output("Photo Count")]
@@ -226,7 +236,7 @@ namespace VVVV.Nodes
             FDimensions[index] = new Spread<Vector2D>();
 
             FFile[index].SliceCount = SliceCount;
-            FFile[index] = new Spread<Telegram.Bot.Types.File>();
+            FFile[index] = new Spread<TelegramFile>();
 
             FPhotoCount[index].SliceCount = SliceCount;
             FPhotoCount[index] = new Spread<int>();
@@ -253,7 +263,7 @@ namespace VVVV.Nodes
                 foreach (PhotoSize p in ps)
                 {
                     FDimensions[i].Add(new Vector2D((double)p.Width, (double)p.Height));
-                    FFile[i].Add(p);
+                    FFile[i].Add(new TelegramFile(p, FBotClient[i].BC));
                     photoCount++;
                 }
 
@@ -274,7 +284,9 @@ namespace VVVV.Nodes
     {
         #region fields & pins
         [Input("File")]
-        public ISpread<Telegram.Bot.Types.File> FFile;
+        public ISpread<TelegramFile> FFile;
+        [Input("Get")]
+        public ISpread<bool> FGet;
 
         [Output("FileID")]
         public ISpread<string> FFileId;
@@ -299,56 +311,65 @@ namespace VVVV.Nodes
             FFileData.SliceCount = 0;
         }
 
-
         public void Evaluate(int SpreadMax)
         {
             FFileId.SliceCount = FFile.SliceCount;
             FFilePath.SliceCount = FFile.SliceCount;
             FFileSize.SliceCount = FFile.SliceCount;
-            FFileData.ResizeAndDispose(FFile.SliceCount, () => new MemoryComStream());
+            FFileData.ResizeAndDispose(FFile.SliceCount, () => new MemoryStream());
             int count = 0;
 
+            int max = Math.Max(FFile.SliceCount, FGet.SliceCount);
 
+            for(int i=0; i < FFile.SliceCount; i++)
+            {
+                var f = FFile[i];
+                if (f == null || FGet[i] == false)
+                    continue;
+
+                DownloadFileAsync(f, FFileData[i]);
+            }
+                
+        }
+
+        public async void DownloadFileAsync(TelegramFile f, Stream output)
+        {
             
-                foreach (Telegram.Bot.Types.File f in FFile)
-                {
-                    if (f == null)
-                        return;
-                    
-                    FFileId.Add(f.FileId);
-                    FFilePath.Add(f.FilePath);
-                    FFileSize.Add(f.FileSize);
+            Telegram.Bot.Types.File thisFile = await f.botClient.GetFileAsync(f.file.FileId);
 
-                    var inputStream = f.FileStream;
-                    var outputStream = FFileData[count];
+            FFileId.Add(f.file.FileId);
+            FFilePath.Add(f.file.FilePath);
+            FFileSize.Add(f.file.FileSize);
 
-                    //reset the positions of the streams
-                    inputStream.Position = 0;
-                    outputStream.Position = 0;
-                    outputStream.SetLength(inputStream.Length);
+            var inputStream = thisFile.FileStream;
+            var outputStream = output;
 
-                    var numBytesToCopy = inputStream.Length;
 
-                    while (numBytesToCopy > 0)
-                    {
-                        //make sure we don't read more than we need or more than
-                        //our byte buffer can hold
-                        var chunkSize = (int)Math.Min(numBytesToCopy, FBuffer.Length);
-                        //the stream's read method returns how many bytes have actually
-                        //been read into the buffer
-                        var numBytesRead = inputStream.Read(FBuffer, 0, chunkSize);
-                        //in case nothing has been read we need to leave the loop
-                        //as we requested more than there was available
-                        if (numBytesRead == 0) break;
-                        //write the number of bytes read to the output stream
-                        outputStream.Write(FBuffer, 0, numBytesRead);
-                        //decrease the total amount of bytes we still need to read
-                        numBytesToCopy -= numBytesRead;
-                    }
+            //reset the positions of the streams
+            inputStream.Position = 0;
+            outputStream.Position = 0;
+            outputStream.SetLength(inputStream.Length);
 
-                    outputStream.Position = 0;
-                    count++;
-                }
+            var numBytesToCopy = inputStream.Length;
+
+            while (numBytesToCopy > 0)
+            {
+                //make sure we don't read more than we need or more than
+                //our byte buffer can hold
+                var chunkSize = (int)Math.Min(numBytesToCopy, FBuffer.Length);
+                //the stream's read method returns how many bytes have actually
+                //been read into the buffer
+                var numBytesRead = inputStream.Read(FBuffer, 0, chunkSize);
+                //in case nothing has been read we need to leave the loop
+                //as we requested more than there was available
+                if (numBytesRead == 0) break;
+                //write the number of bytes read to the output stream
+                outputStream.Write(FBuffer, 0, numBytesRead);
+                //decrease the total amount of bytes we still need to read
+                numBytesToCopy -= numBytesRead;
+            }
+
+            outputStream.Position = 0;
         }
     }
 
@@ -372,8 +393,18 @@ namespace VVVV.Nodes
     
         public void Evaluate(int SpreadMax)
         {
+            if (FUser.SliceCount < 1)
+                return;
+
+            FUsername.SliceCount = 0;
+            FFirstName.SliceCount = 0;
+            FLastName.SliceCount = 0;
+            FUid.SliceCount = 0;
+
             foreach (User u in FUser)
             {
+                if (u == null)
+                    return;
                 FUsername.Add(u.Username);
                 FFirstName.Add(u.FirstName);
                 FLastName.Add(u.LastName);
