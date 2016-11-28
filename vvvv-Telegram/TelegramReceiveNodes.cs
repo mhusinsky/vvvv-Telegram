@@ -351,4 +351,35 @@ namespace VVVV.Nodes
                 }
         }
     }
+
+    #region PluginInfo
+    [PluginInfo(Name = "User", Category = "Telegram", Version = "Split", Help = "Split user data", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramSplitUserNode : IPluginEvaluate
+    {
+        
+        [Input("User")]
+        public ISpread<User> FUser;
+
+        [Output("Username")]
+        public ISpread<string> FUsername;
+        [Output("First Name")]
+        public ISpread<string> FFirstName;
+        [Output("Last Name")]
+        public ISpread<string> FLastName;
+        [Output("User ID")]
+        public ISpread<int> FUid;
+    
+        public void Evaluate(int SpreadMax)
+        {
+            foreach (User u in FUser)
+            {
+                FUsername.Add(u.Username);
+                FFirstName.Add(u.FirstName);
+                FLastName.Add(u.LastName);
+                FUid.Add(u.Id);
+            }
+
+        }
+    }
 }
