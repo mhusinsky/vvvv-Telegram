@@ -241,7 +241,6 @@ namespace VVVV.Nodes
 
             initClientReceivedMessages(i, messageCount);
             initClientUserSliceCount(i, messageCount);
-            int counter = 0;
             
 
             foreach(TelegramMessage tm in photoMessages)
@@ -261,7 +260,6 @@ namespace VVVV.Nodes
                 setUserData(i, m.From);
                 FLogger.Log(LogType.Debug, "Bot " + i + ": Photo message with " + photoCount + " photos received");
 
-                counter++;
             }
 
             FReceived[i] = true;
