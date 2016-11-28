@@ -13,6 +13,7 @@ using System.Diagnostics;
 using VVVV.PluginInterfaces.V2;
 using VVVV.Core.Logging;
 using VVVV.PluginInterfaces.V1;
+using VVVV.Utils;
 using VVVV.Utils.VColor;
 using VVVV.Utils.VMath;
 
@@ -266,4 +267,88 @@ namespace VVVV.Nodes
         }
     }
 
+    #region PluginInfo
+    [PluginInfo(Name = "GetFile", Category = "Telegram", Version = "", Help = "Downloads files from messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramFileNode : IPluginEvaluate
+    {
+        #region fields & pins
+        [Input("File")]
+        public ISpread<Telegram.Bot.Types.File> FFile;
+
+        [Output("FileID")]
+        public ISpread<string> FFileId;
+        [Output("File Path")]
+        public ISpread<string> FFilePath;
+        [Output("File Size")]
+        public ISpread<int> FFileSize;
+        [Output("Data")]
+        public ISpread<Stream> FFileData;
+        [Output("Received", IsBang = true)]
+        public ISpread<bool> FReceived;
+
+        readonly byte[] FBuffer = new byte[1024];
+		
+
+        [Import()]
+        public ILogger FLogger;
+        #endregion fields & pins
+
+        public void OnImportsSatisfied()
+        {
+            FFileData.SliceCount = 0;
+        }
+
+
+        public void Evaluate(int SpreadMax)
+        {
+            FFileId.SliceCount = FFile.SliceCount;
+            FFilePath.SliceCount = FFile.SliceCount;
+            FFileSize.SliceCount = FFile.SliceCount;
+            FFileData.ResizeAndDispose(FFile.SliceCount, () => new MemoryComStream());
+            int count = 0;
+
+
+            
+                foreach (Telegram.Bot.Types.File f in FFile)
+                {
+                    if (f == null)
+                        return;
+                    
+                    FFileId.Add(f.FileId);
+                    FFilePath.Add(f.FilePath);
+                    FFileSize.Add(f.FileSize);
+
+                    var inputStream = f.FileStream;
+                    var outputStream = FFileData[count];
+
+                    //reset the positions of the streams
+                    inputStream.Position = 0;
+                    outputStream.Position = 0;
+                    outputStream.SetLength(inputStream.Length);
+
+                    var numBytesToCopy = inputStream.Length;
+
+                    while (numBytesToCopy > 0)
+                    {
+                        //make sure we don't read more than we need or more than
+                        //our byte buffer can hold
+                        var chunkSize = (int)Math.Min(numBytesToCopy, FBuffer.Length);
+                        //the stream's read method returns how many bytes have actually
+                        //been read into the buffer
+                        var numBytesRead = inputStream.Read(FBuffer, 0, chunkSize);
+                        //in case nothing has been read we need to leave the loop
+                        //as we requested more than there was available
+                        if (numBytesRead == 0) break;
+                        //write the number of bytes read to the output stream
+                        outputStream.Write(FBuffer, 0, numBytesRead);
+                        //decrease the total amount of bytes we still need to read
+                        numBytesToCopy -= numBytesRead;
+                    }
+
+                    outputStream.Position = 0;
+                    count++;
+                }
+        }
+    }
 }
