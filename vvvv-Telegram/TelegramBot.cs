@@ -153,6 +153,17 @@ namespace VVVV.Nodes
             IsNew = true;
         }
     }
+    public class VTelegramCallback
+    {
+        public CallbackQuery callback;
+        public bool IsNew;
+
+        public VTelegramCallback(CallbackQuery c)
+        {
+            callback = c;
+            IsNew = true;
+        }
+    }
 
     public class BotClient
     {
@@ -184,6 +195,7 @@ namespace VVVV.Nodes
 
                 BC.OnMessage += BotOnMessageReceived;
                 BC.OnMessageEdited += BotOnMessageReceived;
+                BC.OnCallbackQuery += BotOnCallbackQueryReceived;
             }
         }
 
@@ -205,6 +217,12 @@ namespace VVVV.Nodes
             this.Messages.Add(new VTelegramMessage (message));
         }
 
+        private async void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
+        {
+            this.Callbacks.Add(new VTelegramCallback(callbackQueryEventArgs.CallbackQuery));
+
+            await BC.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
+                $"Received {callbackQueryEventArgs.CallbackQuery.Data}");
         }
     }
 
