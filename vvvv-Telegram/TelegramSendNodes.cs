@@ -194,13 +194,13 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramSendPhotoRawNode : TelegramSendNode
     {
-        [Input("FileName")]
+        [Input("File Name")]
         public ISpread<string> FFileName;
 
         [Input("Image")]
         public ISpread<Stream> FImage;
 
-        [Input("FCaption", DefaultString = "caption")]
+        [Input("Caption", DefaultString = "caption")]
         public IDiffSpread<string> FCaption;
 
 

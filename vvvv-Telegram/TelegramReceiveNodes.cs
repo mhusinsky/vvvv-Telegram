@@ -127,7 +127,7 @@ namespace VVVV.Nodes
 
         protected override void checkForMessage(int i)
         {
-            var last = FBotClient[i].lastMessages;
+            var last = FBotClient[i].Messages;
             var textMessages = last.Where(textMessage => textMessage.message.Type == MessageType.TextMessage);
             int messageCount = textMessages.Count();
 
@@ -136,7 +136,7 @@ namespace VVVV.Nodes
             initClientReceivedMessages(i, messageCount);
             initClientUserSliceCount(i, messageCount);
 
-            foreach (TelegramMessage tm in textMessages)
+            foreach (VTelegramMessage tm in textMessages)
             {
                 var m = tm.message;
                 FTextMessage[i].Add(m.Text);
@@ -175,7 +175,7 @@ namespace VVVV.Nodes
 
         protected override void checkForMessage(int i)
         {
-            var last = FBotClient[i].lastMessages;
+            var last = FBotClient[i].Messages;
             var locationMessages = last.Where(locationMessage => locationMessage.message.Type == MessageType.LocationMessage);
             int messageCount = locationMessages.Count();
 
@@ -184,7 +184,7 @@ namespace VVVV.Nodes
             initClientReceivedMessages(i, messageCount);
             initClientUserSliceCount(i, messageCount);
 
-            foreach (TelegramMessage tm in locationMessages)
+            foreach (VTelegramMessage tm in locationMessages)
             {
                 var m = tm.message;
                 FLong[i].Add(m.Location.Longitude);
@@ -244,8 +244,8 @@ namespace VVVV.Nodes
 
         protected override void checkForMessage(int i)
         {
-            var last = FBotClient[i].lastMessages;
-            var photoMessages = last.Where(photoMessage => photoMessage.message.Type == MessageType.PhotoMessage);
+            var last = FBotClient[i].Messages;
+            List<VTelegramMessage> photoMessages = getFileMessages(i);
             int messageCount = photoMessages.Count();
 
             if (messageCount < 1) return;
@@ -368,7 +368,6 @@ namespace VVVV.Nodes
                 //decrease the total amount of bytes we still need to read
                 numBytesToCopy -= numBytesRead;
             }
-
             outputStream.Position = 0;
         }
     }
