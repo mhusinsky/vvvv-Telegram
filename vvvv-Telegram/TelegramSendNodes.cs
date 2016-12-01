@@ -116,6 +116,23 @@ namespace VVVV.Nodes
 
         }
 
+        protected IReplyMarkup getReplyMarkup(int i)
+        {
+            var rm = FReplyMarkupEnum[i];
+            switch ((int)rm)
+            {
+                case 0: return null;
+                case 1:
+                    var fr = new ForceReply();
+                    fr.Force = true;
+                    return fr;
+                case 2: return new ReplyKeyboardHide();
+                case 3: return FReplyMarkupKeyboard[i];
+            }
+
+            return null;
+        }
+
         protected abstract Task sendMessageAsync(int i);
 
     }
@@ -130,23 +147,25 @@ namespace VVVV.Nodes
 
         protected override async Task sendMessageAsync(int i)
         {
-            if(FReplyMarkupKeyboard[0] == null)
-                await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, getReplyMarkup(FReplyMarkupEnum[i]), ParseMode.Default);
-            else
-                await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, FReplyMarkupKeyboard[0], ParseMode.Default);
+            //if(FReplyMarkupKeyboard[0] == null)
+                await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, FDisableNotification[i], FReplyId[i], getReplyMarkup(i), ParseMode.Default);
+            //else
+            //    await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, FReplyMarkupKeyboard[0], ParseMode.Default);
 
             FStopwatch[i].Stop();
             FLogger.Log(LogType.Debug, "Bot " + i + ": MessageSent");
         }
+    }
 
-        protected IReplyMarkup getReplyMarkup(ReplyMarkupEnum rm)
-        {
-            switch ((int)rm)
-            {
-                case 0: return null;
-                case 1: return new ForceReply();
-                case 2: return new ReplyKeyboardHide();
-            }
+    #region PluginInfo
+    [PluginInfo(Name = "SendLocation", Category = "Telegram", Version = "", Help = "Sends location messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramSendLocationNode : TelegramSendNode
+    {
+        [Input("Longitude")]
+        public IDiffSpread<double> FLong;
+        [Input("Latitude")]
+        public IDiffSpread<double> FLat;
 
             return null;
         }

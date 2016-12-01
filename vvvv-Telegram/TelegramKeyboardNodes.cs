@@ -28,7 +28,8 @@ namespace VVVV.Nodes
     {
         none,
         ForceReply,
-        ReplyKeyboardHide
+        ReplyKeyboardHide,
+        UseKeyboard
     }
 
     public abstract class TelegramKeyboardNode : IPluginEvaluate
@@ -65,13 +66,13 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramReplyKeyboardNode : TelegramKeyboardNode
     {
-        [Input("OneTimeKeyboard", IsSingle = true, Order = 10)]
-        public IDiffSpread<Boolean> FOneTime;
-
-        [Input("ResizeKeyboard", IsSingle = true, DefaultBoolean = true, Order = 20)]
+        [Input("ResizeKeyboard", IsSingle = true, DefaultBoolean = true, Order = 10)]
         public IDiffSpread<Boolean> FResize;
 
+        [Input("OneTimeKeyboard", IsSingle = true, Order = 20)]
+        public IDiffSpread<Boolean> FOneTime;
 
+        
         protected override void createKeyboard()
         {
             FMarkup.SliceCount = 1;
@@ -88,7 +89,7 @@ namespace VVVV.Nodes
                         buttons[i][j] = new KeyboardButton(FText[i][j]);
                     }
                 }
-                FMarkup[0] = new ReplyKeyboardMarkup(buttons, FOneTime[0], FResize[0]); // TODO: Parameter SelectiveKeyboard
+                FMarkup[0] = new ReplyKeyboardMarkup(buttons, FResize[0], FOneTime[0]); // TODO: Parameter SelectiveKeyboard
             }
         }
     }
