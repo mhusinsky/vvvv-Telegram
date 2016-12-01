@@ -32,11 +32,11 @@ namespace VVVV.Nodes
         [Input("Bots")]
         public ISpread<BotClient> FBotClient;
 
-        [Output("User Name", Visibility = PinVisibility.Hidden)]
+        [Output("User Name", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FUserName;
-        [Output("First Name", Visibility = PinVisibility.Hidden)]
+        [Output("First Name", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FFirstName;
-        [Output("Last Name", Visibility = PinVisibility.Hidden)]
+        [Output("Last Name", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FLastName;
         [Output("User")]
         public ISpread<ISpread<User>> FUser;
