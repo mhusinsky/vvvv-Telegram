@@ -54,8 +54,7 @@ namespace VVVV.Nodes
             
             setMessagesSliceCount(FBotClient.SliceCount);
             setBaseInfoSliceCount(FBotClient.SliceCount);
-            FReceived.SliceCount = FBotClient.SliceCount;
-
+            
             for (int i = 0; i < FBotClient.SliceCount; i++)
             {
                 FReceived[i] = false;
