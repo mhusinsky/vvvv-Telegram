@@ -282,13 +282,16 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramReceivePhotoNode : TelegramReceiveFileMessageNode
     {
-        
+
+        [Output("Caption")]
+        public ISpread<string> FCaption;
         [Output("Dimensions")]
         public ISpread<ISpread<Vector2D>> FDimensions;
         
         protected override void setMessageSpecialTypeSliceCount(int botCount)
         {
             FDimensions.SliceCount = botCount;
+            FCaption.SliceCount = botCount;
         }
 
         protected override void initClientReceivedSpecialMessages(int index, int SliceCount)
@@ -305,6 +308,7 @@ namespace VVVV.Nodes
         protected override int SetOutputs(int i, Message m)
         {
             PhotoSize[] ps = m.Photo;
+            FCaption[i] = m.Caption;
             int count = 0;
 
             foreach (PhotoSize p in ps)
