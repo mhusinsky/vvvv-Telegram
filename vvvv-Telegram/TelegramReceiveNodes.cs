@@ -40,6 +40,8 @@ namespace VVVV.Nodes
         public ISpread<ISpread<string>> FLastName;
         [Output("User")]
         public ISpread<ISpread<User>> FUser;
+        [Output("Date")]
+        public ISpread<ISpread<DateTime>> FDate;        // TODO: check for compatibility with tmp's Time-Pack
         [Output("Received", IsBang = true)]
         public ISpread<bool> FReceived;
 
@@ -51,7 +53,7 @@ namespace VVVV.Nodes
         {
             
             setMessagesSliceCount(FBotClient.SliceCount);
-            setUserSliceCount(FBotClient.SliceCount);
+            setBaseInfoSliceCount(FBotClient.SliceCount);
             FReceived.SliceCount = FBotClient.SliceCount;
 
             for (int i = 0; i < FBotClient.SliceCount; i++)
@@ -70,15 +72,17 @@ namespace VVVV.Nodes
             setMessageTypeSliceCount(botCount);
         }
 
-        protected void setUserSliceCount(int botCount)
+        protected void setBaseInfoSliceCount(int botCount)
         {
             FUser.SliceCount = botCount;
             FUserName.SliceCount = botCount;
             FFirstName.SliceCount = botCount;
             FLastName.SliceCount = botCount;
+
+            FDate.SliceCount = botCount;
         }
 
-        protected void initClientUserSliceCount(int index, int SliceCount)
+        protected void initBaseInfoSlices(int index, int SliceCount)
         {
             FUserName[index].SliceCount = SliceCount;
             FFirstName[index].SliceCount = SliceCount;
@@ -89,15 +93,20 @@ namespace VVVV.Nodes
             FUserName[index] = new Spread<string>();
             FFirstName[index] = new Spread<string>();
             FLastName[index] = new Spread<string>();
+
+            FDate[index].SliceCount = SliceCount;
+            FDate[index] = new Spread<DateTime>();
         }
 
-        protected void setUserData(int index, User from)
+        protected void setBaseInfoData(int index, Message mesg)
         {
-            FUserName[index].Add(from.Username);
-            FFirstName[index].Add(from.FirstName);
-            FLastName[index].Add(from.LastName);
+            User u = mesg.From;
+            FUserName[index].Add(u.Username);
+            FFirstName[index].Add(u.FirstName);
+            FLastName[index].Add(u.LastName);
 
-            FUser[index].Add(from);
+            FUser[index].Add(u);
+            FDate[index].Add(mesg.Date);
         }
 
         protected abstract void checkForMessage(int i);
@@ -134,14 +143,15 @@ namespace VVVV.Nodes
             if (messageCount < 1) return;
 
             initClientReceivedMessages(i, messageCount);
-            initClientUserSliceCount(i, messageCount);
+            initBaseInfoSlices(i, messageCount);
 
             foreach (VTelegramMessage tm in textMessages)
             {
                 var m = tm.message;
                 FTextMessage[i].Add(m.Text);
 
-                setUserData(i, m.From);
+                setBaseInfoData(i, m);
+                FDate[i].Add(m.Date);
                 FLogger.Log(LogType.Debug, "Bot " + i + ": Text message received");
             }
 
@@ -182,7 +192,7 @@ namespace VVVV.Nodes
             if (messageCount < 1) return;
 
             initClientReceivedMessages(i, messageCount);
-            initClientUserSliceCount(i, messageCount);
+            initBaseInfoSlices(i, messageCount);
 
             foreach (VTelegramMessage tm in locationMessages)
             {
@@ -190,7 +200,7 @@ namespace VVVV.Nodes
                 FLong[i].Add(m.Location.Longitude);
                 FLat[i].Add(m.Location.Latitude);
 
-                setUserData(i, m.From);
+                setBaseInfoData(i, m);
                 FLogger.Log(LogType.Debug, "Bot " + i + ": Location message received");
             }
             
@@ -244,7 +254,7 @@ namespace VVVV.Nodes
 
             initClientReceivedMessages(i, messageCount);
             initClientReceivedSpecialMessages(i, messageCount);
-            initClientUserSliceCount(i, messageCount);
+            initBaseInfoSlices(i, messageCount);
 
 
             foreach (VTelegramMessage tm in photoMessages)
@@ -254,7 +264,7 @@ namespace VVVV.Nodes
                 int fileCount = SetOutputs(i, m);
 
                 FFileCount[i].Add(fileCount);
-                setUserData(i, m.From);
+                setBaseInfoData(i, m);
                 FLogger.Log(LogType.Debug, "Bot " + i + ": message with " + fileCount + " files received");
             }
 
