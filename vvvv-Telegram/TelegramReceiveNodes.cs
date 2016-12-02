@@ -364,6 +364,55 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
+    [PluginInfo(Name = "ReceiveVideo", Category = "Telegram", Version = "", Help = "Receives video messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramReceiveVideoNode : TelegramReceiveFileMessageNode
+    {
+        [Output("Caption")]
+        public ISpread<string> FCaption;
+        [Output("MimeType")]
+        public ISpread<string> FMimeType;
+        [Output("Duration")]
+        public ISpread<int> FDuration;
+        [Output("Dimensions")]
+        public ISpread<Vector2D> FDimensions;
+        [Output("Thumbnail")]
+        public ISpread<TelegramFile> FThumb;
+
+        protected override void setMessageSpecialTypeSliceCount(int botCount)
+        {
+            FCaption.SliceCount = botCount;
+            FMimeType.SliceCount = botCount;
+            FDuration.SliceCount = botCount;
+            FDimensions.SliceCount = botCount;
+            FThumb.SliceCount = botCount;
+        }
+
+        protected override void initClientReceivedSpecialMessages(int index, int SliceCount)
+        { }
+
+        protected override List<VTelegramMessage> getFileMessages(int i)
+        {
+            return FBotClient[i].Messages.Where(videoMessage => videoMessage.message.Type == MessageType.VideoMessage).ToList();
+        }
+
+        protected override int SetOutputs(int i, Message m)
+        {
+            Video v = m.Video;
+            
+            FCaption[i] = m.Caption;
+            FMimeType[i] = v.MimeType;
+            FDuration[i] = v.Duration;
+            FDimensions[i] = new Vector2D(Double.Parse(v.Height), Double.Parse(v.Width));
+            FFile[i].Add(new TelegramFile(m.Video, FBotClient[i].BC));
+            FThumb.Add(new TelegramFile(m.Video.Thumb, FBotClient[i].BC));
+            
+            int count = 0;
+            return ++count;
+        }
+    }
+
+    #region PluginInfo
     [PluginInfo(Name = "GetFile", Category = "Telegram", Version = "", Help = "Downloads files from messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramFileNode : IPluginEvaluate
