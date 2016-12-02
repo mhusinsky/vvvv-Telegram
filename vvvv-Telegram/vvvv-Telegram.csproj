@@ -71,6 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TelegramCallbackNodes.cs" />
     <Compile Include="TelegramReceiveNodes.cs" />
     <Compile Include="TelegramKeyboardNodes.cs" />
     <Compile Include="TelegramSendNodes.cs" />
