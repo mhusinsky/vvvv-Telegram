@@ -101,6 +101,19 @@ namespace VVVV.Nodes
                             last.RemoveAt(m);   // remove message from last frame
                         }
                     }
+                    // deal with old callbacks
+                    var lastCallbacks = FBotClient[i].Callbacks;
+                    for (int c = lastCallbacks.Count - 1; c >= 0; c--)
+                    {
+                        if (lastCallbacks[c].IsNew)
+                        {
+                            lastCallbacks[c].IsNew = false;
+                        }
+                        else
+                        {
+                            lastCallbacks.RemoveAt(c);   // remove callback from last frame
+                        }
+                    }
                 }
                 
                 
@@ -213,8 +226,7 @@ namespace VVVV.Nodes
 
         private void BotOnMessageReceived(object sender, MessageEventArgs messageEventArgs)
         {
-            var message = messageEventArgs.Message;
-            this.Messages.Add(new VTelegramMessage (message));
+            this.Messages.Add(new VTelegramMessage (messageEventArgs.Message));
         }
 
         private async void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
