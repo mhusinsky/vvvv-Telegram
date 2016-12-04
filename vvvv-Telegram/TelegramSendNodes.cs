@@ -344,7 +344,7 @@ namespace VVVV.Nodes
             var fts = new FileToSend(FFileName[i], outputStream);
             try
             {
-                await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+                Message mesg = await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
                 FStopwatch[i].Stop();
                 FLogger.Log(LogType.Debug, "Bot " + i + ": PhotoSent");
                 FError[i] = "";
