@@ -22,6 +22,8 @@ using Telegram.Bot.Types.Enums;
 //using Telegram.Bot.Types.InputMessageContents;
 using Telegram.Bot.Types.ReplyMarkups;
 
+using VVVV.Packs.Time;
+
 namespace VVVV.Nodes
 {
    
@@ -158,12 +160,14 @@ namespace VVVV.Nodes
     public class VTelegramMessage
     {
         public Message message;
+        public Time created;
         public bool IsNew;
 
         public VTelegramMessage(Message m)
         {
             message = m;
             IsNew = true;
+            created = new Time(m.Date, TimeZoneInfo.Utc);
         }
     }
     public class VTelegramCallback
@@ -233,7 +237,7 @@ namespace VVVV.Nodes
         {
             this.Callbacks.Add(new VTelegramCallback(callbackQueryEventArgs.CallbackQuery));
 
-            await BC.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id,
+            await BC.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id, 
                 $"Received {callbackQueryEventArgs.CallbackQuery.Data}");
         }
     }
