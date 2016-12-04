@@ -22,11 +22,13 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
+using VVVV.Packs.Time;
+
 
 namespace VVVV.Nodes
 {
 
-    public abstract class TelegramReceiveNode : IPluginEvaluate
+    public abstract class TelegramReceiveNode : IPluginEvaluate, IPartImportsSatisfiedNotification
     {
         #region fields & pins
         [Input("Bots")]
@@ -41,13 +43,15 @@ namespace VVVV.Nodes
         [Output("User")]
         public ISpread<ISpread<User>> FUser;
         [Output("Date")]
-        public ISpread<ISpread<DateTime>> FDate;        // TODO: check for compatibility with tmp's Time-Pack
+        public ISpread<ISpread<Time>> FDate;        // TODO: check for compatibility with tmp's Time-Pack
         [Output("Received", IsBang = true)]
         public ISpread<bool> FReceived;
 
         [Import()]
         public ILogger FLogger;
         #endregion fields & pins
+
+        public virtual void OnImportsSatisfied() { }
 
         public void Evaluate(int SpreadMax)
         {
@@ -83,29 +87,23 @@ namespace VVVV.Nodes
 
         protected void initBaseInfoSlices(int index, int SliceCount)
         {
-            FUserName[index].SliceCount = SliceCount;
-            FFirstName[index].SliceCount = SliceCount;
-            FLastName[index].SliceCount = SliceCount;
-            FUser[index].SliceCount = SliceCount;
-
             FUser[index] = new Spread<User>();
             FUserName[index] = new Spread<string>();
             FFirstName[index] = new Spread<string>();
             FLastName[index] = new Spread<string>();
 
-            FDate[index].SliceCount = SliceCount;
-            FDate[index] = new Spread<DateTime>();
+            FDate[index] = new Spread<Time>();
         }
 
-        protected void setBaseInfoData(int index, Message mesg)
+        protected void setBaseInfoData(int index, VTelegramMessage tm)
         {
-            User u = mesg.From;
+            User u = tm.message.From;
             FUserName[index].Add(u.Username);
             FFirstName[index].Add(u.FirstName);
             FLastName[index].Add(u.LastName);
 
             FUser[index].Add(u);
-            FDate[index].Add(mesg.Date);
+            FDate[index].Add(tm.created);
         }
 
         protected abstract void checkForMessage(int i);
@@ -149,8 +147,7 @@ namespace VVVV.Nodes
                 var m = tm.message;
                 FTextMessage[i].Add(m.Text);
 
-                setBaseInfoData(i, m);
-                FDate[i].Add(m.Date);
+                setBaseInfoData(i, tm);
                 FLogger.Log(LogType.Debug, "Bot " + i + ": Text message received");
             }
 
@@ -199,7 +196,7 @@ namespace VVVV.Nodes
                 FLong[i].Add(m.Location.Longitude);
                 FLat[i].Add(m.Location.Latitude);
 
-                setBaseInfoData(i, m);
+                setBaseInfoData(i, tm);
                 FLogger.Log(LogType.Debug, "Bot " + i + ": Location message received");
             }
             
@@ -227,6 +224,12 @@ namespace VVVV.Nodes
         [Output("File Count")]
         public ISpread<ISpread<int>> FFileCount;
 
+        public override void OnImportsSatisfied()
+        {
+            FFile.SliceCount = 0;
+            FFileCount.SliceCount = 0;;
+        }
+
         protected override void setMessageTypeSliceCount(int botCount)
         {
             FFile.SliceCount = botCount;
@@ -246,8 +249,8 @@ namespace VVVV.Nodes
         protected override void checkForMessage(int i)
         {
             var last = FBotClient[i].Messages;
-            List<VTelegramMessage> photoMessages = getFileMessages(i);
-            int messageCount = photoMessages.Count();
+            List<VTelegramMessage> fileMessages = getFileMessages(i);
+            int messageCount = fileMessages.Count();
 
             if (messageCount < 1) return;
 
@@ -256,14 +259,14 @@ namespace VVVV.Nodes
             initBaseInfoSlices(i, messageCount);
 
 
-            foreach (VTelegramMessage tm in photoMessages)
+            foreach (VTelegramMessage tm in fileMessages)
             {
                 var m = tm.message;
                 
                 int fileCount = SetOutputs(i, m);
 
                 FFileCount[i].Add(fileCount);
-                setBaseInfoData(i, m);
+                setBaseInfoData(i, tm);
                 FLogger.Log(LogType.Debug, "Bot " + i + ": message with " + fileCount + " files received");
             }
 
@@ -286,7 +289,13 @@ namespace VVVV.Nodes
         public ISpread<string> FCaption;
         [Output("Dimensions")]
         public ISpread<ISpread<Vector2D>> FDimensions;
-        
+
+        public override void OnImportsSatisfied()
+        {
+            FCaption.SliceCount = 0;
+            FDimensions.SliceCount = 0;
+        }
+
         protected override void setMessageSpecialTypeSliceCount(int botCount)
         {
             FDimensions.SliceCount = botCount;
@@ -295,7 +304,6 @@ namespace VVVV.Nodes
 
         protected override void initClientReceivedSpecialMessages(int index, int SliceCount)
         {
-            FDimensions[index].SliceCount = SliceCount;
             FDimensions[index] = new Spread<Vector2D>();
         }
 
@@ -334,6 +342,13 @@ namespace VVVV.Nodes
         [Output("Duration")]
         public ISpread<int> FDuration;
 
+        public override void OnImportsSatisfied()
+        {
+            FTitle.SliceCount = 0;
+            FPerformer.SliceCount = 0;
+            FDuration.SliceCount = 0;
+        }
+
         protected override void setMessageSpecialTypeSliceCount(int botCount)
         {
             FTitle.SliceCount = botCount;
@@ -369,7 +384,7 @@ namespace VVVV.Nodes
     {
         [Output("Caption")]
         public ISpread<string> FCaption;
-        [Output("MimeType")]
+        [Output("MimeType", Visibility = PinVisibility.OnlyInspector)]
         public ISpread<string> FMimeType;
         [Output("Duration")]
         public ISpread<int> FDuration;
@@ -378,17 +393,26 @@ namespace VVVV.Nodes
         [Output("Thumbnail")]
         public ISpread<TelegramFile> FThumb;
 
-        protected override void setMessageSpecialTypeSliceCount(int botCount)
+        public override void OnImportsSatisfied()
         {
-            FCaption.SliceCount = botCount;
-            FMimeType.SliceCount = botCount;
-            FDuration.SliceCount = botCount;
-            FDimensions.SliceCount = botCount;
-            FThumb.SliceCount = botCount;
+            FCaption.SliceCount = 0;
+            FMimeType.SliceCount = 0;
+            FDuration.SliceCount = 0;
+            FDimensions.SliceCount = 0;
+            FThumb.SliceCount = 0;
         }
 
-        protected override void initClientReceivedSpecialMessages(int index, int SliceCount)
+        protected override void setMessageSpecialTypeSliceCount(int botCount)
         { }
+
+        protected override void initClientReceivedSpecialMessages(int index, int SliceCount)
+        {
+            FCaption.SliceCount = SliceCount;
+            FMimeType.SliceCount = SliceCount;
+            FDuration.SliceCount = SliceCount;
+            FDimensions.SliceCount = SliceCount;
+            FThumb.SliceCount = SliceCount;
+        }
 
         protected override List<VTelegramMessage> getFileMessages(int i)
         {
@@ -403,11 +427,11 @@ namespace VVVV.Nodes
             FMimeType[i] = v.MimeType;
             FDuration[i] = v.Duration;
             FDimensions[i] = new Vector2D(Double.Parse(v.Height), Double.Parse(v.Width));
+            FThumb[i] = new TelegramFile(m.Video.Thumb, FBotClient[i].BC);
+
             FFile[i].Add(new TelegramFile(m.Video, FBotClient[i].BC));
-            FThumb.Add(new TelegramFile(m.Video.Thumb, FBotClient[i].BC));
             
-            int count = 0;
-            return ++count;
+            return 1;
         }
     }
 
@@ -453,7 +477,7 @@ namespace VVVV.Nodes
             FFileSize.SliceCount = FFile.SliceCount;
             FFileData.ResizeAndDispose(FFile.SliceCount, () => new MemoryStream());
 
-            int max = Math.Max(FFile.SliceCount, FGet.SliceCount);
+            //int max = Math.Max(FFile.SliceCount, FGet.SliceCount);
 
             for(int i=0; i < FFile.SliceCount; i++)
             {
@@ -462,19 +486,19 @@ namespace VVVV.Nodes
                 if (f == null || FGet[i] == false)
                     continue;
 
-                DownloadFileAsync(f, FFileData[i]);
+                DownloadFileAsync(i, f, FFileData[i]);
             }
                 
         }
 
-        public async void DownloadFileAsync(TelegramFile f, Stream output)
+        public async void DownloadFileAsync(int index, TelegramFile f, Stream output)
         {
             
             Telegram.Bot.Types.File thisFile = await f.botClient.GetFileAsync(f.file.FileId);
 
-            FFileId.Add(f.file.FileId);
-            FFilePath.Add(f.file.FilePath);
-            FFileSize.Add(f.file.FileSize);
+            FFileId[index] = f.file.FileId;
+            FFilePath[index] = f.file.FilePath;
+            FFileSize[index] = f.file.FileSize;
 
             var inputStream = thisFile.FileStream;
             var outputStream = output;
@@ -504,6 +528,7 @@ namespace VVVV.Nodes
                 numBytesToCopy -= numBytesRead;
             }
             outputStream.Position = 0;
+            FReceived[index] = true;        // TODO: Not working yet...
         }
     }
 
