@@ -26,8 +26,6 @@ using VVVV.Packs.Time;
 
 namespace VVVV.Nodes
 {
-   
-    
     #region PluginInfo
     [PluginInfo(Name = "BotClient", Category = "Telegram", Version = "", Help = "Provides Communication with a TelegramBot", Credits = "Based on telegram.bo", Tags = "Network, Telegram, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo

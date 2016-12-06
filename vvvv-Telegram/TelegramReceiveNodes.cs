@@ -55,7 +55,6 @@ namespace VVVV.Nodes
 
         public void Evaluate(int SpreadMax)
         {
-            
             setMessagesSliceCount(FBotClient.SliceCount);
             setBaseInfoSliceCount(FBotClient.SliceCount);
             
@@ -66,7 +65,6 @@ namespace VVVV.Nodes
                     return;
                 checkForMessage(i);
             }
-
         }
 
         protected void setMessagesSliceCount(int botCount)
@@ -468,6 +466,7 @@ namespace VVVV.Nodes
         {
             FFileData.SliceCount = 0;
         }
+
 
         public void Evaluate(int SpreadMax)
         {
