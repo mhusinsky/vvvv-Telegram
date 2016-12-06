@@ -40,9 +40,9 @@ namespace VVVV.Nodes
         public ISpread<ISpread<string>> FFirstName;
         [Output("Last Name", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FLastName;
-        [Output("User")]
+        [Output("User", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<User>> FUser;
-        [Output("Date")]
+        [Output("Date", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<Time>> FDate;        // TODO: check for compatibility with tmp's Time-Pack
         [Output("Received", IsBang = true)]
         public ISpread<bool> FReceived;
@@ -56,7 +56,6 @@ namespace VVVV.Nodes
         public void Evaluate(int SpreadMax)
         {
             setMessagesSliceCount(FBotClient.SliceCount);
-            setBaseInfoSliceCount(FBotClient.SliceCount);
             
             for (int i = 0; i < FBotClient.SliceCount; i++)
             {
@@ -70,10 +69,11 @@ namespace VVVV.Nodes
         protected void setMessagesSliceCount(int botCount)
         {
             FReceived.SliceCount = botCount;
+            setMessageInfoSliceCount(botCount);
             setMessageTypeSliceCount(botCount);
         }
 
-        protected void setBaseInfoSliceCount(int botCount)
+        protected void setMessageInfoSliceCount(int botCount)
         {
             FUser.SliceCount = botCount;
             FUserName.SliceCount = botCount;
@@ -83,7 +83,7 @@ namespace VVVV.Nodes
             FDate.SliceCount = botCount;
         }
 
-        protected void initBaseInfoSlices(int index, int SliceCount)
+        protected void initMessageInfoSlices(int index, int SliceCount)
         {
             FUser[index] = new Spread<User>();
             FUserName[index] = new Spread<string>();
@@ -93,21 +93,57 @@ namespace VVVV.Nodes
             FDate[index] = new Spread<Time>();
         }
 
-        protected void setBaseInfoData(int index, VTelegramMessage tm)
+        protected void setMessageInfoData(int index, VTelegramMessage tm)
         {
             User u = tm.message.From;
+            FUser[index].Add(u);
+
             FUserName[index].Add(u.Username);
             FFirstName[index].Add(u.FirstName);
             FLastName[index].Add(u.LastName);
-
-            FUser[index].Add(u);
+            
             FDate[index].Add(tm.created);
         }
 
-        protected abstract void checkForMessage(int i);
-        protected abstract void setMessageTypeSliceCount(int botCount);
-        protected abstract void initClientReceivedMessages(int index, int SliceCount);
+        protected List<VTelegramMessage> getMessageList(int i)
+        {
+            return FBotClient[i].Messages.Where(m => m.message.Type == getMyMessageType()).ToList();
+        }
 
+        protected virtual void checkForMessage(int i)
+        {
+            var myMessages = getMessageList(i);
+            int messageCount = myMessages.Count();
+
+            if (messageCount < 1) return;
+
+            setMessageTypeData(i, messageCount);
+            setMessageSpecialsData(i, messageCount);
+            initMessageInfoSlices(i, messageCount);
+
+            foreach (VTelegramMessage tm in myMessages)
+            {
+                var m = tm.message;
+
+                int fileCount = SetOutputs(i, m);
+
+                setFileCount(i, fileCount);
+                setMessageInfoData(i, tm);
+                FLogger.Log(LogType.Debug, "Bot " + i + ": " + getMyMessageType().ToString() + "received");
+            }
+
+            FReceived[i] = true;
+        }
+
+        protected virtual void setFileCount(int i, int count) { }
+        protected virtual void setMessageSpecialsSliceCount(int SliceCount) { }
+        protected virtual void setMessageSpecialsData(int index, int SliceCount) { }
+
+        protected abstract MessageType getMyMessageType();
+        protected abstract void setMessageTypeSliceCount(int botCount);
+        protected abstract void setMessageTypeData(int index, int SliceCount);
+
+        protected abstract int SetOutputs(int i, Message m);
     }
 
     #region PluginInfo
@@ -115,42 +151,30 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramReceiveTextNode : TelegramReceiveNode
     {
-        [Output("Text")]
+        [Output("Text", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FTextMessage;
+
+        protected override MessageType getMyMessageType()
+        {
+            return MessageType.TextMessage;
+        }
 
         protected override void setMessageTypeSliceCount(int botCount)
         {
             FTextMessage.SliceCount = botCount;
         }
 
-        protected override void initClientReceivedMessages(int index, int SliceCount)
+        protected override void setMessageTypeData(int index, int SliceCount)
         {
-            FTextMessage[index].SliceCount = SliceCount;
             FTextMessage[index] = new Spread<string>();
         }
 
-        protected override void checkForMessage(int i)
+        protected override int SetOutputs(int i, Message m)
         {
-            var last = FBotClient[i].Messages;
-            var textMessages = last.Where(textMessage => textMessage.message.Type == MessageType.TextMessage);
-            int messageCount = textMessages.Count();
-
-            if (messageCount < 1) return;
-
-            initClientReceivedMessages(i, messageCount);
-            initBaseInfoSlices(i, messageCount);
-
-            foreach (VTelegramMessage tm in textMessages)
-            {
-                var m = tm.message;
-                FTextMessage[i].Add(m.Text);
-
-                setBaseInfoData(i, tm);
-                FLogger.Log(LogType.Debug, "Bot " + i + ": Text message received");
-            }
-
-            FReceived[i] = true;
+            FTextMessage[i].Add(m.Text);
+            return 0;
         }
+        
     }
 
     #region PluginInfo
@@ -158,10 +182,15 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramReceiveLocationNode : TelegramReceiveNode
     {
-        [Output("Longitude")]
+        [Output("Longitude", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<double>> FLong;
-        [Output("Latitude")]
+        [Output("Latitude", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<double>> FLat;
+
+        protected override MessageType getMyMessageType()
+        {
+            return MessageType.LocationMessage;
+        }
 
         protected override void setMessageTypeSliceCount(int botCount)
         {
@@ -169,7 +198,7 @@ namespace VVVV.Nodes
             FLat.SliceCount = botCount;
         }
 
-        protected override void initClientReceivedMessages(int index, int SliceCount)
+        protected override void setMessageTypeData(int index, int SliceCount)
         {
             FLong[index].SliceCount = SliceCount;
             FLat[index].SliceCount = SliceCount;
@@ -177,28 +206,11 @@ namespace VVVV.Nodes
             FLat[index] = new Spread<double>();
         }
 
-        protected override void checkForMessage(int i)
+        protected override int SetOutputs(int i, Message m)
         {
-            var last = FBotClient[i].Messages;
-            var locationMessages = last.Where(locationMessage => locationMessage.message.Type == MessageType.LocationMessage);
-            int messageCount = locationMessages.Count();
-
-            if (messageCount < 1) return;
-
-            initClientReceivedMessages(i, messageCount);
-            initBaseInfoSlices(i, messageCount);
-
-            foreach (VTelegramMessage tm in locationMessages)
-            {
-                var m = tm.message;
-                FLong[i].Add(m.Location.Longitude);
-                FLat[i].Add(m.Location.Latitude);
-
-                setBaseInfoData(i, tm);
-                FLogger.Log(LogType.Debug, "Bot " + i + ": Location message received");
-            }
-            
-            FReceived[i] = true;
+            FLong[i].Add(m.Location.Longitude);
+            FLat[i].Add(m.Location.Latitude);
+            return 0;
         }
     }
 
@@ -219,23 +231,29 @@ namespace VVVV.Nodes
 
         [Output("File")]
         public ISpread<ISpread<TelegramFile>> FFile;
-        [Output("File Count")]
+        [Output("Files per Message", BinVisibility = PinVisibility.Hidden)]
         public ISpread<ISpread<int>> FFileCount;
+
+        protected override void setFileCount(int i, int count)
+        {
+            FFileCount[i].Add(count);
+        }
 
         public override void OnImportsSatisfied()
         {
             FFile.SliceCount = 0;
-            FFileCount.SliceCount = 0;;
+            FFileCount.SliceCount = 0;
+            setMessageSpecialsSliceCount(0);
         }
 
         protected override void setMessageTypeSliceCount(int botCount)
         {
             FFile.SliceCount = botCount;
             FFileCount.SliceCount = botCount;
-            setMessageSpecialTypeSliceCount(botCount);
+            setMessageSpecialsSliceCount(botCount);
         }
 
-        protected override void initClientReceivedMessages(int index, int SliceCount)
+        protected override void setMessageTypeData(int index, int SliceCount)
         {
             FFile[index].SliceCount = SliceCount;
             FFile[index] = new Spread<TelegramFile>();
@@ -243,38 +261,6 @@ namespace VVVV.Nodes
             FFileCount[index].SliceCount = SliceCount;
             FFileCount[index] = new Spread<int>();
         }
-
-        protected override void checkForMessage(int i)
-        {
-            var last = FBotClient[i].Messages;
-            List<VTelegramMessage> fileMessages = getFileMessages(i);
-            int messageCount = fileMessages.Count();
-
-            if (messageCount < 1) return;
-
-            initClientReceivedMessages(i, messageCount);
-            initClientReceivedSpecialMessages(i, messageCount);
-            initBaseInfoSlices(i, messageCount);
-
-
-            foreach (VTelegramMessage tm in fileMessages)
-            {
-                var m = tm.message;
-                
-                int fileCount = SetOutputs(i, m);
-
-                FFileCount[i].Add(fileCount);
-                setBaseInfoData(i, tm);
-                FLogger.Log(LogType.Debug, "Bot " + i + ": message with " + fileCount + " files received");
-            }
-
-            FReceived[i] = true;
-        }
-
-        protected abstract void setMessageSpecialTypeSliceCount(int SliceCount);
-        protected abstract void initClientReceivedSpecialMessages(int index, int SliceCount);
-        protected abstract List<VTelegramMessage> getFileMessages(int i);
-        protected abstract int SetOutputs(int i, Message m);
     }
 
     #region PluginInfo
@@ -282,38 +268,32 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramReceivePhotoNode : TelegramReceiveFileMessageNode
     {
-
-        [Output("Caption")]
-        public ISpread<string> FCaption;
-        [Output("Dimensions")]
+        [Output("Caption", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FCaption;
+        [Output("Dimensions", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<Vector2D>> FDimensions;
 
-        public override void OnImportsSatisfied()
+        protected override MessageType getMyMessageType()
         {
-            FCaption.SliceCount = 0;
-            FDimensions.SliceCount = 0;
+            return MessageType.PhotoMessage;
         }
 
-        protected override void setMessageSpecialTypeSliceCount(int botCount)
+        protected override void setMessageSpecialsSliceCount(int botCount)
         {
             FDimensions.SliceCount = botCount;
             FCaption.SliceCount = botCount;
         }
 
-        protected override void initClientReceivedSpecialMessages(int index, int SliceCount)
+        protected override void setMessageSpecialsData(int index, int SliceCount)
         {
             FDimensions[index] = new Spread<Vector2D>();
         }
 
-        protected override List<VTelegramMessage> getFileMessages(int i)
-        {
-            return FBotClient[i].Messages.Where(photoMessage => photoMessage.message.Type == MessageType.PhotoMessage).ToList();
-        }
 
         protected override int SetOutputs(int i, Message m)
         {
             PhotoSize[] ps = m.Photo;
-            FCaption[i] = m.Caption;
+            FCaption[i].Add(m.Caption);
             int count = 0;
 
             foreach (PhotoSize p in ps)
@@ -333,42 +313,33 @@ namespace VVVV.Nodes
     public class TelegramReceiveAudioNode : TelegramReceiveFileMessageNode
     {
 
-        [Output("Title")]
-        public ISpread<string> FTitle;
-        [Output("Performer")]
-        public ISpread<string> FPerformer;
-        [Output("Duration")]
-        public ISpread<int> FDuration;
+        [Output("Title", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FTitle;
+        [Output("Performer", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FPerformer;
+        [Output("Duration", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<int>> FDuration;
 
-        public override void OnImportsSatisfied()
+        protected override MessageType getMyMessageType()
         {
-            FTitle.SliceCount = 0;
-            FPerformer.SliceCount = 0;
-            FDuration.SliceCount = 0;
+            return MessageType.AudioMessage;
         }
 
-        protected override void setMessageSpecialTypeSliceCount(int botCount)
+        protected override void setMessageSpecialsSliceCount(int botCount)
         {
             FTitle.SliceCount = botCount;
             FPerformer.SliceCount = botCount;
             FDuration.SliceCount = botCount;
         }
 
-        protected override void initClientReceivedSpecialMessages(int index, int SliceCount)
-        {}
-
-        protected override List<VTelegramMessage> getFileMessages(int i)
-        {
-            return FBotClient[i].Messages.Where(audioMessage => audioMessage.message.Type == MessageType.AudioMessage).ToList();
-        }
 
         protected override int SetOutputs(int i, Message m)
         {
             Audio a = m.Audio;
             int count = 0;
-            FTitle[i] = a.Title;
-            FPerformer[i] = a.Performer;
-            FDuration[i] = a.Duration;
+            FTitle[i].Add(a.Title);
+            FPerformer[i].Add(a.Performer);
+            FDuration[i].Add(a.Duration);
             FFile[i].Add(new TelegramFile(m.Audio, FBotClient[i].BC));
 
             return ++count;
@@ -380,30 +351,24 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramReceiveVideoNode : TelegramReceiveFileMessageNode
     {
-        [Output("Caption")]
-        public ISpread<string> FCaption;
-        [Output("MimeType", Visibility = PinVisibility.OnlyInspector)]
-        public ISpread<string> FMimeType;
-        [Output("Duration")]
-        public ISpread<int> FDuration;
-        [Output("Dimensions")]
-        public ISpread<Vector2D> FDimensions;
-        [Output("Thumbnail")]
-        public ISpread<TelegramFile> FThumb;
+        [Output("Caption", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FCaption;
+        [Output("MimeType", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FMimeType;
+        [Output("Duration", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<int>> FDuration;
+        [Output("Dimensions", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<Vector2D>> FDimensions;
+        [Output("Thumbnail", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<TelegramFile>> FThumb;
 
-        public override void OnImportsSatisfied()
+        protected override MessageType getMyMessageType()
         {
-            FCaption.SliceCount = 0;
-            FMimeType.SliceCount = 0;
-            FDuration.SliceCount = 0;
-            FDimensions.SliceCount = 0;
-            FThumb.SliceCount = 0;
+            return MessageType.VideoMessage;
         }
 
-        protected override void setMessageSpecialTypeSliceCount(int botCount)
-        { }
 
-        protected override void initClientReceivedSpecialMessages(int index, int SliceCount)
+        protected override void setMessageSpecialsData(int index, int SliceCount)
         {
             FCaption.SliceCount = SliceCount;
             FMimeType.SliceCount = SliceCount;
@@ -412,20 +377,16 @@ namespace VVVV.Nodes
             FThumb.SliceCount = SliceCount;
         }
 
-        protected override List<VTelegramMessage> getFileMessages(int i)
-        {
-            return FBotClient[i].Messages.Where(videoMessage => videoMessage.message.Type == MessageType.VideoMessage).ToList();
-        }
 
         protected override int SetOutputs(int i, Message m)
         {
             Video v = m.Video;
             
-            FCaption[i] = m.Caption;
-            FMimeType[i] = v.MimeType;
-            FDuration[i] = v.Duration;
-            FDimensions[i] = new Vector2D(Double.Parse(v.Height), Double.Parse(v.Width));
-            FThumb[i] = new TelegramFile(m.Video.Thumb, FBotClient[i].BC);
+            FCaption[i].Add(m.Caption);
+            FMimeType[i].Add(v.MimeType);
+            FDuration[i].Add(v.Duration);
+            FDimensions[i].Add(new Vector2D(Double.Parse(v.Height), Double.Parse(v.Width)));
+            FThumb[i].Add(new TelegramFile(m.Video.Thumb, FBotClient[i].BC));
 
             FFile[i].Add(new TelegramFile(m.Video, FBotClient[i].BC));
             
@@ -456,6 +417,8 @@ namespace VVVV.Nodes
         public ISpread<bool> FReceived;
 
         readonly byte[] FBuffer = new byte[1024];
+
+        private Spread<int> isNew = new Spread<int>();
 		
 
         [Import()]
@@ -474,13 +437,23 @@ namespace VVVV.Nodes
             FFileId.SliceCount = FFile.SliceCount;
             FFilePath.SliceCount = FFile.SliceCount;
             FFileSize.SliceCount = FFile.SliceCount;
+            isNew.SliceCount = FFile.SliceCount;
             FFileData.ResizeAndDispose(FFile.SliceCount, () => new MemoryStream());
 
             //int max = Math.Max(FFile.SliceCount, FGet.SliceCount);
 
             for(int i=0; i < FFile.SliceCount; i++)
             {
-                FReceived[i] = false;
+                if(isNew[i] > 0)
+                {
+                    FReceived[i] = true;
+                    isNew[i]--;
+                }
+                else
+                {
+                    FReceived[i] = false;
+                }
+                
                 var f = FFile[i];
                 if (f == null || FGet[i] == false)
                     continue;
@@ -527,7 +500,7 @@ namespace VVVV.Nodes
                 numBytesToCopy -= numBytesRead;
             }
             outputStream.Position = 0;
-            FReceived[index] = true;        // TODO: Not working yet...
+            isNew[index]++;
         }
     }
 
