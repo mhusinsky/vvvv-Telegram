@@ -254,17 +254,48 @@ namespace VVVV.Nodes
         }
     }
 
-    public class TelegramFile
-    {
-        public Telegram.Bot.Types.File file;
-        public TelegramBotClient botClient;
+    #region PluginInfo
+    [PluginInfo(Name = "ReceiveVenue", Category = "Telegram", Version = "", Help = "Receives venue messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
 
-        public TelegramFile(Telegram.Bot.Types.File f, TelegramBotClient bc)
+    public class TelegramReceiveVenueNode : TelegramReceiveLocationNode
+    {
+        [Output("Title", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FTitle;
+        [Output("Adress", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FAdress;
+
+        protected override MessageType getMyMessageType()
         {
-            file = f;
-            botClient = bc;
+            return MessageType.VenueMessage;
+        }
+
+        protected override void setMessageTypeSliceCount(int botCount)
+        {
+            FLong.SliceCount = botCount;
+            FLat.SliceCount = botCount;
+            FTitle.SliceCount = botCount;
+            FAdress.SliceCount = botCount;
+        }
+
+        protected override void setMessageTypeData(int index, int SliceCount)
+        {
+            FLong[index] = new Spread<double>();
+            FLat[index] = new Spread<double>();
+            FTitle[index] = new Spread<string>();
+            FAdress[index] = new Spread<string>();
+        }
+
+        protected override int SetOutputs(int i, Message m)
+        {
+            FLong[i].Add(m.Venue.Location.Longitude);
+            FLat[i].Add(m.Venue.Location.Latitude);
+            FTitle[i].Add(m.Venue.Title);
+            FAdress[i].Add(m.Venue.Address);
+            return 0;
         }
     }
+    
 
     public abstract class TelegramReceiveFileMessageNode : TelegramReceiveNode
     {
