@@ -42,7 +42,7 @@ namespace VVVV.Nodes
         public ISpread<ISpread<string>> FLastName;
         [Output("User", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<User>> FUser;
-        [Output("Date", BinVisibility = PinVisibility.OnlyInspector)]
+        [Output("Timestamp", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<Time>> FDate;        // TODO: check for compatibility with tmp's Time-Pack
         [Output("Received", IsBang = true)]
         public ISpread<bool> FReceived;
