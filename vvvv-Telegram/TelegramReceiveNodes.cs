@@ -173,8 +173,48 @@ namespace VVVV.Nodes
         {
             FTextMessage[i].Add(m.Text);
             return 0;
+        }   
+    }
+
+    #region PluginInfo
+    [PluginInfo(Name = "ReceiveContact", Category = "Telegram", Version = "", Help = "Receives contact messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramReceiveContactNode : TelegramReceiveNode
+    {
+        [Output(" Contact Phone", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FContactPhone;
+        [Output("Contact First Name", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FContactFirstname;
+        [Output("Contact Last Name", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FContactLastname;
+
+        protected override MessageType getMyMessageType()
+        {
+            return MessageType.ContactMessage;
         }
-        
+
+        protected override void setMessageTypeSliceCount(int botCount)
+        {
+            FContactPhone.SliceCount = botCount;
+            FContactFirstname.SliceCount = botCount;
+            FContactLastname.SliceCount = botCount;
+        }
+
+        protected override void setMessageTypeData(int index, int SliceCount)
+        {
+            FContactPhone[index] = new Spread<string>();
+            FContactFirstname[index] = new Spread<string>();
+            FContactLastname[index] = new Spread<string>();
+        }
+
+        protected override int SetOutputs(int i, Message m)
+        {
+            Contact c = m.Contact;
+            FContactPhone[i].Add(c.PhoneNumber);
+            FContactFirstname[i].Add(c.FirstName);
+            FContactLastname[i].Add(c.LastName);
+            return 0;
+        }
     }
 
     #region PluginInfo
