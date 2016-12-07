@@ -92,7 +92,7 @@ namespace VVVV.Nodes
                 {
                     if(FClient[i] == null)
                     {
-                        FLogger.Log(LogType.Debug, "Bot " + i + ": Cannot Send Text, no client available");
+                        FLogger.Log(LogType.Debug, "Bot " + i + ": Cannot send message, no client available");
                     }
                     else if (FClient[i].IsConnected)
                     {
@@ -103,7 +103,7 @@ namespace VVVV.Nodes
                     }
                     else
                     {
-                        FLogger.Log(LogType.Debug, "Bot " + i + ": Cannot Send Text, client not connected");
+                        FLogger.Log(LogType.Debug, "Bot \"" + i + "\": Cannot send message, client not connected");
                     }
                 }
 
