@@ -145,17 +145,38 @@ namespace VVVV.Nodes
     public class TelegramSendTextNode : TelegramSendNode
     {
         [Input("Text", DefaultString = "Text")]
-        public IDiffSpread<string> FTextMessage;
+        public ISpread<ISpread<string>> FTextMessage;
 
         protected override async Task sendMessageAsync(int i)
         {
-            //if(FReplyMarkupKeyboard[0] == null)
-                await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, FDisableNotification[i], FReplyId[i], getReplyMarkup(i), ParseMode.Default);
-            //else
-            //    await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, FReplyMarkupKeyboard[0], ParseMode.Default);
+            foreach(string s in FTextMessage[i])
+            {
+                Message m = await FClient[i].BC.SendTextMessageAsync(FChatId[i], s, false, FDisableNotification[i], FReplyId[i], getReplyMarkup(i), ParseMode.Default);
                 printMessageSentSuccess(i,m.Type);
             }
+            
+            FStopwatch[i].Stop();
+        }
+    }
 
+    #region PluginInfo
+    [PluginInfo(Name = "SendContact", Category = "Telegram", Version = "", Help = "Sends contact messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramSendContactNode : TelegramSendNode
+    {
+        [Input("Phone Number", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FPhone;
+        [Input("First Name", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FFirstName;
+        [Input("Last Name", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FLastName;
+
+        protected override async Task sendMessageAsync(int i)
+        {
+            int max = Math.Max(FPhone[i].SliceCount, Math.Max(FFirstName[i].SliceCount, FLastName[i].SliceCount));
+            for (int j = 0; j < max; j++)
+            {
+                var m = await FClient[i].BC.SendContactAsync(FChatId[i], FPhone[i][j], FFirstName[i][j], FLastName[i][j], false, 0, getReplyMarkup(i));
                 printMessageSentSuccess(i, m.Type);
             }
             FStopwatch[i].Stop();
@@ -167,17 +188,39 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramSendLocationNode : TelegramSendNode
     {
-        [Input("Longitude")]
-        public IDiffSpread<double> FLong;
-        [Input("Latitude")]
-        public IDiffSpread<double> FLat;
+        [Input("Longitude", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<double>> FLong;
+        [Input("Latitude", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<double>> FLat;
 
         protected override async Task sendMessageAsync(int i)
         {
-            await FClient[i].BC.SendLocationAsync(FChatId[i], (float)FLong[i], (float)FLat[i], false, 0, getReplyMarkup(i));
-            
+            int max = Math.Max(FLong[i].SliceCount, FLat[i].SliceCount);
+            for(int j=0; j<max; j++)
+            {
+                var m = await FClient[i].BC.SendLocationAsync(FChatId[i], (float)FLong[i][j], (float)FLat[i][j], false, 0, getReplyMarkup(i));
                 printMessageSentSuccess(i, m.Type);
             }
+            FStopwatch[i].Stop();
+        }
+    }
+
+    #region PluginInfo
+    [PluginInfo(Name = "SendVenue", Category = "Telegram", Version = "", Help = "Sends location messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramSendVenueNode : TelegramSendLocationNode
+    {
+        [Input("Title", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FTitle;
+        [Input("Adress", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FAdress;
+
+        protected override async Task sendMessageAsync(int i)
+        {
+            int max = Math.Max(FLong[i].SliceCount, FLat[i].SliceCount);
+            for (int j = 0; j < max; j++)
+            {
+                var m = await FClient[i].BC.SendVenueAsync(FChatId[i], (float)FLong[i][j], (float)FLat[i][j], FTitle[i][j], FAdress[i][j], null, false, 0, getReplyMarkup(i));
                 printMessageSentSuccess(i, m.Type);
             }
             FStopwatch[i].Stop();
@@ -187,11 +230,20 @@ namespace VVVV.Nodes
     public abstract class TelegramSendFileNode : TelegramSendNode
     {
         [Input("File Name", DefaultString = "filename.xyz", StringType = StringType.Filename)]
-        public IDiffSpread<string> FFileName;
+        public ISpread<string> FFileName;
+
+        [Output("Sent File ID")]
+        public ISpread<ISpread<string>> FFileId;
+
+        [Output("Sent File")]
+        public ISpread<ISpread<TelegramFile>> FFile;
 
         protected override async Task sendMessageAsync(int i)
         {
             await PerformChatActionAsync(i);
+
+            FFileId[i].SliceCount = 0;
+            FFile[i].SliceCount = 0;
 
             using (var fileStream = new FileStream(FFileName[i], FileMode.Open, FileAccess.Read, FileShare.Read))
             {
@@ -216,12 +268,14 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendDocument", Category = "Telegram", Version = "", Help = "Sends document files", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendDocument", Category = "Telegram", Version = "", Help = "Sends document files", 
+                Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", 
+                Bugs = "Files not spreadable", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendDocumentNode : TelegramSendFileNode
     {
         [Input("Caption", DefaultString = "caption")]
-        public IDiffSpread<string> FCaption;
+        public ISpread<string> FCaption;
 
 
         protected override async Task PerformChatActionAsync(int i)
@@ -231,14 +285,16 @@ namespace VVVV.Nodes
 
         protected override async Task SendFileAsync(int i, FileToSend fts)
         {
-            await FClient[i].BC.SendDocumentAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m =  await FClient[i].BC.SendDocumentAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            FFile[i].Add(new TelegramFile(m.Document, FClient[i].BC));
+            FFileId[i].Add(m.Document.FileId);
 
             printMessageSentSuccess(i, m.Type);
         }
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendPhoto", Category = "Telegram", Version = "", Help = "Sends images from files", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendPhoto", Category = "Telegram", Version = "", Help = "Sends images from files", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Photos not spreadable", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendPhotoNode : TelegramSendFileNode
     {
@@ -252,7 +308,12 @@ namespace VVVV.Nodes
 
         protected override async Task SendFileAsync(int i, FileToSend fts)
         {
-            await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            foreach(PhotoSize ps in m.Photo)
+            {
+                FFile[i].Add(new TelegramFile(ps, FClient[i].BC));
+                FFileId[i].Add(ps.FileId);
+            }
             printMessageSentSuccess(i, m.Type);
         }
     }
@@ -275,14 +336,16 @@ namespace VVVV.Nodes
 
         protected override async Task SendFileAsync(int i, FileToSend fts)
         {
-            await FClient[i].BC.SendVideoAsync(FChatId[i], fts, FDuration[i], FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FClient[i].BC.SendVideoAsync(FChatId[i], fts, FDuration[i], FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            FFile[i].Add(new TelegramFile(m.Video, FClient[i].BC));
+            FFileId[i].Add(m.Video.FileId);
 
             printMessageSentSuccess(i, m.Type);
         }
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendAudio", Category = "Telegram", Version = "", Help = "Sends audio files (use .mp3 only)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendAudio", Category = "Telegram", Version = "", Help = "Sends audio files (use .mp3 only)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Audio not spreadable", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendAudioNode : TelegramSendFileNode
     {
@@ -302,14 +365,16 @@ namespace VVVV.Nodes
 
         protected override async Task SendFileAsync(int i, FileToSend fts)
         {
-            await FClient[i].BC.SendAudioAsync(FChatId[i], fts, FDuration[i], FPerformer[i], FTitle[i],  FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FClient[i].BC.SendAudioAsync(FChatId[i], fts, FDuration[i], FPerformer[i], FTitle[i],  FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            FFile[i].Add(new TelegramFile(m.Audio, FClient[i].BC));
+            FFileId[i].Add(m.Audio.FileId);
 
             printMessageSentSuccess(i, m.Type);
         }
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendPhotoRaw", Category = "Telegram", Version = "", Help = "Sends images from Raw Stream", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendPhotoRaw", Category = "Telegram", Version = "", Help = "Sends images from Raw Stream", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Raw not spreadable", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendPhotoRawNode : TelegramSendNode
     {
@@ -322,12 +387,19 @@ namespace VVVV.Nodes
         [Input("Caption", DefaultString = "caption")]
         public IDiffSpread<string> FCaption;
 
+        [Output("Sent File ID")]
+        public ISpread<ISpread<string>> FFileId;
+
+        [Output("Sent File")]
+        public ISpread<ISpread<TelegramFile>> FFile;
+
 
         readonly byte[] FBuffer = new byte[1024];
         
         protected override async Task sendMessageAsync(int i)
         {
 
+            FFileId[i].SliceCount = 0;
             await FClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.UploadPhoto);
 
             var inputStream = FImage[i];
@@ -357,12 +429,18 @@ namespace VVVV.Nodes
                 numBytesToCopy -= numBytesRead;
             }
 
-            outputStream.Position = 0;  // seems to be nescessary. otherwise telegram bot api will not send any data
+            outputStream.Position = 0;  // seems to be nescessary. otherwise telegram.bot api will not send any data
 
             var fts = new FileToSend(FFileName[i], outputStream);
             try
             {
-                Message mesg = await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+                Message m = await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+                foreach(PhotoSize ps in m.Photo)
+                {
+                    FFile[i].Add(new TelegramFile(ps, FClient[i].BC));
+                    FFileId[i].Add(ps.FileId);
+                }
+                
                 FStopwatch[i].Stop();
                 printMessageSentSuccess(i, m.Type);
                 FError[i] = "";
