@@ -379,6 +379,57 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
+    [PluginInfo(Name = "ReceiveDocument", Category = "Telegram", Version = "", Help = "Receives document messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramReceiveDocumentNode : TelegramReceiveFileMessageNode
+    {
+        [Output("Caption", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FCaption;
+        [Output("Filename", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FFilename;
+        [Output("File Path", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FFilePath;
+        [Output("MimeType", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FMimeType;
+        [Output("File Size", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<int>> FSize;
+        [Output("Thumbnail", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<TelegramFile>> FThumb;
+
+        protected override MessageType getMyMessageType()
+        {
+            return MessageType.DocumentMessage;
+        }
+
+
+        protected override void setMessageSpecialsData(int index, int SliceCount)
+        {
+            FCaption.SliceCount = SliceCount;
+            FFilename.SliceCount = SliceCount;
+            FFilePath.SliceCount = SliceCount;
+            FMimeType.SliceCount = SliceCount;
+            FSize.SliceCount = SliceCount;
+            FThumb.SliceCount = SliceCount;
+        }
+
+
+        protected override int SetOutputs(int i, Message m)
+        {
+            Document d = m.Document;
+
+            FCaption[i].Add(m.Caption);
+            FFilename[i].Add(d.FileName);
+            FFilePath[i].Add(d.FilePath);
+            FMimeType[i].Add(d.MimeType);
+            FSize[i].Add(d.FileSize);
+            FThumb[i].Add(new TelegramFile(d.Thumb, FBotClient[i].BC));
+            FFile[i].Add(new TelegramFile(d, FBotClient[i].BC));
+
+            return 1;
+        }
+    }
+
+    #region PluginInfo
     [PluginInfo(Name = "ReceiveAudio", Category = "Telegram", Version = "", Help = "Receives audio messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramReceiveAudioNode : TelegramReceiveFileMessageNode
