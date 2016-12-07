@@ -111,7 +111,7 @@ namespace VVVV.Nodes
                         }
                         else
                         {
-                            lastCallbacks.RemoveAt(c);   // remove callback from last frame
+                            lastCallbacks.RemoveAt(c);   // remove callback object from last frame
                         }
                     }
                 }
