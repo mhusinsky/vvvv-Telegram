@@ -240,8 +240,6 @@ namespace VVVV.Nodes
 
         protected override void setMessageTypeData(int index, int SliceCount)
         {
-            FLong[index].SliceCount = SliceCount;
-            FLat[index].SliceCount = SliceCount;
             FLong[index] = new Spread<double>();
             FLat[index] = new Spread<double>();
         }
