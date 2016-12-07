@@ -154,6 +154,18 @@ namespace VVVV.Nodes
         }
     }
 
+    public class TelegramFile
+    {
+        public Telegram.Bot.Types.File file;
+        public TelegramBotClient botClient;
+
+        public TelegramFile(Telegram.Bot.Types.File f, TelegramBotClient bc)
+        {
+            file = f;
+            botClient = bc;
+        }
+    }
+
     // contains the message object and a flag to mark whether it is new or old (and therefore should be deleted)
     public class VTelegramMessage
     {
