@@ -130,6 +130,11 @@ namespace VVVV.Nodes
             return null;
         }
 
+        protected void printMessageSentSuccess(int i, MessageType mt)
+        {
+            FLogger.Log(LogType.Debug, "Bot \"" + FClient[i].Username + "\": Sent " + mt.ToString());
+        }
+
         protected abstract Task sendMessageAsync(int i);
 
     }
@@ -148,9 +153,12 @@ namespace VVVV.Nodes
                 await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, FDisableNotification[i], FReplyId[i], getReplyMarkup(i), ParseMode.Default);
             //else
             //    await FClient[i].BC.SendTextMessageAsync(FChatId[i], FTextMessage[i], false, false, 0, FReplyMarkupKeyboard[0], ParseMode.Default);
+                printMessageSentSuccess(i,m.Type);
+            }
 
+                printMessageSentSuccess(i, m.Type);
+            }
             FStopwatch[i].Stop();
-            FLogger.Log(LogType.Debug, "Bot " + i + ": MessageSent");
         }
     }
 
@@ -168,8 +176,11 @@ namespace VVVV.Nodes
         {
             await FClient[i].BC.SendLocationAsync(FChatId[i], (float)FLong[i], (float)FLat[i], false, 0, getReplyMarkup(i));
             
+                printMessageSentSuccess(i, m.Type);
+            }
+                printMessageSentSuccess(i, m.Type);
+            }
             FStopwatch[i].Stop();
-            FLogger.Log(LogType.Debug, "Bot " + i + ": MessageSent");
         }
     }
 
@@ -221,6 +232,8 @@ namespace VVVV.Nodes
         protected override async Task SendFileAsync(int i, FileToSend fts)
         {
             await FClient[i].BC.SendDocumentAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+
+            printMessageSentSuccess(i, m.Type);
         }
     }
 
@@ -240,6 +253,7 @@ namespace VVVV.Nodes
         protected override async Task SendFileAsync(int i, FileToSend fts)
         {
             await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            printMessageSentSuccess(i, m.Type);
         }
     }
 
@@ -262,6 +276,8 @@ namespace VVVV.Nodes
         protected override async Task SendFileAsync(int i, FileToSend fts)
         {
             await FClient[i].BC.SendVideoAsync(FChatId[i], fts, FDuration[i], FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+
+            printMessageSentSuccess(i, m.Type);
         }
     }
 
@@ -287,6 +303,8 @@ namespace VVVV.Nodes
         protected override async Task SendFileAsync(int i, FileToSend fts)
         {
             await FClient[i].BC.SendAudioAsync(FChatId[i], fts, FDuration[i], FPerformer[i], FTitle[i],  FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+
+            printMessageSentSuccess(i, m.Type);
         }
     }
 
@@ -346,7 +364,7 @@ namespace VVVV.Nodes
             {
                 Message mesg = await FClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
                 FStopwatch[i].Stop();
-                FLogger.Log(LogType.Debug, "Bot " + i + ": PhotoSent");
+                printMessageSentSuccess(i, m.Type);
                 FError[i] = "";
             }
             catch (Exception e)
