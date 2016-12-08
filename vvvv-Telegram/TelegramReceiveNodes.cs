@@ -66,11 +66,10 @@ namespace VVVV.Nodes
             }
         }
 
-        protected void setMessagesSliceCount(int botCount)
+        protected virtual void setMessagesSliceCount(int botCount)
         {
             FReceived.SliceCount = botCount;
             setMessageInfoSliceCount(botCount);
-            setMessageTypeSliceCount(botCount);
         }
 
         protected void setMessageInfoSliceCount(int botCount)
@@ -85,24 +84,24 @@ namespace VVVV.Nodes
 
         protected void initMessageInfoSlices(int index, int SliceCount)
         {
-            FUser[index] = new Spread<User>();
-            FUserName[index] = new Spread<string>();
-            FFirstName[index] = new Spread<string>();
-            FLastName[index] = new Spread<string>();
+            FUser[index].SliceCount = SliceCount;
+            FUserName[index].SliceCount = SliceCount;
+            FFirstName[index].SliceCount = SliceCount;
+            FLastName[index].SliceCount = SliceCount;
 
-            FDate[index] = new Spread<Time>();
+            FDate[index].SliceCount = SliceCount;
         }
 
-        protected void setMessageInfoData(int index, VTelegramMessage tm)
+        protected void setMessageInfoData(int index, int count, VTelegramMessage tm)
         {
             User u = tm.message.From;
-            FUser[index].Add(u);
+            FUser[index][count] = u;
 
-            FUserName[index].Add(u.Username);
-            FFirstName[index].Add(u.FirstName);
-            FLastName[index].Add(u.LastName);
+            FUserName[index][count] = u.Username;
+            FFirstName[index][count] = u.FirstName;
+            FLastName[index][count] = u.LastName;
             
-            FDate[index].Add(tm.created);
+            FDate[index][count] = tm.created;
         }
 
         protected List<VTelegramMessage> getMessageList(int i)
@@ -117,10 +116,11 @@ namespace VVVV.Nodes
 
             if (messageCount < 1) return;
 
-            setMessageTypeData(i, messageCount);
+            resetMessageTypeData(i);
             setMessageSpecialsData(i, messageCount);
             initMessageInfoSlices(i, messageCount);
-
+            int count = 0;
+            
             foreach (VTelegramMessage tm in myMessages)
             {
                 var m = tm.message;
@@ -128,20 +128,19 @@ namespace VVVV.Nodes
                 int fileCount = SetOutputs(i, m);
 
                 setFileCount(i, fileCount);
-                setMessageInfoData(i, tm);
+                setMessageInfoData(i, count, tm);
                 FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": " + getMyMessageType().ToString() + " received");
+                count++;
             }
 
             FReceived[i] = true;
         }
 
         protected virtual void setFileCount(int i, int count) { }
-        protected virtual void setMessageSpecialsSliceCount(int SliceCount) { }
         protected virtual void setMessageSpecialsData(int index, int SliceCount) { }
 
         protected abstract MessageType getMyMessageType();
-        protected abstract void setMessageTypeSliceCount(int botCount);
-        protected abstract void setMessageTypeData(int index, int SliceCount);
+        protected abstract void resetMessageTypeData(int index);
 
         protected abstract int SetOutputs(int i, Message m);
     }
@@ -159,12 +158,13 @@ namespace VVVV.Nodes
             return MessageType.TextMessage;
         }
 
-        protected override void setMessageTypeSliceCount(int botCount)
+        protected override void setMessagesSliceCount(int botCount)
         {
+            base.setMessagesSliceCount(botCount);
             FTextMessage.SliceCount = botCount;
         }
 
-        protected override void setMessageTypeData(int index, int SliceCount)
+        protected override void resetMessageTypeData(int index)
         {
             FTextMessage[index] = new Spread<string>();
         }
@@ -193,14 +193,15 @@ namespace VVVV.Nodes
             return MessageType.ContactMessage;
         }
 
-        protected override void setMessageTypeSliceCount(int botCount)
+        protected override void setMessagesSliceCount(int botCount)
         {
+            base.setMessagesSliceCount(botCount);
             FContactPhone.SliceCount = botCount;
             FContactFirstname.SliceCount = botCount;
             FContactLastname.SliceCount = botCount;
         }
 
-        protected override void setMessageTypeData(int index, int SliceCount)
+        protected override void resetMessageTypeData(int index)
         {
             FContactPhone[index] = new Spread<string>();
             FContactFirstname[index] = new Spread<string>();
@@ -232,13 +233,14 @@ namespace VVVV.Nodes
             return MessageType.LocationMessage;
         }
 
-        protected override void setMessageTypeSliceCount(int botCount)
+        protected override void setMessagesSliceCount(int botCount)
         {
+            base.setMessagesSliceCount(botCount);
             FLong.SliceCount = botCount;
             FLat.SliceCount = botCount;
         }
 
-        protected override void setMessageTypeData(int index, int SliceCount)
+        protected override void resetMessageTypeData(int index)
         {
             FLong[index] = new Spread<double>();
             FLat[index] = new Spread<double>();
@@ -268,15 +270,16 @@ namespace VVVV.Nodes
             return MessageType.VenueMessage;
         }
 
-        protected override void setMessageTypeSliceCount(int botCount)
+        protected override void setMessagesSliceCount(int botCount)
         {
+            base.setMessagesSliceCount(botCount);
             FLong.SliceCount = botCount;
             FLat.SliceCount = botCount;
             FTitle.SliceCount = botCount;
             FAdress.SliceCount = botCount;
         }
 
-        protected override void setMessageTypeData(int index, int SliceCount)
+        protected override void resetMessageTypeData(int index)
         {
             FLong[index] = new Spread<double>();
             FLat[index] = new Spread<double>();
@@ -312,24 +315,21 @@ namespace VVVV.Nodes
             return MessageType.StickerMessage;
         }
 
-        protected override void setMessageTypeSliceCount(int botCount)
+        protected override void setMessagesSliceCount(int botCount)
         {
+            base.setMessagesSliceCount(botCount);
             FEmoji.SliceCount = botCount;
             FDimensions.SliceCount = botCount;
             FThumb.SliceCount = botCount;
         }
 
-        protected override void setMessageTypeData(int index, int SliceCount)
+        protected override void resetMessageTypeData(int index)
         {
             FEmoji[index] = new Spread<string>(); ;
             FDimensions[index] = new Spread<Vector2D>(); ;
             FThumb[index] = new Spread<TelegramFile>(); ;
         }
         
-
-        protected override void setMessageSpecialsSliceCount(int botCount)
-        { }
-
         protected override int SetOutputs(int i, Message m)
         {
             Sticker s = m.Sticker;
@@ -359,22 +359,18 @@ namespace VVVV.Nodes
         {
             FFile.SliceCount = 0;
             FFileCount.SliceCount = 0;
-            setMessageSpecialsSliceCount(0);
         }
 
-        protected override void setMessageTypeSliceCount(int botCount)
+        protected override void setMessagesSliceCount(int botCount)
         {
+            base.setMessagesSliceCount(botCount);
             FFile.SliceCount = botCount;
             FFileCount.SliceCount = botCount;
-            setMessageSpecialsSliceCount(botCount);
         }
 
-        protected override void setMessageTypeData(int index, int SliceCount)
+        protected override void resetMessageTypeData(int index)
         {
-            FFile[index].SliceCount = SliceCount;
             FFile[index] = new Spread<TelegramFile>();
-
-            FFileCount[index].SliceCount = SliceCount;
             FFileCount[index] = new Spread<int>();
         }
     }
@@ -394,8 +390,9 @@ namespace VVVV.Nodes
             return MessageType.PhotoMessage;
         }
 
-        protected override void setMessageSpecialsSliceCount(int botCount)
+        protected override void setMessagesSliceCount(int botCount)
         {
+            base.setMessagesSliceCount(botCount);
             FDimensions.SliceCount = botCount;
             FCaption.SliceCount = botCount;
         }
@@ -494,8 +491,9 @@ namespace VVVV.Nodes
             return MessageType.AudioMessage;
         }
 
-        protected override void setMessageSpecialsSliceCount(int botCount)
+        protected override void setMessagesSliceCount(int botCount)
         {
+            base.setMessagesSliceCount(botCount);
             FTitle.SliceCount = botCount;
             FPerformer.SliceCount = botCount;
             FDuration.SliceCount = botCount;
