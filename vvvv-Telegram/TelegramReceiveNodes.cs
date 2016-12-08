@@ -294,9 +294,57 @@ namespace VVVV.Nodes
         }
     }
 
+    #region PluginInfo
+    [PluginInfo(Name = "ReceiveSticker", Category = "Telegram", Version = "", Help = "Receives sticker messages (containing a .webp file)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramReceiveStickerNode : TelegramReceiveNode
+    {
+        [Output("Emoji", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FEmoji;
+        [Output("Dimensions", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<Vector2D>> FDimensions;
+        [Output("Sticker", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<TelegramFile>> FThumb;
+
+
+        protected override MessageType getMyMessageType()
+        {
+            return MessageType.StickerMessage;
+        }
+
+        protected override void setMessageTypeSliceCount(int botCount)
+        {
+            FEmoji.SliceCount = botCount;
+            FDimensions.SliceCount = botCount;
+            FThumb.SliceCount = botCount;
+        }
+
+        protected override void setMessageTypeData(int index, int SliceCount)
+        {
+            FEmoji[index] = new Spread<string>(); ;
+            FDimensions[index] = new Spread<Vector2D>(); ;
+            FThumb[index] = new Spread<TelegramFile>(); ;
+        }
+        
+
+        protected override void setMessageSpecialsSliceCount(int botCount)
+        { }
+
+        protected override int SetOutputs(int i, Message m)
+        {
+            Sticker s = m.Sticker;
+            int count = 0;
+            FEmoji[i].Add(s.Emoji);
+            FDimensions[i].Add(new Vector2D(Double.Parse(s.Height), Double.Parse(s.Width)));
+            FThumb[i].Add(new TelegramFile(s.Thumb, FBotClient[i].BC));
+
+            return ++count;
+        }
+    }
+
+
     public abstract class TelegramReceiveFileMessageNode : TelegramReceiveNode
     {
-
         [Output("File")]
         public ISpread<ISpread<TelegramFile>> FFile;
         [Output("Files per Message", BinVisibility = PinVisibility.Hidden)]
@@ -374,6 +422,8 @@ namespace VVVV.Nodes
             return count;
         }
     }
+
+    
 
     #region PluginInfo
     [PluginInfo(Name = "ReceiveDocument", Category = "Telegram", Version = "", Help = "Receives document messages", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]

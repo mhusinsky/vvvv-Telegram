@@ -268,6 +268,29 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
+    [PluginInfo(Name = "SendSticker", Category = "Telegram", Version = "", Help = "Sends stickers (webp or jpg)",
+                Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi",
+                Bugs = "Files not spreadable", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramSendStickerNode : TelegramSendFileNode
+    {
+
+        protected override async Task PerformChatActionAsync(int i)
+        {
+            await FClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.UploadDocument);
+        }
+
+        protected override async Task SendFileAsync(int i, FileToSend fts)
+        {
+            Message m = await FClient[i].BC.SendStickerAsync(FChatId[i], fts, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            FFile[i].Add(new TelegramFile(m.Sticker, FClient[i].BC));
+            FFileId[i].Add(m.Sticker.FileId);
+
+            printMessageSentSuccess(i, m.Type);
+        }
+    }
+
+    #region PluginInfo
     [PluginInfo(Name = "SendDocument", Category = "Telegram", Version = "", Help = "Sends document files", 
                 Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", 
                 Bugs = "Files not spreadable", AutoEvaluate = true)]
