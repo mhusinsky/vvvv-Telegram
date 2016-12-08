@@ -117,7 +117,7 @@ namespace VVVV.Nodes
             if (messageCount < 1) return;
 
             resetMessageTypeData(i);
-            setMessageSpecialsData(i, messageCount);
+            //setMessageSpecialsData(i, messageCount);
             initMessageInfoSlices(i, messageCount);
             int count = 0;
             
@@ -137,7 +137,7 @@ namespace VVVV.Nodes
         }
 
         protected virtual void setFileCount(int i, int count) { }
-        protected virtual void setMessageSpecialsData(int index, int SliceCount) { }
+        //protected virtual void setMessageSpecialsData(int index, int SliceCount) { }
 
         protected abstract MessageType getMyMessageType();
         protected abstract void resetMessageTypeData(int index);
@@ -364,6 +364,7 @@ namespace VVVV.Nodes
         protected override void setMessagesSliceCount(int botCount)
         {
             base.setMessagesSliceCount(botCount);
+
             FFile.SliceCount = botCount;
             FFileCount.SliceCount = botCount;
         }
@@ -393,12 +394,15 @@ namespace VVVV.Nodes
         protected override void setMessagesSliceCount(int botCount)
         {
             base.setMessagesSliceCount(botCount);
+
             FDimensions.SliceCount = botCount;
             FCaption.SliceCount = botCount;
         }
 
-        protected override void setMessageSpecialsData(int index, int SliceCount)
+        protected override void resetMessageTypeData(int index)
         {
+            base.resetMessageTypeData(index);
+
             FDimensions[index] = new Spread<Vector2D>();
         }
 
@@ -446,14 +450,16 @@ namespace VVVV.Nodes
         }
 
 
-        protected override void setMessageSpecialsData(int index, int SliceCount)
+        protected override void resetMessageTypeData(int index)
         {
-            FCaption.SliceCount = SliceCount;
-            FFilename.SliceCount = SliceCount;
-            FFilePath.SliceCount = SliceCount;
-            FMimeType.SliceCount = SliceCount;
-            FSize.SliceCount = SliceCount;
-            FThumb.SliceCount = SliceCount;
+            base.resetMessageTypeData(index);
+
+            FCaption[index] = new Spread<string>();
+            FFilename[index] = new Spread<string>();
+            FFilePath[index] = new Spread<string>();
+            FMimeType[index] = new Spread<string>();
+            FSize[index] = new Spread<int>();
+            FThumb[index] = new Spread<TelegramFile>();
         }
 
 
@@ -494,6 +500,7 @@ namespace VVVV.Nodes
         protected override void setMessagesSliceCount(int botCount)
         {
             base.setMessagesSliceCount(botCount);
+
             FTitle.SliceCount = botCount;
             FPerformer.SliceCount = botCount;
             FDuration.SliceCount = botCount;
@@ -535,13 +542,15 @@ namespace VVVV.Nodes
         }
 
 
-        protected override void setMessageSpecialsData(int index, int SliceCount)
+        protected override void resetMessageTypeData(int index)
         {
-            FCaption.SliceCount = SliceCount;
-            FMimeType.SliceCount = SliceCount;
-            FDuration.SliceCount = SliceCount;
-            FDimensions.SliceCount = SliceCount;
-            FThumb.SliceCount = SliceCount;
+            base.resetMessageTypeData(index);
+
+            FCaption[index] = new Spread<string>();
+            FMimeType[index] = new Spread<string>();
+            FDuration[index] = new Spread<int>();
+            FDimensions[index] = new Spread<Vector2D>();
+            FThumb[index] = new Spread<TelegramFile>();
         }
 
 
