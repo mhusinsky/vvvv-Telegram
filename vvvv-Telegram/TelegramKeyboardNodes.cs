@@ -34,11 +34,11 @@ namespace VVVV.Nodes
 
     public abstract class TelegramKeyboardNode : IPluginEvaluate
     {
-        [Input("String", Order = 0)]
-        public ISpread<ISpread<String>> FText;
+        [Input("Key Label", Order = 0, CheckIfChanged = true)]
+        public ISpread<ISpread<string>> FText;
 
         [Input("Update", IsBang = true, IsSingle = true, Order = 100)]
-        public IDiffSpread<Boolean> FUpdate;
+        public IDiffSpread<bool> FUpdate;
 
         [Output("Keyboard")]
         public ISpread<IReplyMarkup> FMarkup;
@@ -53,11 +53,12 @@ namespace VVVV.Nodes
         {
             FMarkup.SliceCount = 1;
 
-            if (FUpdate[0])
+            if (FUpdate[0] || FText.IsChanged)
             {
                 createKeyboard();
             }
         }
+
         protected abstract void createKeyboard();
     }
 
@@ -95,11 +96,12 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "InlineKeyboard", Category = "Telegram", Version = "", Help = "Creates Custom Keyboards", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "InlineKeyboard", Category = "Telegram", Version = "", Help = "Creates custom inline keyboards", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramInlineKeyboardNode : TelegramKeyboardNode
     {
-
+        [Input("Url", StringType = StringType.URL)]
+        public ISpread<string> FUrl;
 
         protected override void createKeyboard()
         {
@@ -108,13 +110,17 @@ namespace VVVV.Nodes
             if (FUpdate[0])
             {
                 InlineKeyboardButton[][] inlineButtons = new InlineKeyboardButton[FText.SliceCount][];
-
+                int cnt = 0;
                 for (int i = 0; i < FText.SliceCount; i++)
                 {
                     inlineButtons[i] = new InlineKeyboardButton[FText[i].SliceCount];
                     for (int j = 0; j < FText[i].SliceCount; j++)
                     {
                         inlineButtons[i][j] = new InlineKeyboardButton(FText[i][j]);
+                        if(FUrl[cnt].Length > 0) 
+                            inlineButtons[i][j].Url = FUrl[cnt];
+
+                        cnt++;
                     }
                 }
                 FMarkup[0] = new InlineKeyboardMarkup(inlineButtons);
