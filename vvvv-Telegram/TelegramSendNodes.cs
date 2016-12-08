@@ -253,7 +253,6 @@ namespace VVVV.Nodes
                 {
                     await SendFileAsync(i, fts);
                     FStopwatch[i].Stop();
-                    FLogger.Log(LogType.Debug, "Bot " + i + ": file sent...");
                     FError[i] = "";
                 }
                 catch (Exception e)
