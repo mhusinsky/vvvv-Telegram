@@ -608,6 +608,11 @@ namespace VVVV.Nodes
             FFileSize.SliceCount = FFile.SliceCount;
             isNew.SliceCount = FFile.SliceCount;
             FFileData.ResizeAndDispose(FFile.SliceCount, () => new MemoryStream());
+            for(int s=0; s<FFileData.SliceCount; s++)
+            {
+                if (FFileData[s] == null)
+                    FFileData[s] = new MemoryStream();
+            }
 
             //int max = Math.Max(FFile.SliceCount, FGet.SliceCount);
 
