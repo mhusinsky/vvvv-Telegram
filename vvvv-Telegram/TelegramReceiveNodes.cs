@@ -129,7 +129,7 @@ namespace VVVV.Nodes
 
                 setFileCount(i, fileCount);
                 setMessageInfoData(i, tm);
-                FLogger.Log(LogType.Debug, "Bot \"" + i + "\": " + getMyMessageType().ToString() + " received");
+                FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": " + getMyMessageType().ToString() + " received");
             }
 
             FReceived[i] = true;
@@ -293,7 +293,6 @@ namespace VVVV.Nodes
             return 0;
         }
     }
-    
 
     public abstract class TelegramReceiveFileMessageNode : TelegramReceiveNode
     {
