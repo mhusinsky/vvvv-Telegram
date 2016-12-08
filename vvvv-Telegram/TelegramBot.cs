@@ -35,13 +35,10 @@ namespace VVVV.Nodes
         [Input("API-Key", DefaultString = "YOURKEY")]
         public IDiffSpread<string> FApiKey;
 
-        [Input("ChatId", DefaultString = "ChatID")]
-        public IDiffSpread<string> FChatId;
-
-        [Input("Connect", IsBang = true, DefaultValue = 0, IsSingle = true)]
+        [Input("Connect", IsBang = true, DefaultValue = 0)]
         public IDiffSpread<bool> FConnect;
 
-        [Input("Disconnect", IsBang = true, DefaultValue = 0, IsSingle = true)]
+        [Input("Disconnect", IsBang = true, DefaultValue = 0)]
         public IDiffSpread<bool> FDisconnect;
 
         [Output("BotClient")]
@@ -80,6 +77,7 @@ namespace VVVV.Nodes
             FStopwatch.SliceCount = FApiKey.SliceCount;
             
             FBotName.SliceCount = FApiKey.SliceCount;
+            FConnectTime.SliceCount = FApiKey.SliceCount;
             FConnected.SliceCount = FApiKey.SliceCount;
 
             FBotClient.SliceCount = FApiKey.SliceCount;
