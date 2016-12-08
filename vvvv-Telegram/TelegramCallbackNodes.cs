@@ -25,12 +25,23 @@ using Telegram.Bot.Types.Enums;
 
 namespace VVVV.Nodes
 {
-    public abstract class TelegramCallbackNode : IPluginEvaluate
+    #region PluginInfo
+    [PluginInfo(Name = "Callback", Category = "Telegram", Version = "", Help = "Callback node", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramCallbackNode : IPluginEvaluate
     {
         #region fields & pins
         [Input("Bots")]
-        public ISpread<BotClient> FBotClient;
+        public ISpread<BotClient> FClient;
 
+        [Output("Chat Instance")]
+        public ISpread<string> FChatInstance;
+        [Output("Data")]
+        public ISpread<string> FData;
+        [Output("Id")]
+        public ISpread<string> FId;
+        [Output("From")]
+        public ISpread<User> FUser;
         [Output("Received", IsBang = true)]
         public ISpread<bool> FReceived;
 
@@ -40,12 +51,12 @@ namespace VVVV.Nodes
 
         public void Evaluate(int SpreadMax)
         {
-            setCallbacksSliceCount(FBotClient.SliceCount);
-            
-            for (int i = 0; i < FBotClient.SliceCount; i++)
+            setCallbacksSliceCount(FClient.SliceCount);
+
+            for (int i = 0; i < FClient.SliceCount; i++)
             {
                 FReceived[i] = false;
-                if (FBotClient[i] == null)
+                if (FClient[i] == null)
                     return;
                 checkForCallback(i);
             }
@@ -54,19 +65,56 @@ namespace VVVV.Nodes
 
         protected void setCallbacksSliceCount(int botCount)
         {
+            FChatInstance.SliceCount = botCount;
+            FData.SliceCount = botCount;
+            FId.SliceCount = botCount;
+            FUser.SliceCount = botCount;
             FReceived.SliceCount = botCount;
         }
 
-        protected void checkForCallback(int i)
+        protected async void checkForCallback(int i)
         {
-            var callbacks = FBotClient[i].Callbacks;
+            var callbacks = getCallbackList(i);
 
             foreach (VTelegramCallback cb in callbacks)
             {
-
+                var c = cb.callback;
+                FData[i] = c.Data;
+                FId[i] = c.Id;
+                FUser[i] = c.From;
+                autoAction(i, c);
             }
         }
 
+        protected virtual List<VTelegramCallback> getCallbackList(int i)
+        {
+            return FClient[i].Callbacks.ToList();
+        }
 
+        protected virtual void autoAction(int i, CallbackQuery c) { }
+
+    }
+
+    #region PluginInfo
+    [PluginInfo(Name = "AnswerCallback", Category = "Telegram", Version = "", Help = "Displays a notification as a result for an inline keyboard", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramInlineKeyboardNotificationNode : TelegramCallbackNode
+    {
+        [Input("Text")]
+        public ISpread<string> FText;
+
+        [Input("Echo selection")]
+        public ISpread<bool> FEcho;
+
+        protected override async void autoAction(int i, CallbackQuery c) 
+        {
+            try
+            {
+                string echo = FEcho[i] ? c.Data : "";
+                await FClient[i].BC.AnswerCallbackQueryAsync(c.Id, FText[i] + echo);
+            }
+            catch (Exception e) { }
+        }
+        
     }
 }

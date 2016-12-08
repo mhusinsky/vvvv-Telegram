@@ -243,7 +243,7 @@ namespace VVVV.Nodes
             this.Messages.Add(new VTelegramMessage (messageEventArgs.Message));
         }
 
-        private async void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
+        private void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
         {
             this.Callbacks.Add(new VTelegramCallback(callbackQueryEventArgs.CallbackQuery));
 
