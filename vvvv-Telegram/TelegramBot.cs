@@ -244,9 +244,6 @@ namespace VVVV.Nodes
         private void BotOnCallbackQueryReceived(object sender, CallbackQueryEventArgs callbackQueryEventArgs)
         {
             this.Callbacks.Add(new VTelegramCallback(callbackQueryEventArgs.CallbackQuery));
-
-            //await BC.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id, 
-            //    $"Received {callbackQueryEventArgs.CallbackQuery.Data}");
         }
     }
 
