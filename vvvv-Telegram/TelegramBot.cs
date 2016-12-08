@@ -247,8 +247,8 @@ namespace VVVV.Nodes
         {
             this.Callbacks.Add(new VTelegramCallback(callbackQueryEventArgs.CallbackQuery));
 
-            await BC.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id, 
-                $"Received {callbackQueryEventArgs.CallbackQuery.Data}");
+            //await BC.AnswerCallbackQueryAsync(callbackQueryEventArgs.CallbackQuery.Id, 
+            //    $"Received {callbackQueryEventArgs.CallbackQuery.Data}");
         }
     }
 
