@@ -2,6 +2,7 @@
 [Bb]uild/
 [Oo]bj/
 [Dd]eploy/
+[Rr]elease_dir/
 
 
 # mstest test results
