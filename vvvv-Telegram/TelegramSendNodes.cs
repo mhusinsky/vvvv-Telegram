@@ -45,7 +45,7 @@ namespace VVVV.Nodes
         [Input("Keyboard")]
         public IDiffSpread<IReplyMarkup> FReplyMarkupKeyboard;
 
-        [Input("Send", IsBang = true, DefaultValue = 0, IsSingle = true)]
+        [Input("Send", IsBang = true, DefaultValue = 0)]
         public IDiffSpread<bool> FSend;
 
         [Output("Sending")]
