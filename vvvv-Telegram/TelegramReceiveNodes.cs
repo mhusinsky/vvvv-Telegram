@@ -34,6 +34,8 @@ namespace VVVV.Nodes
         [Input("Bots")]
         public ISpread<BotClient> FBotClient;
 
+        [Output("User ID", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<int>> FUid;
         [Output("User Name", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FUserName;
         [Output("First Name", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
@@ -78,7 +80,7 @@ namespace VVVV.Nodes
             FUserName.SliceCount = botCount;
             FFirstName.SliceCount = botCount;
             FLastName.SliceCount = botCount;
-
+            FUid.SliceCount = botCount;
             FDate.SliceCount = botCount;
         }
 
@@ -88,7 +90,7 @@ namespace VVVV.Nodes
             FUserName[index].SliceCount = SliceCount;
             FFirstName[index].SliceCount = SliceCount;
             FLastName[index].SliceCount = SliceCount;
-
+            FUid[index].SliceCount = SliceCount;
             FDate[index].SliceCount = SliceCount;
         }
 
@@ -100,7 +102,7 @@ namespace VVVV.Nodes
             FUserName[index][count] = u.Username;
             FFirstName[index][count] = u.FirstName;
             FLastName[index][count] = u.LastName;
-            
+            FUid[index][count] = u.Id;
             FDate[index][count] = tm.created;
         }
 
