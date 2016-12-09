@@ -97,6 +97,14 @@
   </Target>
   <Import Project="..\packages\VVVV.SlimDX.1.0.2\build\net40\VVVV.SlimDX.targets" Condition="Exists('..\packages\VVVV.SlimDX.1.0.2\build\net40\VVVV.SlimDX.targets')" />
   <Import Project="..\packages\VVVV.PluginInterfaces.34.106.0-develop-1872\build\net46\VVVV.PluginInterfaces.targets" Condition="Exists('..\packages\VVVV.PluginInterfaces.34.106.0-develop-1872\build\net46\VVVV.PluginInterfaces.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(SolutionDir)vvvv-Telegram\bin\Debug $(SolutionDir)release_dir\plugins /s /i /y
+xcopy $(SolutionDir)girlpower $(SolutionDir)\release_dir /s /i /y
+del  $(SolutionDir)\release_dir\plugins\*~.xml
+del  $(SolutionDir)\release_dir\plugins\*.v4p
+del  $(SolutionDir)\release_dir\plugins\*.pdb
+del  $(SolutionDir)\release_dir\plugins\VVVV.Packs.Time.dll</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
