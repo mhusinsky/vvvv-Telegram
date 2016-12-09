@@ -400,7 +400,7 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramSendPhotoRawNode : TelegramSendNode
     {
-        [Input("File Name")]
+        [Input("File Name", DefaultString = "filename.jpg")]
         public ISpread<string> FFileName;
 
         [Input("Image")]
