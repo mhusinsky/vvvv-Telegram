@@ -611,7 +611,8 @@ namespace VVVV.Nodes
 
         public void Evaluate(int SpreadMax)
         {
-            FReceived.SliceCount = FFile.SliceCount;
+            FReceived.SliceCount = Math.Max(1, FFile.SliceCount);
+
             FFileId.SliceCount = FFile.SliceCount;
             FFilePath.SliceCount = FFile.SliceCount;
             FFileSize.SliceCount = FFile.SliceCount;
