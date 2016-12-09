@@ -31,7 +31,7 @@ namespace VVVV.Nodes
     public class TelegramCallbackNode : IPluginEvaluate
     {
         #region fields & pins
-        [Input("Bots")]
+        [Input("Bots", Order = -100)]
         public ISpread<BotClient> FClient;
 
         [Output("Chat Instance")]

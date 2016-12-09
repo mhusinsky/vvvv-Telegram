@@ -27,10 +27,10 @@ namespace VVVV.Nodes
     public abstract class TelegramSendNode : IPluginEvaluate
     {
         #region fields & pins
-        [Input("Bots")]
+        [Input("Bots", Order = -100)]
         public ISpread<BotClient> FBotClient;
 
-        [Input("ChatId")]
+        [Input("ChatId", Order = -90)]
         public IDiffSpread<int> FChatId;
 
         [Input("Disable Notification")]

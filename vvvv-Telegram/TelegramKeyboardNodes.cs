@@ -34,7 +34,7 @@ namespace VVVV.Nodes
 
     public abstract class TelegramKeyboardNode : IPluginEvaluate
     {
-        [Input("Key Label", Order = 0, CheckIfChanged = true)]
+        [Input("Key Label", CheckIfChanged = true, Order = -10, BinOrder = -9)]
         public ISpread<ISpread<string>> FText;
 
         [Input("Update", IsBang = true, IsSingle = true, Order = 100)]

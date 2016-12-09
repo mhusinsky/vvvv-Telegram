@@ -181,7 +181,7 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramReceiveContactNode : TelegramReceiveNode
     {
-        [Output(" Contact Phone", BinVisibility = PinVisibility.OnlyInspector)]
+        [Output("Contact Phone", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FContactPhone;
         [Output("Contact First Name", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FContactFirstname;
@@ -345,9 +345,9 @@ namespace VVVV.Nodes
 
     public abstract class TelegramReceiveFileMessageNode : TelegramReceiveNode
     {
-        [Output("File")]
+        [Output("File", Order = -100, BinOrder = -99)]
         public ISpread<ISpread<TelegramFile>> FFile;
-        [Output("Files per Message", BinVisibility = PinVisibility.Hidden)]
+        [Output("Files per Message", Order = -90, BinVisibility = PinVisibility.False)]
         public ISpread<ISpread<int>> FFileCount;
 
         protected override void setFileCount(int i, int count)
