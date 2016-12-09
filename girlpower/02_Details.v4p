@@ -1,0 +1,929 @@
+<!DOCTYPE PATCH  SYSTEM "http://vvvv.org/versions/vvvv45beta34.2.dtd" >
+   <PATCH nodename="C:\vvvv\git\vvvv-Telegram\release_dir\02_Details.v4p" systemname="02_Details" filename="C:\vvvv\git\vvvv-Telegram\vvvv-Telegram\bin\Debug\02_Details.v4p" scrollx="0" scrolly="-360">
+   <BOUNDS type="Window" left="300" top="825" width="17370" height="12975">
+   </BOUNDS>
+   <NODE systemname="BotClient (Telegram)" filename="vvvv-Telegram.dll" nodename="BotClient (Telegram)" componentmode="Hidden" id="5">
+   <BOUNDS type="Node" left="7380" top="2310" width="2070" height="270">
+   </BOUNDS>
+   <PIN pinname="Connect" visible="1">
+   </PIN>
+   <PIN pinname="Disconnect" visible="1">
+   </PIN>
+   <PIN pinname="API-Key" visible="1" slicecount="2" values="251862907:AAFAbY_ZFlR94vXjZ1ioi6ZKBaJseLZbGpU,326919431:AAEZygV6ytFa_G4Lh_JaDCuA-e6rS4oEWLo">
+   </PIN>
+   <PIN pinname="Bot Name" visible="1">
+   </PIN>
+   <PIN pinname="Connected" visible="1">
+   </PIN>
+   <PIN pinname="BotClient" visible="1">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="4" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="8385" top="1455" width="480" height="480">
+   </BOUNDS>
+   <BOUNDS type="Node" left="8385" top="1455" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Y Input Value" slicecount="1" visible="1" values="0">
+   </PIN>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Behavior" slicecount="1" values="Bang">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Connect">
+   </PIN>
+   <PIN pinname="X Input Value" slicecount="1" values="0">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="4" srcpinname="Y Output Value" dstnodeid="5" dstpinname="Connect">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="3" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="9405" top="1455" width="480" height="480">
+   </BOUNDS>
+   <BOUNDS type="Node" left="9405" top="1455" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Y Input Value" slicecount="1" visible="1" values="0">
+   </PIN>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Behavior" slicecount="1" values="Bang">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Disconnect">
+   </PIN>
+   <PIN pinname="X Input Value" slicecount="1" values="0">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="3" srcpinname="Y Output Value" dstnodeid="5" dstpinname="Disconnect">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="2" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="7395" top="495" width="4275" height="540">
+   </BOUNDS>
+   <BOUNDS type="Node" left="7395" top="495" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Input String" slicecount="2" visible="1" values="|API KEY|,|API KEY 2|">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="YOURKEY">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="API-Key">
+   </PIN>
+   <PIN pinname="Output String" visible="1">
+   </PIN>
+   <PIN pinname="Rows" slicecount="1" values="2">
+   </PIN>
+   <PIN pinname="SliceCount Mode" slicecount="1" values="ColsRowsPages">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="1" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="8070" top="2850" width="1710" height="705">
+   </BOUNDS>
+   <BOUNDS type="Node" left="8070" top="2850" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Default" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|Bot Name|">
+   </PIN>
+   <PIN pinname="Rows" slicecount="1" values="2">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="5" srcpinname="Bot Name" dstnodeid="1" dstpinname="Input String">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="0" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="9825" top="2805" width="495" height="765">
+   </BOUNDS>
+   <BOUNDS type="Node" left="9825" top="2805" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Behavior" slicecount="1" values="Toggle">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Connected">
+   </PIN>
+   <PIN pinname="Rows" slicecount="1" values="2">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="5" srcpinname="Connected" dstnodeid="0" dstpinname="Y Input Value">
+   </LINK>
+   <PACK Name="addonpack" Version="34.1.0">
+   </PACK>
+   <NODE systemname="SendText (Telegram)" filename="vvvv-Telegram.dll" nodename="SendText (Telegram)" componentmode="Hidden" id="6">
+   <BOUNDS type="Node" left="840" top="6570" width="3720" height="270">
+   </BOUNDS>
+   <PIN pinname="Bots" visible="1">
+   </PIN>
+   <PIN pinname="ChatId" visible="1">
+   </PIN>
+   <PIN pinname="Send" visible="1">
+   </PIN>
+   <PIN pinname="Text" visible="1" slicecount="3" values="Text1,Text2,Text3">
+   </PIN>
+   <PIN pinname="Text Bin Size" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="5" srcpinname="BotClient" dstnodeid="6" dstpinname="Bots">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="7" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="570" top="480" width="1050" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="570" top="480" width="5010" height="840">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|Telegram - Some Details on Spreading and more|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   <PIN pinname="Size" slicecount="1" values="14">
+   </PIN>
+   </NODE>
+   <NODE systemname="ReceiveText (Telegram)" filename="vvvv-Telegram.dll" nodename="ReceiveText (Telegram)" componentmode="Hidden" id="8">
+   <BOUNDS type="Node" left="1095" top="2910" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Bots" visible="1">
+   </PIN>
+   <PIN pinname="User ID" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="5" srcpinname="BotClient" dstnodeid="8" dstpinname="Bots">
+   </LINK>
+   <LINK srcnodeid="8" srcpinname="User ID" dstnodeid="6" dstpinname="ChatId">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="9" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="4515" top="5850" width="480" height="480">
+   </BOUNDS>
+   <BOUNDS type="Node" left="4515" top="5850" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Y Input Value" slicecount="1" visible="1" values="0">
+   </PIN>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Behavior" slicecount="1" values="Bang">
+   </PIN>
+   <PIN pinname="X Input Value" slicecount="1" values="0">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="9" srcpinname="Y Output Value" dstnodeid="6" dstpinname="Send">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="10" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="1755" top="3435" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="1755" top="3435" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Input String" slicecount="1" visible="1" values="Text">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="Text">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Text">
+   </PIN>
+   <PIN pinname="Output String" visible="1">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="11" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="2220" top="6240" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="2220" top="6240" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Y Input Value" slicecount="1" visible="1" values="2">
+   </PIN>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Integer">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|Text Bin Size|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="11" srcpinname="Y Output Value" dstnodeid="6" dstpinname="Text Bin Size">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="12" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="2835" top="3915" width="3435" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="2835" top="3915" width="2145" height="510">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|SendText is spreadable wrt the connected Bots.|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   <NODE systemname="I (Spreads)" nodename="I (Spreads)" componentmode="Hidden" id="13">
+   <BOUNDS type="Node" left="1950" top="3735" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname=".. To [" slicecount="1" values="5">
+   </PIN>
+   <PIN pinname="[ From .." slicecount="1" values="1">
+   </PIN>
+   <PIN pinname="Output" visible="1">
+   </PIN>
+   </NODE>
+   <NODE systemname="Add (String)" nodename="Add (String)" componentmode="Hidden" id="14">
+   <BOUNDS type="Node" left="1770" top="4590" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Input 1" visible="1">
+   </PIN>
+   <PIN pinname="Input 2" visible="1">
+   </PIN>
+   <PIN pinname="Output" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="10" srcpinname="Output String" dstnodeid="14" dstpinname="Input 1">
+   </LINK>
+   <NODE systemname="AsString (Value)" nodename="AsString (Value)" componentmode="Hidden" id="15">
+   <BOUNDS type="Node" left="1965" top="4095" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Input" visible="1">
+   </PIN>
+   <PIN pinname="SubType" slicecount="1" values="|Integer (MinInt .. MaxInt)|">
+   </PIN>
+   <PIN pinname="Output" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="13" srcpinname="Output" dstnodeid="15" dstpinname="Input">
+   </LINK>
+   <LINK srcnodeid="15" srcpinname="Output" dstnodeid="14" dstpinname="Input 2">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="16" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="1770" top="5160" width="1170" height="765">
+   </BOUNDS>
+   <BOUNDS type="Node" left="1770" top="5160" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Input String" slicecount="1" visible="1" values="Text">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="Text">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Text">
+   </PIN>
+   <PIN pinname="Output String" visible="1">
+   </PIN>
+   <PIN pinname="Rows" slicecount="1" values="4">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="14" srcpinname="Output" dstnodeid="16" dstpinname="Input String">
+   </LINK>
+   <LINK srcnodeid="16" srcpinname="Output String" dstnodeid="6" dstpinname="Text">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="18" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="8265" top="6645" width="825" height="1065">
+   </BOUNDS>
+   <BOUNDS type="Node" left="8265" top="6645" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Integer">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|Files per Message|">
+   </PIN>
+   <PIN pinname="Rows" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="3" values="4,4,4">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="19" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="9345" top="6675" width="8625" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="9345" top="6675" width="2895" height="945">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|If multiple photo messages per bot arrive in one VVVV-Frame, this pin will tell you how many images are associated with each message|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   <NODE systemname="User (Telegram Split)" filename="vvvv-Telegram.dll" nodename="User (Telegram Split)" componentmode="Hidden" id="20">
+   <BOUNDS type="Node" left="9945" top="9660" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="User" visible="1" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Username" visible="1">
+   </PIN>
+   <PIN pinname="First Name" visible="1">
+   </PIN>
+   <PIN pinname="Last Name" visible="1">
+   </PIN>
+   <PIN pinname="User ID" visible="1">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="21" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="10695" top="9480" width="3240" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="10695" top="9480" width="2910" height="720">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|Every receive node has a &quot;User&quot; output. User (Telegram Split) can be used to have a look at the User Details|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (Node)" componentmode="InABox" id="22" systemname="IOBox (Node)">
+   <BOUNDS type="Box" left="9960" top="8865" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="9960" top="8865" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Descriptive Name" slicecount="1" values="User">
+   </PIN>
+   <PIN pinname="Output Node" visible="1">
+   </PIN>
+   <PIN pinname="Input Node" slicecount="1" values="||">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="22" srcpinname="Output Node" dstnodeid="20" dstpinname="User">
+   </LINK>
+   <NODE systemname="GetFile (Telegram)" filename="vvvv-Telegram.dll" nodename="GetFile (Telegram)" componentmode="Hidden" id="23">
+   <BOUNDS type="Node" left="5925" top="9075" width="1560" height="270">
+   </BOUNDS>
+   <PIN pinname="File" visible="1" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Get" visible="1">
+   </PIN>
+   <PIN pinname="Data" visible="1">
+   </PIN>
+   <PIN pinname="File Size" visible="1">
+   </PIN>
+   <PIN pinname="FileID" visible="1">
+   </PIN>
+   <PIN pinname="Received" visible="1">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="24" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="10800" top="4935" width="570" height="930">
+   </BOUNDS>
+   <BOUNDS type="Node" left="10800" top="4935" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Behavior" slicecount="1" values="Bang">
+   </PIN>
+   <PIN pinname="Rows" slicecount="1" values="2">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Received">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="2" values="0,0">
+   </PIN>
+   <PIN pinname="Y Output Value" visible="1">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="25" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="11475" top="5085" width="5325" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="11475" top="5085" width="1905" height="780">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|Received will bang for when one message from a bot arrived in this frame|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="26" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="7440" top="8250" width="480" height="480">
+   </BOUNDS>
+   <BOUNDS type="Node" left="7440" top="8250" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Y Input Value" slicecount="1" visible="1" values="0">
+   </PIN>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Behavior" slicecount="1" values="Bang">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Get">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="26" srcpinname="Y Output Value" dstnodeid="23" dstpinname="Get">
+   </LINK>
+   <NODE nodename="IOBox (Node)" componentmode="InABox" id="27" systemname="IOBox (Node)">
+   <BOUNDS type="Box" left="5535" top="10350" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="5535" top="10350" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Data">
+   </PIN>
+   <PIN pinname="Output Node" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="23" srcpinname="Data" dstnodeid="27" dstpinname="Input Node">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="28" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="6660" top="9570" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="6660" top="9570" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Integer">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|File Size|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="23" srcpinname="File Size" dstnodeid="28" dstpinname="Y Input Value">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="29" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="5475" top="9600" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="5475" top="9600" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Default" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="FileID">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="23" srcpinname="FileID" dstnodeid="29" dstpinname="Input String">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="30" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="7860" top="9045" width="4005" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="7860" top="9045" width="1830" height="735">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|If a message contains a file, it needs to be downloaded seperatly|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="32" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="7380" top="5280" width="795" height="480">
+   </BOUNDS>
+   <BOUNDS type="Node" left="7380" top="5280" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Integer">
+   </PIN>
+   <PIN pinname="Rows" slicecount="1" values="2">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="2" values="8,4">
+   </PIN>
+   <PIN pinname="Vector Size" slicecount="1" values="2">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="|0, 0|">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|File Bin Size|">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="34" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="8340" top="5250" width="4020" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="8340" top="5250" width="1905" height="795">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|File Bin Size will tell you how many files arrived per bot in the last frame|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (Node)" componentmode="InABox" id="35" systemname="IOBox (Node)">
+   <BOUNDS type="Box" left="5925" top="7185" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="5925" top="7185" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Descriptive Name" slicecount="1" values="File">
+   </PIN>
+   <PIN pinname="Output Node" visible="1">
+   </PIN>
+   <PIN pinname="Input Node" slicecount="1" values="||">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="36" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="8730" top="10725" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="8730" top="10725" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Default" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Username">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="20" srcpinname="Username" dstnodeid="36" dstpinname="Input String">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="37" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="9660" top="10725" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="9660" top="10725" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Default" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|First Name|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="20" srcpinname="First Name" dstnodeid="37" dstpinname="Input String">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="38" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="10560" top="10725" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="10560" top="10725" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Default" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|Last Name|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="20" srcpinname="Last Name" dstnodeid="38" dstpinname="Input String">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="39" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="11520" top="10725" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="11520" top="10725" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Integer">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|User ID|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="20" srcpinname="User ID" dstnodeid="39" dstpinname="Y Input Value">
+   </LINK>
+   <NODE nodename="IOBox (Node)" componentmode="InABox" id="40" systemname="IOBox (Node)">
+   <BOUNDS type="Box" left="13395" top="6465" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="13395" top="6465" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Timestamp">
+   </PIN>
+   <PIN pinname="Output Node" visible="1">
+   </PIN>
+   <PIN pinname="Input Node" slicecount="1" values="||">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="41" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="14415" top="6420" width="13185" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="14415" top="6420" width="2490" height="1365">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|For using the Timestamp output, you need to have vvvv-Time pack installed (just beware, that you don&apos;t get a conflict because of multiple Newtonsoft.Json.dll files (delete the oldest one)|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   <NODE systemname="Time (Time Split)" filename="%VVVV%\packs\vvvv-Time\nodes\plugins\VVVV.Packs.Time.Nodes.dll" nodename="Time (Time Split)" componentmode="Hidden" id="42">
+   <BOUNDS type="Node" left="13395" top="8280" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Time" visible="1" slicecount="3" values=",,">
+   </PIN>
+   <PIN pinname="TimeStamp" visible="1">
+   </PIN>
+   <PIN pinname="Timezone" visible="1">
+   </PIN>
+   <PIN pinname="Year" visible="1">
+   </PIN>
+   <PIN pinname="Month" visible="1">
+   </PIN>
+   <PIN pinname="Day" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="40" srcpinname="Output Node" dstnodeid="42" dstpinname="Time">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="48" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="14040" top="7830" width="2685" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="14040" top="7830" width="2685" height="270">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="https://vvvv.org/contribution/time">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="URL">
+   </PIN>
+   </NODE>
+   <NODE systemname="ReceivePhoto (Telegram)" filename="vvvv-Telegram.dll" nodename="ReceivePhoto (Telegram)" componentmode="Hidden" id="49">
+   <BOUNDS type="Node" left="7395" top="4470" width="3450" height="270">
+   </BOUNDS>
+   </NODE>
+   <LINK srcnodeid="5" srcpinname="BotClient" dstnodeid="49" dstpinname="Bots">
+   </LINK>
+   <LINK srcnodeid="49" srcpinname="Files per Message" dstnodeid="18" dstpinname="Y Input Value">
+   </LINK>
+   <LINK srcnodeid="49" srcpinname="User" dstnodeid="22" dstpinname="Input Node">
+   </LINK>
+   <LINK srcnodeid="49" srcpinname="Received" dstnodeid="24" dstpinname="Y Input Value">
+   </LINK>
+   <LINK srcnodeid="49" srcpinname="File Bin Size" dstnodeid="32" dstpinname="Y Input Value">
+   </LINK>
+   <LINK srcnodeid="49" srcpinname="File" dstnodeid="35" dstpinname="Input Node">
+   </LINK>
+   <LINK srcnodeid="49" srcpinname="Timestamp" dstnodeid="40" dstpinname="Input Node">
+   </LINK>
+   <NODE systemname="GetSlice (Node)" nodename="GetSlice (Node)" componentmode="Hidden" id="50">
+   <BOUNDS type="Node" left="5910" top="8175" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Input Node" visible="1">
+   </PIN>
+   <PIN pinname="Output Node" visible="1">
+   </PIN>
+   <PIN pinname="Index" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="35" srcpinname="Output Node" dstnodeid="50" dstpinname="Input Node">
+   </LINK>
+   <LINK srcnodeid="50" srcpinname="Output Node" dstnodeid="23" dstpinname="File">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="51" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="6540" top="7800" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="6540" top="7800" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Y Input Value" slicecount="1" visible="1" values="3">
+   </PIN>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Integer">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="51" srcpinname="Y Output Value" dstnodeid="50" dstpinname="Index">
+   </LINK>
+   <NODE systemname="OR (Boolean Spectral)" nodename="OR (Boolean Spectral)" componentmode="Hidden" id="52">
+   <BOUNDS type="Node" left="7425" top="7800" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Output" visible="1">
+   </PIN>
+   <PIN pinname="Input" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="52" srcpinname="Output" dstnodeid="26" dstpinname="Y Input Value">
+   </LINK>
+   <LINK srcnodeid="24" srcpinname="Y Output Value" dstnodeid="52" dstpinname="Input">
+   </LINK>
+   <NODE systemname="Renderer (EX9)" nodename="Renderer (EX9)" componentmode="InAWindow" id="53">
+   <BOUNDS type="Node" left="5520" top="11655" width="100" height="100">
+   </BOUNDS>
+   <BOUNDS type="Box" left="5520" top="11655" width="2400" height="1800">
+   </BOUNDS>
+   <BOUNDS type="Window" left="17535" top="855" width="5280" height="5085">
+   </BOUNDS>
+   <PIN pinname="Layers" visible="1">
+   </PIN>
+   </NODE>
+   <NODE systemname="DynamicTexture (EX9.Texture Raw)" filename="" nodename="DynamicTexture (EX9.Texture Raw)" componentmode="Hidden" id="54">
+   <BOUNDS type="Node" left="5535" top="10890" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Texture Out" visible="1">
+   </PIN>
+   <PIN pinname="Data" visible="1">
+   </PIN>
+   <PIN pinname="Apply" visible="1">
+   </PIN>
+   </NODE>
+   <NODE systemname="FullscreenQuad (DX9)" filename="%VVVV%\addonpack\lib\nodes\modules\TextureFX\misc\FullscreenQuad (DX9).v4p" nodename="FullscreenQuad (DX9)" componentmode="Hidden" id="55">
+   <BOUNDS type="Node" left="5520" top="11295" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Texture" visible="1">
+   </PIN>
+   <PIN pinname="Layer" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="54" srcpinname="Texture Out" dstnodeid="55" dstpinname="Texture">
+   </LINK>
+   <LINK srcnodeid="55" srcpinname="Layer" dstnodeid="53" dstpinname="Layers">
+   </LINK>
+   <LINK srcnodeid="27" srcpinname="Output Node" dstnodeid="54" dstpinname="Data">
+   </LINK>
+   <LINK srcnodeid="23" srcpinname="Received" dstnodeid="54" dstpinname="Apply">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="56" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="735" top="6930" width="5940" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="735" top="6930" width="3675" height="510">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|Please note, that atm the SendText node is the only node allowing bin sized inputs|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   <NODE systemname="SendPhoto (Telegram)" filename="vvvv-Telegram.dll" nodename="SendPhoto (Telegram)" componentmode="Hidden" id="57">
+   <BOUNDS type="Node" left="990" top="8715" width="2700" height="270">
+   </BOUNDS>
+   <PIN pinname="Bots" visible="1">
+   </PIN>
+   <PIN pinname="ChatId" visible="1">
+   </PIN>
+   <PIN pinname="File Name" visible="1">
+   </PIN>
+   <PIN pinname="Send" visible="1">
+   </PIN>
+   <PIN pinname="Send Time" visible="1">
+   </PIN>
+   <PIN pinname="Sent File ID" visible="1">
+   </PIN>
+   <PIN pinname="Sent File" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="5" srcpinname="BotClient" dstnodeid="57" dstpinname="Bots">
+   </LINK>
+   <LINK srcnodeid="8" srcpinname="User ID" dstnodeid="57" dstpinname="ChatId">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="59" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="1965" top="8205" width="1020" height="255">
+   </BOUNDS>
+   <BOUNDS type="Node" left="1965" top="8205" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Input String" slicecount="1" visible="1" values="t_logo.png">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="filename.xyz">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="|All Files (*.*)||*.*|">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="Filename">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="59" srcpinname="Output String" dstnodeid="57" dstpinname="File Name">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="60" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="3615" top="7890" width="480" height="480">
+   </BOUNDS>
+   <BOUNDS type="Node" left="3615" top="7890" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Y Input Value" slicecount="2" visible="1" values="0,0">
+   </PIN>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Behavior" slicecount="1" values="Bang">
+   </PIN>
+   <PIN pinname="X Input Value" slicecount="2" values="0,0">
+   </PIN>
+   <PIN pinname="Rows" slicecount="1" values="2">
+   </PIN>
+   <PIN pinname="SliceCount Mode" slicecount="1" values="ColsRowsPages">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Send">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="60" srcpinname="Y Output Value" dstnodeid="57" dstpinname="Send">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="61" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="3630" top="9240" width="795" height="480">
+   </BOUNDS>
+   <BOUNDS type="Node" left="3630" top="9240" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Rows" slicecount="1" values="2">
+   </PIN>
+   <PIN pinname="Y Input Value" slicecount="2" values="0,">
+   </PIN>
+   <PIN pinname="Vector Size" slicecount="1" values="2">
+   </PIN>
+   <PIN pinname="Default" slicecount="1" values="|0, 0|">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|Send Time|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="57" srcpinname="Send Time" dstnodeid="61" dstpinname="Y Input Value">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="62" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="585" top="9975" width="5610" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="585" top="9975" width="2640" height="705">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|When sending media files telegram will return the details of the sent message|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="63" systemname="IOBox (String)">
+   <BOUNDS type="Box" left="570" top="9240" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="570" top="9240" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Default" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="File Mask" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Maximum Characters" slicecount="1" values="-1">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|Sent File ID|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="57" srcpinname="Sent File ID" dstnodeid="63" dstpinname="Input String">
+   </LINK>
+   <NODE nodename="IOBox (Node)" componentmode="InABox" id="64" systemname="IOBox (Node)">
+   <BOUNDS type="Box" left="2025" top="9240" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="2025" top="9240" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|Sent File|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="57" srcpinname="Sent File" dstnodeid="64" dstpinname="Input Node">
+   </LINK>
+   <LINK srcnodeid="2" srcpinname="Output String" dstnodeid="5" dstpinname="API-Key">
+   </LINK>
+   <NODE nodename="IOBox (String)" componentmode="InABox" id="65" systemname="IOBox (String)">
+   <BOUNDS type="Node" left="585" top="1530" width="5715" height="270">
+   </BOUNDS>
+   <BOUNDS type="Box" left="585" top="1530" width="3495" height="510">
+   </BOUNDS>
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|The telegram send and receive nodes are spreadable wrt to the connected bots|">
+   </PIN>
+   <PIN pinname="Output String" visible="0">
+   </PIN>
+   <PIN pinname="Show Grid" slicecount="1" values="0">
+   </PIN>
+   <PIN pinname="String Type" slicecount="1" values="MultiLine">
+   </PIN>
+   </NODE>
+   </PATCH>
