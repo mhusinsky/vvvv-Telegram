@@ -22,8 +22,6 @@ using Telegram.Bot.Types.Enums;
 //using Telegram.Bot.Types.InputMessageContents;
 using Telegram.Bot.Types.ReplyMarkups;
 
-using VVVV.Packs.Time;
-
 namespace VVVV.Nodes
 {
     #region PluginInfo
@@ -168,14 +166,14 @@ namespace VVVV.Nodes
     public class VTelegramMessage
     {
         public Message message;
-        public Time created;
+        public DateTime created;
         public bool IsNew;
 
         public VTelegramMessage(Message m)
         {
             message = m;
             IsNew = true;
-            created = new Time(m.Date, TimeZoneInfo.Utc);
+            created = m.Date;
         }
     }
     public class VTelegramCallback

@@ -22,7 +22,6 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-using VVVV.Packs.Time;
 
 
 namespace VVVV.Nodes
@@ -45,7 +44,7 @@ namespace VVVV.Nodes
         [Output("User", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<User>> FUser;
         [Output("Timestamp", BinVisibility = PinVisibility.OnlyInspector)]
-        public ISpread<ISpread<Time>> FDate;        // TODO: check for compatibility with tmp's Time-Pack
+        public ISpread<ISpread<double>> FDate;        // TODO: check for compatibility with tmp's Time-Pack
         [Output("Received", IsBang = true)]
         public ISpread<bool> FReceived;
 
@@ -103,7 +102,7 @@ namespace VVVV.Nodes
             FFirstName[index][count] = u.FirstName;
             FLastName[index][count] = u.LastName;
             FUid[index][count] = u.Id;
-            FDate[index][count] = tm.created;
+            FDate[index][count] = tm.created.ToOADate();
         }
 
         protected List<VTelegramMessage> getMessageList(int i)
