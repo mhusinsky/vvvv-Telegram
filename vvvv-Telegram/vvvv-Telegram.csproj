@@ -65,10 +65,6 @@
       <HintPath>..\packages\VVVV.Core.34.106.0-develop-1872\lib\net46\VVVV.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="VVVV.Packs.Time, Version=1.0.5905.19301, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VVVV.Packs.Time.0.6\lib\net40\VVVV.Packs.Time.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="VVVV.Utils, Version=34.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\VVVV.Utils.34.106.0-develop-1872\lib\net46\VVVV.Utils.dll</HintPath>
       <Private>False</Private>
