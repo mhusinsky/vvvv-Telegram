@@ -570,24 +570,37 @@ namespace VVVV.Nodes
 
             outputStream.Position = 0;  // seems to be nescessary. otherwise telegram.bot api will not send any data
 
-            var fts = new FileToSend(FFileName[i], outputStream);
             try
             {
-                Message m = await FBotClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
-                foreach(PhotoSize ps in m.Photo)
+                var fts = new FileToSend(FFileName[i], outputStream);
+                try
                 {
-                    FFile[i].Add(new TelegramFile(ps, FBotClient[i].BC));
-                    FFileId[i].Add(ps.FileId);
-                }
+                    Message m = await FBotClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+                    foreach(PhotoSize ps in m.Photo)
+                    {
+                        FFile[i].Add(new TelegramFile(ps, FBotClient[i].BC));
+                        FFileId[i].Add(ps.FileId);
+                    }
                 
-                FStopwatch[i].Stop();
-                printMessageSentSuccess(i, m.Type);
-                FError[i] = "";
+                    FStopwatch[i].Stop();
+                    printMessageSentSuccess(i, m.Type);
+                }
+                catch (Exception e)
+                {
+                    FStopwatch[i].Stop();
+                    FStopwatch[i].Reset();
+                    FError[i] = e.Message;
+                    FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message. Exception: " + e.Message);
+                }
             }
             catch (Exception e)
             {
+                FStopwatch[i].Stop();
+                FStopwatch[i].Reset();
                 FError[i] = e.Message;
+                FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message. Exception: " + e.Message);
             }
+
         }
     }
 }
