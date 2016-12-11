@@ -48,10 +48,12 @@ namespace VVVV.Nodes
         [Input("Send", IsBang = true, DefaultValue = 0)]
         public IDiffSpread<bool> FSend;
 
-        [Output("Sending")]
-        public ISpread<bool> FSending;
         [Output("Send Time")]
         public ISpread<double> FTime;
+
+        [Output("Success", IsBang = true)]
+        public ISpread<bool> FSuccess;
+        
 
         [Output("Error", Visibility = PinVisibility.OnlyInspector)]
         public ISpread<String> FError;
@@ -71,7 +73,7 @@ namespace VVVV.Nodes
         {
 
             FStopwatch.SliceCount = FBotClient.SliceCount;
-            FSending.SliceCount = FBotClient.SliceCount;
+            FSuccess.SliceCount = FBotClient.SliceCount;
             FTime.SliceCount = FBotClient.SliceCount;
             FError.SliceCount = FBotClient.SliceCount;
 
@@ -79,8 +81,8 @@ namespace VVVV.Nodes
             {
                 if (FStopwatch[i] == null)
                     FStopwatch[i] = new Stopwatch();
-                if(FSending[i])
-                    FSending[i] = false;
+                if(FSuccess[i])
+                    FSuccess[i] = false;
 
 
                 if (FSend[i])
@@ -102,8 +104,17 @@ namespace VVVV.Nodes
                     }
                 }
 
-                FSending[i] = FTime[i] < FStopwatch[i].ElapsedMilliseconds / 1000.0;
-                FTime[i] = FStopwatch[i].ElapsedMilliseconds / 1000.0;
+                double currentTime = FStopwatch[i].ElapsedMilliseconds / 1000.0;
+                if (FTime[i] < currentTime && !FStopwatch[i].IsRunning)     // stopwatch was stopped somewhere in between
+                {
+                    FSuccess[i] = true;
+                }
+                else
+                {
+                    FSuccess[i] = false;
+                }
+                //FSending[i] = FTime[i] < FStopwatch[i].ElapsedMilliseconds / 1000.0;
+                FTime[i] = currentTime;
             }
 
         }
