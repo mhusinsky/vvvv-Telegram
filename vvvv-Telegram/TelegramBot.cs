@@ -49,6 +49,9 @@ namespace VVVV.Nodes
         [Output("Connected")]
         public ISpread<bool> FConnected;
 
+        [Output("Error", Visibility = PinVisibility.OnlyInspector)]
+        public ISpread<String> FError;
+
 
         [Import()]
         public ILogger FLogger;
@@ -74,6 +77,7 @@ namespace VVVV.Nodes
             FConnected.SliceCount = FApiKey.SliceCount;
 
             FBotClient.SliceCount = FApiKey.SliceCount;
+            FError.SliceCount = FApiKey.SliceCount;
 
             for (int i=0; i < FBotClient.SliceCount; i++)
             {
@@ -110,16 +114,26 @@ namespace VVVV.Nodes
                 
                 if (FConnect[i])
                 {
-                    FBotClient[i] = new BotClient(FApiKey[i]);
+                    try
+                    {
+                        FBotClient[i] = new BotClient(FApiKey[i]);
+                        FError[i] = "";
 
-                    FStopwatch[i] = new Stopwatch();
-                    FConnected[i] = false;
-                    
-                    FStopwatch[i].Reset();
-                    FStopwatch[i].Start();
+                        FStopwatch[i] = new Stopwatch();
+                        FConnected[i] = false;
 
-                    FBotClient[i].ConnectAsync();
-                    FLogger.Log(LogType.Debug, "Connecting to Bot at index " + i);
+                        FStopwatch[i].Reset();
+                        FStopwatch[i].Start();
+
+                        FBotClient[i].ConnectAsync();
+                        FLogger.Log(LogType.Debug, "Connecting to Bot at index " + i);
+                    }
+                    catch (Exception e)
+                    {
+                        FError[i] = e.Message;
+                        FLogger.Log(LogType.Debug, "Error connecting to Bot at index " + i);
+                        FLogger.Log(LogType.Debug, e.Message);
+                    }
                 }
 
                 if(FBotClient[i] != null)
@@ -132,6 +146,7 @@ namespace VVVV.Nodes
                         FStopwatch[i].Stop();
                         FConnectTime[i] = FStopwatch[i].ElapsedMilliseconds / 1000.0;
                         FBotName[i] = FBotClient[i].Username;
+                        FError[i] = "";
                     }
 
                     if (FDisconnect[i])
