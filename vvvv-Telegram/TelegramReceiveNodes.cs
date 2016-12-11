@@ -408,6 +408,7 @@ namespace VVVV.Nodes
             base.resetMessageTypeData(index);
 
             FDimensions[index] = new Spread<Vector2D>();
+            FCaption[index] = new Spread<string>();
         }
 
 
