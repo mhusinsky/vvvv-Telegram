@@ -77,6 +77,8 @@ namespace VVVV.Nodes
             FTime.SliceCount = FBotClient.SliceCount;
             FError.SliceCount = FBotClient.SliceCount;
 
+            setMessagesSliceCount(FBotClient.SliceCount);
+
             for (int i=0; i < FBotClient.SliceCount; i++)
             {
                 if (FStopwatch[i] == null)
@@ -156,6 +158,7 @@ namespace VVVV.Nodes
         }
 
         protected abstract Task sendMessageAsync(int i);
+        protected virtual void setMessagesSliceCount(int botCount) { }
 
     }
 
@@ -261,6 +264,12 @@ namespace VVVV.Nodes
 
         [Output("Sent File")]
         public ISpread<ISpread<TelegramFile>> FFile;
+
+        protected override void setMessagesSliceCount(int botCount)
+        {
+            FFile.SliceCount = botCount;
+            FOutFileId.SliceCount = botCount;
+        }
 
         protected override async Task sendMessageAsync(int i)
         {
