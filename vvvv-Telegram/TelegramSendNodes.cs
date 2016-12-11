@@ -481,6 +481,32 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
+    [PluginInfo(Name = "SendVoice", Category = "Telegram", Version = "", Help = "Sends voice files (use .ogg with OPUS codec only)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Only one audio file per bot", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramSendVoiceNode : TelegramSendFileNode
+    {
+        [Input("Duration")]
+        public IDiffSpread<int> FDuration;
+
+        protected override async Task PerformChatActionAsync(int i)
+        {
+            await FBotClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.RecordAudio);
+        }
+
+        protected override async Task SendFileAsync(int i, FileToSend fts)
+        {
+            Message m = await FBotClient[i].BC.SendVoiceAsync(FChatId[i], fts, FDuration[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            SetFileOutputs(i, m);
+        }
+        protected override async Task SendFileAsync(int i, string FileId)
+        {
+            Message m = await FBotClient[i].BC.SendVoiceAsync(FChatId[i], FileId, FDuration[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            SetFileOutputs(i, m);
+        }
+        protected override void SetFileOutputs(int i, Message m)
+        {
+            FFile[i].Add(new TelegramFile(m.Voice, FBotClient[i].BC));
+            FOutFileId[i].Add(m.Voice.FileId);
 
             printMessageSentSuccess(i, m.Type);
         }
