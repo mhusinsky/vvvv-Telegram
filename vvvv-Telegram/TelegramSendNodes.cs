@@ -89,18 +89,26 @@ namespace VVVV.Nodes
                 {
                     if(FBotClient[i] == null)
                     {
-                        FLogger.Log(LogType.Debug, "Bot " + i + ": Cannot send message, no client available");
+                        FLogger.Log(LogType.Debug, "Bot at index " + i + ": Cannot send message, no client available");
+                        FError[i] = "Cannot send message, no client available";
+                    }
+                    else if(FChatId.SliceCount == 0)
+                    {
+                        FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message, no ChatID given");
+                        FError[i] = "Cannot send message, no ChatID given";
                     }
                     else if (FBotClient[i].IsConnected)
                     {
                         // STARTTASK
                         FStopwatch[i].Reset();
                         FStopwatch[i].Start();
+
                         sendMessageAsync(i);
                     }
                     else
                     {
-                        FLogger.Log(LogType.Debug, "Bot \"" + i + "\": Cannot send message, client not connected");
+                        FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message, client not connected");
+                        FError[i] = "Cannot send message, client not connected";
                     }
                 }
 
@@ -139,6 +147,7 @@ namespace VVVV.Nodes
         protected void printMessageSentSuccess(int i, MessageType mt)
         {
             FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Sent " + mt.ToString());
+            FError[i] = "";
         }
 
         protected abstract Task sendMessageAsync(int i);
@@ -155,10 +164,10 @@ namespace VVVV.Nodes
 
         protected override async Task sendMessageAsync(int i)
         {
-            foreach(string s in FTextMessage[i])
+            foreach (string s in FTextMessage[i])
             {
                 Message m = await FBotClient[i].BC.SendTextMessageAsync(FChatId[i], s, false, FDisableNotification[i], FReplyId[i], getReplyMarkup(i), ParseMode.Default);
-                printMessageSentSuccess(i,m.Type);
+                printMessageSentSuccess(i, m.Type);
             }
             
             FStopwatch[i].Stop();
@@ -264,6 +273,9 @@ namespace VVVV.Nodes
                 }
                 catch (Exception e)
                 {
+                    FStopwatch[i].Stop();
+                    FStopwatch[i].Reset();
+                    FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message. Exception: " + e.Message);
                     FError[i] = e.Message;
                 }
             }
@@ -300,6 +312,7 @@ namespace VVVV.Nodes
             }
         }
 
+        
         protected abstract Task PerformChatActionAsync(int i);
         protected abstract Task SendFileAsync(int i, FileToSend fts);
         protected abstract Task SendFileAsync(int i, string FileId);
@@ -309,7 +322,7 @@ namespace VVVV.Nodes
     #region PluginInfo
     [PluginInfo(Name = "SendSticker", Category = "Telegram", Version = "", Help = "Sends stickers (webp or jpg)",
                 Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi",
-                Bugs = "Files not spreadable", AutoEvaluate = true)]
+                Bugs = "Only one sticker per bot", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendStickerNode : TelegramSendFileNode
     {
@@ -341,7 +354,7 @@ namespace VVVV.Nodes
     #region PluginInfo
     [PluginInfo(Name = "SendDocument", Category = "Telegram", Version = "", Help = "Sends document files", 
                 Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", 
-                Bugs = "Files not spreadable", AutoEvaluate = true)]
+                Bugs = "Only one document per bot", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendDocumentNode : TelegramSendFileNode
     {
@@ -374,7 +387,7 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendPhoto", Category = "Telegram", Version = "", Help = "Sends images from files", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Photos not spreadable", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendPhoto", Category = "Telegram", Version = "", Help = "Sends images from files", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Only one photo per bot", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendPhotoNode : TelegramSendFileNode
     {
@@ -408,7 +421,7 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendVideo", Category = "Telegram", Version = "", Help = "Sends video files (use .mp4 only)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendVideo", Category = "Telegram", Version = "", Help = "Sends video files (use .mp4 only)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Bugs = "Only one video per bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendVideoNode : TelegramSendFileNode
     {
@@ -443,7 +456,7 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendAudio", Category = "Telegram", Version = "", Help = "Sends audio files (use .mp3 only)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Audio not spreadable", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendAudio", Category = "Telegram", Version = "", Help = "Sends audio files (use .mp3 only)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Only one audio file per bot", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendAudioNode : TelegramSendFileNode
     {
@@ -513,7 +526,7 @@ namespace VVVV.Nodes
     }
 
     #region PluginInfo
-    [PluginInfo(Name = "SendPhotoRaw", Category = "Telegram", Version = "", Help = "Sends images from Raw Stream", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Raw not spreadable", AutoEvaluate = true)]
+    [PluginInfo(Name = "SendPhotoRaw", Category = "Telegram", Version = "", Help = "Sends images from Raw Stream", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", Bugs = "Only one photo per bot", AutoEvaluate = true)]
     #endregion PluginInfo
     public class TelegramSendPhotoRawNode : TelegramSendNode
     {
