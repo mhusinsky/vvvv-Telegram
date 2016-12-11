@@ -33,6 +33,8 @@ namespace VVVV.Nodes
         [Input("Bots")]
         public ISpread<BotClient> FBotClient;
 
+        [Output("Message ID", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<int>> FMessageId;
         [Output("User ID", BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<int>> FUid;
         [Output("User Name", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
@@ -81,6 +83,7 @@ namespace VVVV.Nodes
             FLastName.SliceCount = botCount;
             FUid.SliceCount = botCount;
             FDate.SliceCount = botCount;
+            FMessageId.SliceCount = botCount;
         }
 
         protected void initMessageInfoSlices(int index, int SliceCount)
@@ -91,6 +94,7 @@ namespace VVVV.Nodes
             FLastName[index].SliceCount = SliceCount;
             FUid[index].SliceCount = SliceCount;
             FDate[index].SliceCount = SliceCount;
+            FMessageId[index].SliceCount = SliceCount;
         }
 
         protected void setMessageInfoData(int index, int count, VTelegramMessage tm)
@@ -103,6 +107,7 @@ namespace VVVV.Nodes
             FLastName[index][count] = u.LastName;
             FUid[index][count] = u.Id;
             FDate[index][count] = tm.created.ToOADate();
+            FMessageId[index][count] = tm.message.MessageId;
         }
 
         protected List<VTelegramMessage> getMessageList(int i)
