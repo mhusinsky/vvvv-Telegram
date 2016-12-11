@@ -59,11 +59,6 @@ namespace VVVV.Nodes
         //readonly Spread<CancellationToken> ct = new Spread<CancellationToken>();
         ////int TaskCount = 0;
         readonly Spread<Stopwatch> FStopwatch = new Spread<Stopwatch>();
-        
-        public void OnImportsSatisfied()
-        {
-            FLogger.Log(LogType.Message, "Init TelegramBot Node");
-        }
 
 
         public void Evaluate(int SpreadMax)
