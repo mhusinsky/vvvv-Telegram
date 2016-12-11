@@ -118,7 +118,6 @@ namespace VVVV.Nodes
             if (messageCount < 1) return;
 
             resetMessageTypeData(i);
-            //setMessageSpecialsData(i, messageCount);
             initMessageInfoSlices(i, messageCount);
             int count = 0;
             
@@ -138,8 +137,7 @@ namespace VVVV.Nodes
         }
 
         protected virtual void setFileCount(int i, int count) { }
-        //protected virtual void setMessageSpecialsData(int index, int SliceCount) { }
-
+        
         protected abstract MessageType getMyMessageType();
         protected abstract void resetMessageTypeData(int index);
 
@@ -298,6 +296,40 @@ namespace VVVV.Nodes
         }
     }
 
+    
+    public abstract class TelegramReceiveFileMessageNode : TelegramReceiveNode
+    {
+        [Output("File", Order = -100, BinOrder = -99)]
+        public ISpread<ISpread<TelegramFile>> FFile;
+        [Output("Files per Message", Order = -90, BinVisibility = PinVisibility.False)]
+        public ISpread<ISpread<int>> FFileCount;
+
+        protected override void setFileCount(int i, int count)
+        {
+            FFileCount[i].Add(count);
+        }
+
+        public override void OnImportsSatisfied()
+        {
+            FFile.SliceCount = 0;
+            FFileCount.SliceCount = 0;
+        }
+
+        protected override void setMessagesSliceCount(int botCount)
+        {
+            base.setMessagesSliceCount(botCount);
+
+            FFile.SliceCount = botCount;
+            FFileCount.SliceCount = botCount;
+        }
+
+        protected override void resetMessageTypeData(int index)
+        {
+            FFile[index] = new Spread<TelegramFile>();
+            FFileCount[index] = new Spread<int>();
+        }
+    }
+
     #region PluginInfo
     [PluginInfo(Name = "ReceiveSticker", Category = "Telegram", Version = "", Help = "Receives sticker messages (containing a .webp file)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
@@ -330,7 +362,7 @@ namespace VVVV.Nodes
             FDimensions[index] = new Spread<Vector2D>(); ;
             FThumb[index] = new Spread<TelegramFile>(); ;
         }
-        
+
         protected override int SetOutputs(int i, Message m)
         {
             Sticker s = m.Sticker;
@@ -340,40 +372,6 @@ namespace VVVV.Nodes
             FThumb[i].Add(new TelegramFile(s.Thumb, FBotClient[i].BC));
 
             return ++count;
-        }
-    }
-
-
-    public abstract class TelegramReceiveFileMessageNode : TelegramReceiveNode
-    {
-        [Output("File", Order = -100, BinOrder = -99)]
-        public ISpread<ISpread<TelegramFile>> FFile;
-        [Output("Files per Message", Order = -90, BinVisibility = PinVisibility.False)]
-        public ISpread<ISpread<int>> FFileCount;
-
-        protected override void setFileCount(int i, int count)
-        {
-            FFileCount[i].Add(count);
-        }
-
-        public override void OnImportsSatisfied()
-        {
-            FFile.SliceCount = 0;
-            FFileCount.SliceCount = 0;
-        }
-
-        protected override void setMessagesSliceCount(int botCount)
-        {
-            base.setMessagesSliceCount(botCount);
-
-            FFile.SliceCount = botCount;
-            FFileCount.SliceCount = botCount;
-        }
-
-        protected override void resetMessageTypeData(int index)
-        {
-            FFile[index] = new Spread<TelegramFile>();
-            FFileCount[index] = new Spread<int>();
         }
     }
 
@@ -615,7 +613,7 @@ namespace VVVV.Nodes
         [Input("Get", IsBang = true)]
         public ISpread<bool> FGet;
 
-        [Output("FileID")]
+        [Output("File ID")]
         public ISpread<string> FFileId;
         [Output("File Path")]
         public ISpread<string> FFilePath;

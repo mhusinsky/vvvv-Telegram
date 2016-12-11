@@ -30,13 +30,13 @@ namespace VVVV.Nodes
         [Input("Bots", Order = -100)]
         public ISpread<BotClient> FBotClient;
 
-        [Input("ChatId", Order = -90)]
+        [Input("Chat ID", Order = -90)]
         public IDiffSpread<int> FChatId;
 
         [Input("Disable Notification")]
         public IDiffSpread<bool> FDisableNotification;
 
-        [Input("Reply to Message")]
+        [Input("Reply to Message ID")]
         public IDiffSpread<int> FReplyId;
 
         [Input("ReplyMarkup")]
@@ -89,13 +89,18 @@ namespace VVVV.Nodes
                 {
                     if(FBotClient[i] == null)
                     {
-                        FLogger.Log(LogType.Debug, "Bot at index " + i + ": Cannot send message, no client available");
-                        FError[i] = "Cannot send message, no client available";
+                        FLogger.Log(LogType.Debug, "Bot at index " + i + ": Cannot send message, no BotClient available");
+                        FError[i] = "Cannot send message, no BotClient available";
                     }
                     else if(FChatId.SliceCount == 0)
                     {
                         FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message, no ChatID given");
                         FError[i] = "Cannot send message, no ChatID given";
+                    }
+                    else if (FReplyId.SliceCount == 0)
+                    {
+                        FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message, no Reply Message ID given");
+                        FError[i] = "Cannot send message, no Reply Message ID given";
                     }
                     else if (FBotClient[i].IsConnected)
                     {
@@ -107,8 +112,8 @@ namespace VVVV.Nodes
                     }
                     else
                     {
-                        FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message, client not connected");
-                        FError[i] = "Cannot send message, client not connected";
+                        FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message, BotClient not connected");
+                        FError[i] = "Cannot send message, BotClient not connected";
                     }
                 }
 
@@ -308,7 +313,6 @@ namespace VVVV.Nodes
                     FError[i] = e.Message;
                     FLogger.Log(LogType.Debug, "Bot \"" + FBotClient[i].Username + "\": Cannot send message. Exception: " + e.Message);
                 }
-
             }
         }
 

@@ -38,7 +38,7 @@ namespace VVVV.Nodes
         public ISpread<string> FChatInstance;
         [Output("Data")]
         public ISpread<string> FData;
-        [Output("Id")]
+        [Output("ID")]
         public ISpread<string> FId;
         [Output("From")]
         public ISpread<User> FUser;
@@ -72,7 +72,7 @@ namespace VVVV.Nodes
             FReceived.SliceCount = botCount;
         }
 
-        protected async void checkForCallback(int i)
+        protected void checkForCallback(int i)
         {
             var callbacks = getCallbackList(i);
 
