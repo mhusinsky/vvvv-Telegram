@@ -515,7 +515,40 @@ namespace VVVV.Nodes
             FTitle[i].Add(a.Title);
             FPerformer[i].Add(a.Performer);
             FDuration[i].Add(a.Duration);
-            FFile[i].Add(new TelegramFile(m.Audio, FBotClient[i].BC));
+            FFile[i].Add(new TelegramFile(a, FBotClient[i].BC));
+
+            return ++count;
+        }
+    }
+
+    #region PluginInfo
+    [PluginInfo(Name = "ReceiveVoice", Category = "Telegram", Version = "", Help = "Receives audio messages (.ogg format with OPUS codec)", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
+    #endregion PluginInfo
+    public class TelegramReceiveVoiceNode : TelegramReceiveFileMessageNode
+    {
+
+        [Output("Duration", BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<int>> FDuration;
+
+        protected override MessageType getMyMessageType()
+        {
+            return MessageType.VoiceMessage;
+        }
+
+        protected override void setMessagesSliceCount(int botCount)
+        {
+            base.setMessagesSliceCount(botCount);
+
+            FDuration.SliceCount = botCount;
+        }
+
+
+        protected override int SetOutputs(int i, Message m)
+        {
+            Voice v = m.Voice;
+            int count = 0;
+            FDuration[i].Add(v.Duration);
+            FFile[i].Add(new TelegramFile(v, FBotClient[i].BC));
 
             return ++count;
         }
@@ -565,7 +598,7 @@ namespace VVVV.Nodes
             FDimensions[i].Add(new Vector2D(Double.Parse(v.Height), Double.Parse(v.Width)));
             FThumb[i].Add(new TelegramFile(m.Video.Thumb, FBotClient[i].BC));
 
-            FFile[i].Add(new TelegramFile(m.Video, FBotClient[i].BC));
+            FFile[i].Add(new TelegramFile(v, FBotClient[i].BC));
             
             return 1;
         }
