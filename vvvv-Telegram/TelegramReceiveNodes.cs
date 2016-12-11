@@ -454,6 +454,17 @@ namespace VVVV.Nodes
             return MessageType.DocumentMessage;
         }
 
+        protected override void setMessagesSliceCount(int botCount)
+        {
+            base.setMessagesSliceCount(botCount);
+
+            FCaption.SliceCount = botCount;
+            FFilename.SliceCount = botCount;
+            FFilePath.SliceCount = botCount;
+            FMimeType.SliceCount = botCount;
+            FSize.SliceCount = botCount;
+            FThumb.SliceCount = botCount;
+        }
 
         protected override void resetMessageTypeData(int index)
         {
@@ -511,6 +522,14 @@ namespace VVVV.Nodes
             FDuration.SliceCount = botCount;
         }
 
+        protected override void resetMessageTypeData(int index)
+        {
+            base.resetMessageTypeData(index);
+
+            FTitle[index] = new Spread<string>();
+            FPerformer[index] = new Spread<string>();
+            FDuration[index] = new Spread<int>();
+        }
 
         protected override int SetOutputs(int i, Message m)
         {
@@ -546,6 +565,13 @@ namespace VVVV.Nodes
             FDuration.SliceCount = botCount;
         }
 
+        protected override void resetMessageTypeData(int index)
+        {
+            base.resetMessageTypeData(index);
+
+            FDuration[index] = new Spread<int>();
+        }
+
 
         protected override int SetOutputs(int i, Message m)
         {
@@ -579,6 +605,16 @@ namespace VVVV.Nodes
             return MessageType.VideoMessage;
         }
 
+        protected override void setMessagesSliceCount(int botCount)
+        {
+            base.setMessagesSliceCount(botCount);
+
+            FCaption.SliceCount = botCount;
+            FMimeType.SliceCount = botCount;
+            FDuration.SliceCount = botCount;
+            FDimensions.SliceCount = botCount;
+            FThumb.SliceCount = botCount;
+        }
 
         protected override void resetMessageTypeData(int index)
         {
