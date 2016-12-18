@@ -14,4 +14,4 @@ Plugins are ready for download on the [VVVV contributions page](https://vvvv.org
 Matthias Husinsky
 ### License
 * vvvv-Telegram plugins: [CC-BY](https://creativecommons.org/licenses/by/4.0/) Matthias Husinsky
-* [Telegram.Bot by Robin Müller](https://github.com/MrRoundRobin/telegram.bot): MIT
+* [Telegram.Bot by Robin MÃ¼ller](https://github.com/MrRoundRobin/telegram.bot): MIT
