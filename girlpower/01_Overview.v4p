@@ -1,6 +1,6 @@
 <!DOCTYPE PATCH  SYSTEM "http://vvvv.org/versions/vvvv45beta34.2.dtd" >
    <PATCH nodename="C:\vvvv\git\vvvv-Telegram\release_dir\01_Overview.v4p" scrollx="315" scrolly="-360" systemname="Girlpower" filename="C:\vvvv\git\vvvv-Telegram\vvvv-Telegram\bin\Debug\Girlpower.v4p">
-   <BOUNDS type="Window" left="465" top="795" width="19260" height="13125">
+   <BOUNDS type="Window" left="465" top="795" width="19260" height="13470">
    </BOUNDS>
    <PACK Name="addonpack" Version="34.1.0">
    </PACK>
@@ -85,7 +85,7 @@
    <NODE nodename="IOBox (String)" componentmode="InABox" id="69" systemname="IOBox (String)">
    <BOUNDS type="Node" left="675" top="435" width="3360" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="675" top="435" width="4590" height="810">
+   <BOUNDS type="Box" left="675" top="435" width="5850" height="495">
    </BOUNDS>
    <PIN pinname="Input String" visible="0" slicecount="1" values="|How to build a Telegram Bot: Overview|">
    </PIN>
@@ -101,9 +101,9 @@
    <NODE nodename="IOBox (String)" componentmode="InABox" id="70" systemname="IOBox (String)">
    <BOUNDS type="Node" left="1380" top="2970" width="3360" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="1380" top="2970" width="4005" height="630">
+   <BOUNDS type="Box" left="1380" top="2970" width="4575" height="555">
    </BOUNDS>
-   <PIN pinname="Input String" visible="0" slicecount="1" values="|Create yourself a Telegram-Bot by talking to the Botfather (who is a Telegram bot himself). Details here:|">
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|Start like this: Create yourself a Telegram-Bot by talking to the Botfather (who is a Telegram bot himself). Details here:|">
    </PIN>
    <PIN pinname="Output String" visible="0">
    </PIN>
@@ -129,11 +129,11 @@
    </PIN>
    </NODE>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="72" systemname="IOBox (String)">
-   <BOUNDS type="Node" left="1260" top="1845" width="3360" height="270">
+   <BOUNDS type="Node" left="1380" top="1845" width="3360" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="1260" top="1845" width="5070" height="705">
+   <BOUNDS type="Box" left="1380" top="1845" width="5070" height="705">
    </BOUNDS>
-   <PIN pinname="Input String" visible="0" slicecount="1" values="|Telegram is a cloud based messenger system with a nice bot api to create artificial chat partners. If you want to know more, continue reading here:|">
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|Telegram is a cloud based messenger system with a nice bot API to create artificial chat partners. If you want to know more, continue reading here:|">
    </PIN>
    <PIN pinname="Output String" visible="0">
    </PIN>
@@ -143,9 +143,9 @@
    </PIN>
    </NODE>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="73" systemname="IOBox (String)">
-   <BOUNDS type="Node" left="1710" top="2535" width="2400" height="270">
+   <BOUNDS type="Node" left="1380" top="2535" width="2400" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="1710" top="2535" width="2400" height="270">
+   <BOUNDS type="Box" left="1380" top="2535" width="2400" height="270">
    </BOUNDS>
    <PIN pinname="Input String" visible="0" slicecount="1" values="https://core.telegram.org/bots">
    </PIN>
@@ -173,9 +173,9 @@
    </PIN>
    </NODE>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="76" systemname="IOBox (String)">
-   <BOUNDS type="Node" left="1380" top="3555" width="3315" height="270">
+   <BOUNDS type="Node" left="1380" top="3495" width="3315" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="1380" top="3555" width="3315" height="270">
+   <BOUNDS type="Box" left="1380" top="3495" width="3315" height="270">
    </BOUNDS>
    <PIN pinname="Input String" visible="0" slicecount="1" values="https://core.telegram.org/bots#6-botfather">
    </PIN>
@@ -189,7 +189,7 @@
    <NODE nodename="IOBox (String)" componentmode="InABox" id="78" systemname="IOBox (String)">
    <BOUNDS type="Node" left="7620" top="705" width="3360" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="7620" top="705" width="5280" height="570">
+   <BOUNDS type="Box" left="7620" top="705" width="5310" height="495">
    </BOUNDS>
    <PIN pinname="Input String" visible="0" slicecount="1" values="|Once you&apos;ve created a bot you will also get an API-Key for the bot, which you will need to enter to the BotClient node. Now press connect...|">
    </PIN>
@@ -255,7 +255,7 @@
    </BOUNDS>
    <BOUNDS type="Box" left="1380" top="4395" width="6855" height="1185">
    </BOUNDS>
-   <PIN pinname="Input String" visible="0" slicecount="1" values="|You can now connect Receive- and Send nodes to Receive and send Telegram messages from your bot. For each message type there is a node, which will store the last message(s) that were received during the last VVVV-frame (if no receive node of a certain kind was there when the message arrived, the message will be discarded).&cr;&lf;All receive nodes have hidden pins containing data about the senders (users) of the message.|">
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|You can now connect Receive- and Send nodes to receive and send Telegram messages from your bot. For each message type there is a node, which will store the last message(s) that were received during the last VVVV-frame like an S+H. If no receive node of that kind was available when the message arrived, the message will be discarded.&cr;&lf;All receive nodes have hidden pins containing data about the senders (users) of the message.|">
    </PIN>
    <PIN pinname="Output String" visible="0">
    </PIN>
@@ -315,6 +315,8 @@
    </PIN>
    <PIN pinname="User ID" visible="1">
    </PIN>
+   <PIN pinname="Message ID" visible="1">
+   </PIN>
    </NODE>
    <NODE systemname="ReceiveAudio (Telegram)" filename="vvvv-Telegram.dll" nodename="ReceiveAudio (Telegram)" componentmode="Hidden" id="87">
    <BOUNDS type="Node" left="5580" top="10155" width="100" height="100">
@@ -365,9 +367,9 @@
    </PIN>
    </NODE>
    <NODE systemname="ReceiveContact (Telegram)" filename="vvvv-Telegram.dll" nodename="ReceiveContact (Telegram)" componentmode="Hidden" id="91">
-   <BOUNDS type="Node" left="1470" top="10530" width="100" height="100">
+   <BOUNDS type="Node" left="1470" top="10830" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="1470" top="10530">
+   <BOUNDS type="Box" left="1470" top="10830">
    </BOUNDS>
    <PIN pinname="Bots" visible="1">
    </PIN>
@@ -381,9 +383,9 @@
    </PIN>
    </NODE>
    <NODE systemname="ReceiveLocation (Telegram)" filename="vvvv-Telegram.dll" nodename="ReceiveLocation (Telegram)" componentmode="Hidden" id="92">
-   <BOUNDS type="Node" left="1470" top="11160" width="100" height="100">
+   <BOUNDS type="Node" left="1470" top="11460" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="1470" top="11160">
+   <BOUNDS type="Box" left="1470" top="11460">
    </BOUNDS>
    <PIN pinname="Bots" visible="1">
    </PIN>
@@ -391,9 +393,9 @@
    </PIN>
    </NODE>
    <NODE systemname="ReceiveVenue (Telegram)" filename="vvvv-Telegram.dll" nodename="ReceiveVenue (Telegram)" componentmode="Hidden" id="93">
-   <BOUNDS type="Node" left="1470" top="11745" width="100" height="100">
+   <BOUNDS type="Node" left="1470" top="12045" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="1470" top="11745">
+   <BOUNDS type="Box" left="1470" top="12045">
    </BOUNDS>
    <PIN pinname="Bots" visible="1">
    </PIN>
@@ -433,21 +435,21 @@
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="95" srcpinname="Output Node" dstnodeid="91" dstpinname="Bots" linkstyle="Bezier">
-   <LINKPOINT x="5440" y="8628">
+   <LINKPOINT x="5440" y="8728">
    </LINKPOINT>
-   <LINKPOINT x="1670" y="8578">
+   <LINKPOINT x="1670" y="8778">
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="95" srcpinname="Output Node" dstnodeid="92" dstpinname="Bots" linkstyle="Bezier">
-   <LINKPOINT x="5440" y="8935">
+   <LINKPOINT x="5440" y="9035">
    </LINKPOINT>
-   <LINKPOINT x="1670" y="8885">
+   <LINKPOINT x="1670" y="9085">
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="95" srcpinname="Output Node" dstnodeid="93" dstpinname="Bots" linkstyle="Bezier">
-   <LINKPOINT x="5440" y="9228">
+   <LINKPOINT x="5440" y="9328">
    </LINKPOINT>
-   <LINKPOINT x="1670" y="9178">
+   <LINKPOINT x="1670" y="9378">
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="95" srcpinname="Output Node" dstnodeid="89" dstpinname="Bots" linkstyle="Bezier">
@@ -497,9 +499,9 @@
    <LINK srcnodeid="86" srcpinname="Text" dstnodeid="96" dstpinname="Input String">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="98" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="2700" top="7560" width="285" height="240">
+   <BOUNDS type="Box" left="2850" top="7560" width="285" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="2700" top="7560" width="0" height="0">
+   <BOUNDS type="Node" left="2850" top="7560" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -515,9 +517,9 @@
    <LINK srcnodeid="86" srcpinname="Received" dstnodeid="98" dstpinname="Y Input Value">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="99" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="2655" top="10560" width="285" height="240">
+   <BOUNDS type="Box" left="2700" top="10860" width="285" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="2655" top="10560" width="0" height="0">
+   <BOUNDS type="Node" left="2700" top="10860" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -531,9 +533,9 @@
    <LINK srcnodeid="91" srcpinname="Received" dstnodeid="99" dstpinname="Y Input Value">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="100" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="2700" top="11205" width="285" height="240">
+   <BOUNDS type="Box" left="2700" top="11505" width="285" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="2700" top="11205" width="0" height="0">
+   <BOUNDS type="Node" left="2700" top="11505" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -547,9 +549,9 @@
    <LINK srcnodeid="92" srcpinname="Received" dstnodeid="100" dstpinname="Y Input Value">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="101" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="2535" top="11775" width="285" height="240">
+   <BOUNDS type="Box" left="2835" top="12075" width="285" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="2535" top="11775" width="0" height="0">
+   <BOUNDS type="Node" left="2835" top="12075" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -563,9 +565,9 @@
    <LINK srcnodeid="93" srcpinname="Received" dstnodeid="101" dstpinname="Y Input Value">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="102" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="6495" top="11730" width="285" height="240">
+   <BOUNDS type="Box" left="6795" top="11730" width="285" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="6495" top="11730" width="0" height="0">
+   <BOUNDS type="Node" left="6795" top="11730" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -579,9 +581,9 @@
    <LINK srcnodeid="94" srcpinname="Received" dstnodeid="102" dstpinname="Y Input Value">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="103" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="6240" top="11280" width="285" height="240">
+   <BOUNDS type="Box" left="6495" top="11280" width="285" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="6240" top="11280" width="0" height="0">
+   <BOUNDS type="Node" left="6495" top="11280" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -595,9 +597,9 @@
    <LINK srcnodeid="90" srcpinname="Received" dstnodeid="103" dstpinname="Y Input Value">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="104" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="7095" top="10725" width="285" height="240">
+   <BOUNDS type="Box" left="7245" top="10725" width="285" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="7095" top="10725" width="0" height="0">
+   <BOUNDS type="Node" left="7245" top="10725" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -611,9 +613,9 @@
    <LINK srcnodeid="88" srcpinname="Received" dstnodeid="104" dstpinname="Y Input Value">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="105" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="7095" top="10185" width="285" height="240">
+   <BOUNDS type="Box" left="7245" top="10185" width="285" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="7095" top="10185" width="0" height="0">
+   <BOUNDS type="Node" left="7245" top="10185" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -627,9 +629,9 @@
    <LINK srcnodeid="87" srcpinname="Received" dstnodeid="105" dstpinname="Y Input Value">
    </LINK>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="106" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="8295" top="7755" width="285" height="240">
+   <BOUNDS type="Box" left="8460" top="7755" width="285" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="8295" top="7755" width="0" height="0">
+   <BOUNDS type="Node" left="8460" top="7755" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -643,9 +645,9 @@
    <LINK srcnodeid="89" srcpinname="Received" dstnodeid="106" dstpinname="Y Input Value">
    </LINK>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="109" systemname="IOBox (String)">
-   <BOUNDS type="Box" left="1965" top="9255" width="795" height="240">
+   <BOUNDS type="Box" left="1965" top="9705" width="795" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="1965" top="9255" width="0" height="0">
+   <BOUNDS type="Node" left="1965" top="9705" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Default" slicecount="1" values="||">
    </PIN>
@@ -659,9 +661,9 @@
    <LINK srcnodeid="86" srcpinname="First Name" dstnodeid="109" dstpinname="Input String">
    </LINK>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="110" systemname="IOBox (String)">
-   <BOUNDS type="Box" left="2145" top="9750" width="795" height="240">
+   <BOUNDS type="Box" left="2145" top="10200" width="795" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="2145" top="9750" width="0" height="0">
+   <BOUNDS type="Node" left="2145" top="10200" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Default" slicecount="1" values="||">
    </PIN>
@@ -675,9 +677,9 @@
    <LINK srcnodeid="86" srcpinname="Last Name" dstnodeid="110" dstpinname="Input String">
    </LINK>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="111" systemname="IOBox (String)">
-   <BOUNDS type="Box" left="1800" top="8730" width="795" height="240">
+   <BOUNDS type="Box" left="1800" top="9180" width="795" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="1800" top="8730" width="0" height="0">
+   <BOUNDS type="Node" left="1800" top="9180" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Default" slicecount="1" values="||">
    </PIN>
@@ -691,9 +693,9 @@
    <LINK srcnodeid="86" srcpinname="User Name" dstnodeid="111" dstpinname="Input String">
    </LINK>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="112" systemname="IOBox (String)">
-   <BOUNDS type="Node" left="2850" top="8835" width="2055" height="270">
+   <BOUNDS type="Node" left="2850" top="9285" width="2055" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="2850" top="8835" width="1650" height="570">
+   <BOUNDS type="Box" left="2850" top="9285" width="1650" height="570">
    </BOUNDS>
    <PIN pinname="Input String" visible="0" slicecount="1" values="|these pins are hidden by default|">
    </PIN>
@@ -705,9 +707,9 @@
    </PIN>
    </NODE>
    <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="113" systemname="IOBox (Value Advanced)">
-   <BOUNDS type="Box" left="1635" top="8010" width="915" height="240">
+   <BOUNDS type="Box" left="1710" top="8205" width="915" height="240">
    </BOUNDS>
-   <BOUNDS type="Node" left="1635" top="8010" width="0" height="0">
+   <BOUNDS type="Node" left="1710" top="8205" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Units" slicecount="1" values="||">
    </PIN>
@@ -723,7 +725,7 @@
    <LINK srcnodeid="86" srcpinname="User ID" dstnodeid="113" dstpinname="Y Input Value">
    </LINK>
    <NODE systemname="User (Telegram Split)" filename="vvvv-Telegram.dll" nodename="User (Telegram Split)" componentmode="Hidden" id="115">
-   <BOUNDS type="Node" left="2820" top="8205" width="100" height="100">
+   <BOUNDS type="Node" left="2835" top="8235" width="100" height="100">
    </BOUNDS>
    <PIN pinname="User" visible="1">
    </PIN>
@@ -731,13 +733,15 @@
    <LINK srcnodeid="86" srcpinname="User" dstnodeid="115" dstpinname="User">
    </LINK>
    <NODE systemname="SendAudio (Telegram)" filename="vvvv-Telegram.dll" nodename="SendAudio (Telegram)" componentmode="Hidden" id="116">
-   <BOUNDS type="Node" left="14595" top="10020" width="100" height="100">
+   <BOUNDS type="Node" left="14895" top="10020" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="14595" top="10020">
+   <BOUNDS type="Box" left="14895" top="10020">
    </BOUNDS>
    <PIN pinname="Bots" visible="1">
    </PIN>
    <PIN pinname="ChatId" visible="1">
+   </PIN>
+   <PIN pinname="Chat ID" visible="1">
    </PIN>
    </NODE>
    <NODE systemname="SendContact (Telegram)" filename="vvvv-Telegram.dll" nodename="SendContact (Telegram)" componentmode="Hidden" id="117">
@@ -749,15 +753,19 @@
    </PIN>
    <PIN pinname="ChatId" visible="1">
    </PIN>
+   <PIN pinname="Chat ID" visible="1">
+   </PIN>
    </NODE>
    <NODE systemname="SendDocument (Telegram)" filename="vvvv-Telegram.dll" nodename="SendDocument (Telegram)" componentmode="Hidden" id="118">
-   <BOUNDS type="Node" left="14145" top="11775" width="100" height="100">
+   <BOUNDS type="Node" left="14445" top="11775" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="14145" top="11775">
+   <BOUNDS type="Box" left="14445" top="11775">
    </BOUNDS>
    <PIN pinname="Bots" visible="1">
    </PIN>
    <PIN pinname="ChatId" visible="1">
+   </PIN>
+   <PIN pinname="Chat ID" visible="1">
    </PIN>
    </NODE>
    <NODE systemname="SendLocation (Telegram)" filename="vvvv-Telegram.dll" nodename="SendLocation (Telegram)" componentmode="Hidden" id="119">
@@ -769,11 +777,13 @@
    </PIN>
    <PIN pinname="ChatId" visible="1">
    </PIN>
+   <PIN pinname="Chat ID" visible="1">
+   </PIN>
    </NODE>
    <NODE systemname="SendPhoto (Telegram)" filename="vvvv-Telegram.dll" nodename="SendPhoto (Telegram)" componentmode="Hidden" id="120">
-   <BOUNDS type="Node" left="14745" top="9300" width="2760" height="270">
+   <BOUNDS type="Node" left="15045" top="9300" width="2760" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="14745" top="9300">
+   <BOUNDS type="Box" left="15045" top="9300">
    </BOUNDS>
    <PIN pinname="Bots" visible="1">
    </PIN>
@@ -782,6 +792,8 @@
    <PIN pinname="File Name" visible="1">
    </PIN>
    <PIN pinname="ChatId" visible="1">
+   </PIN>
+   <PIN pinname="Chat ID" visible="1">
    </PIN>
    </NODE>
    <NODE systemname="SendPhotoRaw (Telegram)" filename="vvvv-Telegram.dll" nodename="SendPhotoRaw (Telegram)" componentmode="Hidden" id="121">
@@ -799,15 +811,19 @@
    </PIN>
    <PIN pinname="File Name" visible="1">
    </PIN>
+   <PIN pinname="Chat ID" visible="1">
+   </PIN>
    </NODE>
    <NODE systemname="SendSticker (Telegram)" filename="vvvv-Telegram.dll" nodename="SendSticker (Telegram)" componentmode="Hidden" id="122">
-   <BOUNDS type="Node" left="14295" top="11295" width="100" height="100">
+   <BOUNDS type="Node" left="14595" top="11295" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="14295" top="11295">
+   <BOUNDS type="Box" left="14595" top="11295">
    </BOUNDS>
    <PIN pinname="Bots" visible="1">
    </PIN>
    <PIN pinname="ChatId" visible="1">
+   </PIN>
+   <PIN pinname="Chat ID" visible="1">
    </PIN>
    </NODE>
    <NODE systemname="SendText (Telegram)" filename="vvvv-Telegram.dll" nodename="SendText (Telegram)" componentmode="Hidden" id="123">
@@ -823,6 +839,12 @@
    </PIN>
    <PIN pinname="Send" visible="1">
    </PIN>
+   <PIN pinname="Success" visible="1">
+   </PIN>
+   <PIN pinname="Send Time" visible="1">
+   </PIN>
+   <PIN pinname="Chat ID" visible="1">
+   </PIN>
    </NODE>
    <NODE systemname="SendVenue (Telegram)" filename="vvvv-Telegram.dll" nodename="SendVenue (Telegram)" componentmode="Hidden" id="124">
    <BOUNDS type="Node" left="12195" top="11430" width="100" height="100">
@@ -833,15 +855,19 @@
    </PIN>
    <PIN pinname="ChatId" visible="1">
    </PIN>
+   <PIN pinname="Chat ID" visible="1">
+   </PIN>
    </NODE>
    <NODE systemname="SendVideo (Telegram)" filename="vvvv-Telegram.dll" nodename="SendVideo (Telegram)" componentmode="Hidden" id="126">
-   <BOUNDS type="Node" left="14445" top="10695" width="100" height="100">
+   <BOUNDS type="Node" left="14745" top="10695" width="100" height="100">
    </BOUNDS>
-   <BOUNDS type="Box" left="14445" top="10695">
+   <BOUNDS type="Box" left="14745" top="10695">
    </BOUNDS>
    <PIN pinname="Bots" visible="1">
    </PIN>
    <PIN pinname="ChatId" visible="1">
+   </PIN>
+   <PIN pinname="Chat ID" visible="1">
    </PIN>
    </NODE>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="127" systemname="IOBox (String)">
@@ -929,9 +955,9 @@
    <LINK srcnodeid="133" srcpinname="Output" dstnodeid="134" dstpinname="Index">
    </LINK>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="135" systemname="IOBox (String)">
-   <BOUNDS type="Node" left="8700" top="7740" width="4140" height="270">
+   <BOUNDS type="Node" left="8715" top="7740" width="4140" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="8700" top="7740" width="1680" height="660">
+   <BOUNDS type="Box" left="8715" top="7740" width="1680" height="660">
    </BOUNDS>
    <PIN pinname="Input String" visible="0" slicecount="1" values="|received photos are available in up to 4 different resolutions|">
    </PIN>
@@ -986,7 +1012,7 @@
    <LINKPOINT x="13680" y="3765">
    </LINKPOINT>
    </LINK>
-   <LINK srcnodeid="138" srcpinname="Output Node" dstnodeid="123" dstpinname="Bots" linkstyle="Bezier">
+   <LINK srcnodeid="138" srcpinname="Output Node" dstnodeid="123" dstpinname="Bots" linkstyle="Bezier" hiddenwhenlocked="0">
    <LINKPOINT x="13680" y="6938">
    </LINKPOINT>
    <LINKPOINT x="11775" y="6938">
@@ -1011,9 +1037,9 @@
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="138" srcpinname="Output Node" dstnodeid="120" dstpinname="Bots" linkstyle="Bezier">
-   <LINKPOINT x="13710" y="6893">
+   <LINKPOINT x="13810" y="6893">
    </LINKPOINT>
-   <LINKPOINT x="14760" y="6893">
+   <LINKPOINT x="14960" y="6893">
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="138" srcpinname="Output Node" dstnodeid="121" dstpinname="Bots" linkstyle="Bezier">
@@ -1023,27 +1049,27 @@
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="138" srcpinname="Output Node" dstnodeid="116" dstpinname="Bots" linkstyle="Bezier">
-   <LINKPOINT x="13660" y="7260">
+   <LINKPOINT x="13760" y="7260">
    </LINKPOINT>
-   <LINKPOINT x="14660" y="7260">
+   <LINKPOINT x="14860" y="7260">
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="138" srcpinname="Output Node" dstnodeid="126" dstpinname="Bots" linkstyle="Bezier">
-   <LINKPOINT x="13610" y="7598">
+   <LINKPOINT x="13710" y="7598">
    </LINKPOINT>
-   <LINKPOINT x="14560" y="7598">
+   <LINKPOINT x="14760" y="7598">
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="138" srcpinname="Output Node" dstnodeid="122" dstpinname="Bots" linkstyle="Bezier">
-   <LINKPOINT x="13560" y="7890">
+   <LINKPOINT x="13660" y="7890">
    </LINKPOINT>
-   <LINKPOINT x="14460" y="7890">
+   <LINKPOINT x="14660" y="7890">
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="138" srcpinname="Output Node" dstnodeid="118" dstpinname="Bots" linkstyle="Bezier">
-   <LINKPOINT x="13510" y="8138">
+   <LINKPOINT x="13610" y="8138">
    </LINKPOINT>
-   <LINKPOINT x="14360" y="8138">
+   <LINKPOINT x="14560" y="8138">
    </LINKPOINT>
    </LINK>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="140" systemname="IOBox (String)">
@@ -1061,11 +1087,11 @@
    </PIN>
    </NODE>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="141" systemname="IOBox (String)">
-   <BOUNDS type="Node" left="14865" top="8250" width="2175" height="270">
+   <BOUNDS type="Node" left="15105" top="7995" width="2175" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="14865" top="8250" width="2265" height="345">
+   <BOUNDS type="Box" left="15105" top="7995" width="2430" height="555">
    </BOUNDS>
-   <PIN pinname="Input String" visible="0" slicecount="1" values="|these nodes send files|">
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|these nodes send files (currently 50MB max)|">
    </PIN>
    <PIN pinname="Output String" visible="0">
    </PIN>
@@ -1077,9 +1103,9 @@
    </PIN>
    </NODE>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="143" systemname="IOBox (String)">
-   <BOUNDS type="Box" left="15405" top="8940" width="1200" height="255">
+   <BOUNDS type="Box" left="15705" top="8940" width="1200" height="255">
    </BOUNDS>
-   <BOUNDS type="Node" left="15405" top="8940" width="0" height="0">
+   <BOUNDS type="Node" left="15705" top="8940" width="0" height="0">
    </BOUNDS>
    <PIN pinname="Input String" slicecount="1" visible="1" values="filename.xyz">
    </PIN>
@@ -1115,9 +1141,9 @@
    </PIN>
    </NODE>
    <LINK srcnodeid="113" srcpinname="Y Output Value" dstnodeid="145" dstpinname="Y Input Value" linkstyle="Bezier">
-   <LINKPOINT x="1570" y="9235">
+   <LINKPOINT x="1190" y="9790">
    </LINKPOINT>
-   <LINKPOINT x="11825" y="5480">
+   <LINKPOINT x="11845" y="5540">
    </LINKPOINT>
    </LINK>
    <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="123" dstpinname="ChatId" hiddenwhenlocked="1">
@@ -1449,9 +1475,9 @@
    <LINK srcnodeid="130" srcpinname="Received" dstnodeid="169" dstpinname="Apply">
    </LINK>
    <NODE nodename="IOBox (String)" componentmode="InABox" id="170" systemname="IOBox (String)">
-   <BOUNDS type="Node" left="645" top="1275" width="1005" height="270">
+   <BOUNDS type="Node" left="690" top="870" width="1005" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="645" top="1275" width="1005" height="270">
+   <BOUNDS type="Box" left="690" top="870" width="1005" height="270">
    </BOUNDS>
    <PIN pinname="Input String" visible="0" slicecount="1" values="|motzi, 2016|">
    </PIN>
@@ -1479,9 +1505,9 @@
    <NODE nodename="IOBox (String)" componentmode="InABox" id="173" systemname="IOBox (String)">
    <BOUNDS type="Node" left="1350" top="5790" width="3720" height="270">
    </BOUNDS>
-   <BOUNDS type="Box" left="1350" top="5790" width="5010" height="525">
+   <BOUNDS type="Box" left="1350" top="5790" width="6210" height="495">
    </BOUNDS>
-   <PIN pinname="Input String" visible="0" slicecount="1" values="|Now send some messages from your client to your bot! You will get the message content and some info from the sender.|">
+   <PIN pinname="Input String" visible="0" slicecount="1" values="|Now send some messages from your client (e.g. Telegram App on your mobile phone) to your bot. You will get the message content and some info from the sender.|">
    </PIN>
    <PIN pinname="Output String" visible="0">
    </PIN>
@@ -1555,5 +1581,167 @@
    </PIN>
    </NODE>
    <LINK srcnodeid="177" srcpinname="Output String" dstnodeid="176" dstpinname="Filename" hiddenwhenlocked="1">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="178" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="13035" top="9690" width="405" height="255">
+   </BOUNDS>
+   <BOUNDS type="Node" left="13035" top="9690" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Behavior" slicecount="1" values="Bang">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="Success">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="123" srcpinname="Success" dstnodeid="178" dstpinname="Y Input Value">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="179" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="11745" top="9720" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="11745" top="9720" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|Send Time|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="123" srcpinname="Send Time" dstnodeid="179" dstpinname="Y Input Value">
+   </LINK>
+   <NODE systemname="ReceiveVoice (Telegram)" filename="plugins\vvvv-Telegram.dll" nodename="ReceiveVoice (Telegram)" componentmode="Hidden" id="180">
+   <BOUNDS type="Node" left="4965" top="12240" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Bots" visible="1">
+   </PIN>
+   <PIN pinname="Received" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="95" srcpinname="Output Node" dstnodeid="180" dstpinname="Bots" linkstyle="Bezier">
+   <LINKPOINT x="5610" y="9450">
+   </LINKPOINT>
+   <LINKPOINT x="4995" y="9450">
+   </LINKPOINT>
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="181" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="6330" top="12270" width="285" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="6330" top="12270" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Boolean">
+   </PIN>
+   <PIN pinname="Behavior" slicecount="1" values="Bang">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="180" srcpinname="Received" dstnodeid="181" dstpinname="Y Input Value">
+   </LINK>
+   <NODE systemname="SendVoice (Telegram)" filename="plugins\vvvv-Telegram.dll" nodename="SendVoice (Telegram)" componentmode="Hidden" id="182">
+   <BOUNDS type="Node" left="14325" top="12285" width="100" height="100">
+   </BOUNDS>
+   <PIN pinname="Bots" visible="1">
+   </PIN>
+   <PIN pinname="ChatId" visible="1">
+   </PIN>
+   <PIN pinname="Chat ID" visible="1">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="138" srcpinname="Output Node" dstnodeid="182" dstpinname="Bots" linkstyle="Bezier">
+   <LINKPOINT x="13710" y="8400">
+   </LINKPOINT>
+   <LINKPOINT x="14340" y="8400">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="182" dstpinname="ChatId" hiddenwhenlocked="1">
+   </LINK>
+   <NODE nodename="IOBox (Value Advanced)" componentmode="InABox" id="183" systemname="IOBox (Value Advanced)">
+   <BOUNDS type="Box" left="840" top="8580" width="795" height="240">
+   </BOUNDS>
+   <BOUNDS type="Node" left="840" top="8580" width="0" height="0">
+   </BOUNDS>
+   <PIN pinname="Units" slicecount="1" values="||">
+   </PIN>
+   <PIN pinname="Precision" slicecount="1" values="4">
+   </PIN>
+   <PIN pinname="Value Type" slicecount="1" values="Integer">
+   </PIN>
+   <PIN pinname="Descriptive Name" slicecount="1" values="|Message ID|">
+   </PIN>
+   </NODE>
+   <LINK srcnodeid="86" srcpinname="Message ID" dstnodeid="183" dstpinname="Y Input Value">
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="123" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11940" y="7958">
+   </LINKPOINT>
+   <LINKPOINT x="11940" y="7958">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="117" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11955" y="8430">
+   </LINKPOINT>
+   <LINKPOINT x="12075" y="8430">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="119" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11955" y="8723">
+   </LINKPOINT>
+   <LINKPOINT x="12225" y="8723">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="124" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11955" y="8970">
+   </LINKPOINT>
+   <LINKPOINT x="12375" y="8970">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="120" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11985" y="7905">
+   </LINKPOINT>
+   <LINKPOINT x="15375" y="7905">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="116" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11985" y="8273">
+   </LINKPOINT>
+   <LINKPOINT x="15060" y="8273">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="126" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11985" y="8603">
+   </LINKPOINT>
+   <LINKPOINT x="14910" y="8603">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="122" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11985" y="8910">
+   </LINKPOINT>
+   <LINKPOINT x="14760" y="8910">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="118" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11985" y="9158">
+   </LINKPOINT>
+   <LINKPOINT x="14610" y="9158">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="182" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11970" y="9413">
+   </LINKPOINT>
+   <LINKPOINT x="14505" y="9413">
+   </LINKPOINT>
+   </LINK>
+   <LINK srcnodeid="145" srcpinname="Y Output Value" dstnodeid="121" dstpinname="Chat ID" linkstyle="Bezier" hiddenwhenlocked="1">
+   <LINKPOINT x="11985" y="6885">
+   </LINKPOINT>
+   <LINKPOINT x="14910" y="6885">
+   </LINKPOINT>
    </LINK>
    </PATCH>
