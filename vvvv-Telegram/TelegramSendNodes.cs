@@ -19,7 +19,8 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using Telegram.Bot.Types.InputMessageContents;
+//using Telegram.Bot.Types.InputMessageContents;
+using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace VVVV.Nodes
@@ -140,11 +141,8 @@ namespace VVVV.Nodes
             switch ((int)rm)
             {
                 case 0: return null;
-                case 1:
-                    var fr = new ForceReply();
-                    fr.Force = true;
-                    return fr;
-                case 2: return new ReplyKeyboardHide();
+                case 1: return new ForceReplyMarkup();
+                case 2: return new ReplyKeyboardRemove();
                 case 3: return FReplyMarkupKeyboard[i];
             }
 
@@ -174,7 +172,7 @@ namespace VVVV.Nodes
         {
             foreach (string s in FTextMessage[i])
             {
-                Message m = await FBotClient[i].BC.SendTextMessageAsync(FChatId[i], s, false, FDisableNotification[i], FReplyId[i], getReplyMarkup(i), ParseMode.Default);
+                Message m = await FBotClient[i].BC.SendTextMessageAsync(FChatId[i], s, ParseMode.Default, false , FDisableNotification[i], FReplyId[i], getReplyMarkup(i)); //TODO: Make WebPagePreview configurable
                 printMessageSentSuccess(i, m.Type);
             }
             
@@ -199,7 +197,7 @@ namespace VVVV.Nodes
             int max = Math.Max(FPhone[i].SliceCount, Math.Max(FFirstName[i].SliceCount, FLastName[i].SliceCount));
             for (int j = 0; j < max; j++)
             {
-                var m = await FBotClient[i].BC.SendContactAsync(FChatId[i], FPhone[i][j], FFirstName[i][j], FLastName[i][j], false, 0, getReplyMarkup(i));
+                var m = await FBotClient[i].BC.SendContactAsync(FChatId[i], FPhone[i][j], FFirstName[i][j], FLastName[i][j], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
                 printMessageSentSuccess(i, m.Type);
             }
             FStopwatch[i].Stop();
@@ -221,7 +219,7 @@ namespace VVVV.Nodes
             int max = Math.Max(FLong[i].SliceCount, FLat[i].SliceCount);
             for(int j=0; j<max; j++)
             {
-                var m = await FBotClient[i].BC.SendLocationAsync(FChatId[i], (float)FLong[i][j], (float)FLat[i][j], false, 0, getReplyMarkup(i));
+                var m = await FBotClient[i].BC.SendLocationAsync(FChatId[i], (float)FLong[i][j], (float)FLat[i][j], 0, FDisableNotification[i], FReplyId[i]);
                 printMessageSentSuccess(i, m.Type);
             }
             FStopwatch[i].Stop();
@@ -243,7 +241,7 @@ namespace VVVV.Nodes
             int max = Math.Max(FLong[i].SliceCount, FLat[i].SliceCount);
             for (int j = 0; j < max; j++)
             {
-                var m = await FBotClient[i].BC.SendVenueAsync(FChatId[i], (float)FLong[i][j], (float)FLat[i][j], FTitle[i][j], FAdress[i][j], null, false, 0, getReplyMarkup(i));
+                var m = await FBotClient[i].BC.SendVenueAsync(FChatId[i], (float)FLong[i][j], (float)FLat[i][j], FTitle[i][j], FAdress[i][j], null, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
                 printMessageSentSuccess(i, m.Type);
             }
             FStopwatch[i].Stop();
@@ -301,9 +299,7 @@ namespace VVVV.Nodes
                     {
                         try
                         {
-                            var fts = new FileToSend(FFileName[i], fileStream);
-
-                            await SendFileAsync(i, fts);
+                            await SendFileAsync(i, fileStream);
                             FStopwatch[i].Stop();
                         }
                         catch (Exception e)
@@ -327,7 +323,7 @@ namespace VVVV.Nodes
 
         
         protected abstract Task PerformChatActionAsync(int i);
-        protected abstract Task SendFileAsync(int i, FileToSend fts);
+        protected abstract Task SendFileAsync(int i, Stream stream);
         protected abstract Task SendFileAsync(int i, string FileId);
         protected abstract void SetFileOutputs(int i, Message m);
     }
@@ -345,9 +341,10 @@ namespace VVVV.Nodes
             await FBotClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.UploadDocument);
         }
 
-        protected override async Task SendFileAsync(int i, FileToSend fts)
+        protected override async Task SendFileAsync(int i, Stream stream)
         {
-            Message m = await FBotClient[i].BC.SendStickerAsync(FChatId[i], fts, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            var iof = new InputOnlineFile(stream);
+            Message m = await FBotClient[i].BC.SendStickerAsync(FChatId[i], iof, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override async Task SendFileAsync(int i, string FileId)
@@ -380,14 +377,14 @@ namespace VVVV.Nodes
             await FBotClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.UploadDocument);
         }
 
-        protected override async Task SendFileAsync(int i, FileToSend fts)
+        protected override async Task SendFileAsync(int i, Stream stream)
         {
-            Message m =  await FBotClient[i].BC.SendDocumentAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m =  await FBotClient[i].BC.SendDocumentAsync(FChatId[i], stream, FCaption[i], ParseMode.Default, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override async Task SendFileAsync(int i, string FileId)
         {
-            Message m = await FBotClient[i].BC.SendDocumentAsync(FChatId[i], FileId, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FBotClient[i].BC.SendDocumentAsync(FChatId[i], FileId, FCaption[i], ParseMode.Default, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override void SetFileOutputs(int i, Message m)
@@ -412,14 +409,14 @@ namespace VVVV.Nodes
             await FBotClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.UploadPhoto);
         }
 
-        protected override async Task SendFileAsync(int i, FileToSend fts)
+        protected override async Task SendFileAsync(int i, Stream stream)
         {
-            Message m = await FBotClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FBotClient[i].BC.SendPhotoAsync(FChatId[i], stream, FCaption[i], ParseMode.Default, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override async Task SendFileAsync(int i, string FileId)
         {
-            Message m = await FBotClient[i].BC.SendPhotoAsync(FChatId[i], FileId, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FBotClient[i].BC.SendPhotoAsync(FChatId[i], FileId, FCaption[i], ParseMode.Default, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override void SetFileOutputs(int i, Message m)
@@ -449,14 +446,14 @@ namespace VVVV.Nodes
             await FBotClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.UploadVideo);
         }
 
-        protected override async Task SendFileAsync(int i, FileToSend fts)
+        protected override async Task SendFileAsync(int i, Stream stream)
         {
-            Message m = await FBotClient[i].BC.SendVideoAsync(FChatId[i], fts, FDuration[i], FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FBotClient[i].BC.SendVideoAsync(FChatId[i], stream, FDuration[i], 0, 0, FCaption[i], ParseMode.Default , false, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override async Task SendFileAsync(int i, string FileId)
         {
-            Message m = await FBotClient[i].BC.SendVideoAsync(FChatId[i], FileId, FDuration[i], FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FBotClient[i].BC.SendVideoAsync(FChatId[i], FileId, FDuration[i], 0, 0, FCaption[i], ParseMode.Default, false, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override void SetFileOutputs(int i, Message m)
@@ -473,6 +470,9 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramSendAudioNode : TelegramSendFileNode
     {
+        [Input("Caption", DefaultString = "caption")]
+        public IDiffSpread<string> FCaption;
+
         [Input("Duration")]
         public IDiffSpread<int> FDuration;
 
@@ -487,14 +487,14 @@ namespace VVVV.Nodes
             await FBotClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.UploadAudio);
         }
 
-        protected override async Task SendFileAsync(int i, FileToSend fts)
+        protected override async Task SendFileAsync(int i, Stream stream)
         {
-            Message m = await FBotClient[i].BC.SendAudioAsync(FChatId[i], fts, FDuration[i], FPerformer[i], FTitle[i],  FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FBotClient[i].BC.SendAudioAsync(FChatId[i], stream, FCaption[i], ParseMode.Default, FDuration[i], FPerformer[i], FTitle[i],  FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override async Task SendFileAsync(int i, string FileId)
         {
-            Message m = await FBotClient[i].BC.SendAudioAsync(FChatId[i], FileId, FDuration[i], FPerformer[i], FTitle[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FBotClient[i].BC.SendAudioAsync(FChatId[i], FileId, FCaption[i], ParseMode.Default, FDuration[i], FPerformer[i], FTitle[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override void SetFileOutputs(int i, Message m)
@@ -511,6 +511,9 @@ namespace VVVV.Nodes
     #endregion PluginInfo
     public class TelegramSendVoiceNode : TelegramSendFileNode
     {
+        [Input("Caption", DefaultString = "caption")]
+        public IDiffSpread<string> FCaption;
+
         [Input("Duration")]
         public IDiffSpread<int> FDuration;
 
@@ -519,14 +522,14 @@ namespace VVVV.Nodes
             await FBotClient[i].BC.SendChatActionAsync(FChatId[i], ChatAction.RecordAudio);
         }
 
-        protected override async Task SendFileAsync(int i, FileToSend fts)
+        protected override async Task SendFileAsync(int i, Stream stream)
         {
-            Message m = await FBotClient[i].BC.SendVoiceAsync(FChatId[i], fts, FDuration[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FBotClient[i].BC.SendVoiceAsync(FChatId[i], stream, FCaption[i], ParseMode.Default, FDuration[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override async Task SendFileAsync(int i, string FileId)
         {
-            Message m = await FBotClient[i].BC.SendVoiceAsync(FChatId[i], FileId, FDuration[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+            Message m = await FBotClient[i].BC.SendVoiceAsync(FChatId[i], FileId, FCaption[i], ParseMode.Default, FDuration[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
             SetFileOutputs(i, m);
         }
         protected override void SetFileOutputs(int i, Message m)
@@ -598,10 +601,11 @@ namespace VVVV.Nodes
 
             try
             {
-                var fts = new FileToSend(FFileName[i], outputStream);
+                var iof = new InputOnlineFile(outputStream, FFileName[i]);
+                
                 try
                 {
-                    Message m = await FBotClient[i].BC.SendPhotoAsync(FChatId[i], fts, FCaption[i], FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
+                    Message m = await FBotClient[i].BC.SendPhotoAsync(FChatId[i], iof, FCaption[i], ParseMode.Default, FDisableNotification[i], FReplyId[i], getReplyMarkup(i));
                     foreach(PhotoSize ps in m.Photo)
                     {
                         FFile[i].Add(new TelegramFile(ps, FBotClient[i].BC));

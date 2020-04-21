@@ -27,7 +27,7 @@ namespace VVVV.Nodes
     #region PluginInfo
     [PluginInfo(Name = "BotClient", Category = "Telegram", Version = "", Help = "Connects to Telegram with an API-Key", Credits = "Based on telegram.bot", Tags = "Network, Bot", Author = "motzi", AutoEvaluate = true)]
     #endregion PluginInfo
-    public class TelegramBotNode : IPluginEvaluate
+    public class TelegramBotNode : IPluginEvaluate, IDisposable
     {
         #region fields & pins
         [Input("API-Key", DefaultString = "YOURKEY")]
@@ -158,14 +158,22 @@ namespace VVVV.Nodes
                 }
             }
         }
+
+        public void Dispose()
+        {
+            foreach (var botClient in FBotClient)
+            {
+                botClient.Disconnect();
+            }
+        }
     }
 
     public class TelegramFile
     {
-        public Telegram.Bot.Types.File file;
+        public Telegram.Bot.Types.FileBase file;
         public TelegramBotClient botClient;
 
-        public TelegramFile(Telegram.Bot.Types.File f, TelegramBotClient bc)
+        public TelegramFile(Telegram.Bot.Types.FileBase f, TelegramBotClient bc)
         {
             file = f;
             botClient = bc;

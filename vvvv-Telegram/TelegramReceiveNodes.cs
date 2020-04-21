@@ -159,7 +159,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.TextMessage;
+            return MessageType.Text;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -194,7 +194,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.ContactMessage;
+            return MessageType.Contact;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -234,7 +234,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.LocationMessage;
+            return MessageType.Location;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -271,7 +271,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.VenueMessage;
+            return MessageType.Venue;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -350,7 +350,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.StickerMessage;
+            return MessageType.Sticker;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -373,7 +373,7 @@ namespace VVVV.Nodes
             Sticker s = m.Sticker;
             int count = 0;
             FEmoji[i].Add(s.Emoji);
-            FDimensions[i].Add(new Vector2D(Double.Parse(s.Height), Double.Parse(s.Width)));
+            FDimensions[i].Add(new Vector2D(Convert.ToDouble(s.Height), Convert.ToDouble(s.Width)));
             FThumb[i].Add(new TelegramFile(s.Thumb, FBotClient[i].BC));
 
             return ++count;
@@ -392,7 +392,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.PhotoMessage;
+            return MessageType.Photo;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -440,8 +440,10 @@ namespace VVVV.Nodes
         public ISpread<ISpread<string>> FCaption;
         [Output("Filename", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FFilename;
-        [Output("File Path", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
-        public ISpread<ISpread<string>> FFilePath;
+        [Output("FileId", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FFileId;
+        [Output("FileUniqueId", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
+        public ISpread<ISpread<string>> FFileUniqueId;
         [Output("MimeType", Visibility = PinVisibility.OnlyInspector, BinVisibility = PinVisibility.OnlyInspector)]
         public ISpread<ISpread<string>> FMimeType;
         [Output("File Size", BinVisibility = PinVisibility.OnlyInspector)]
@@ -451,7 +453,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.DocumentMessage;
+            return MessageType.Document;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -460,7 +462,8 @@ namespace VVVV.Nodes
 
             FCaption.SliceCount = botCount;
             FFilename.SliceCount = botCount;
-            FFilePath.SliceCount = botCount;
+            FFileId.SliceCount = botCount;
+            FFileUniqueId.SliceCount = botCount;
             FMimeType.SliceCount = botCount;
             FSize.SliceCount = botCount;
             FThumb.SliceCount = botCount;
@@ -472,7 +475,8 @@ namespace VVVV.Nodes
 
             FCaption[index] = new Spread<string>();
             FFilename[index] = new Spread<string>();
-            FFilePath[index] = new Spread<string>();
+            FFileId[index] = new Spread<string>();
+            FFileUniqueId[index] = new Spread<string>();
             FMimeType[index] = new Spread<string>();
             FSize[index] = new Spread<int>();
             FThumb[index] = new Spread<TelegramFile>();
@@ -485,7 +489,8 @@ namespace VVVV.Nodes
 
             FCaption[i].Add(m.Caption);
             FFilename[i].Add(d.FileName);
-            FFilePath[i].Add(d.FilePath);
+            FFileId[i].Add(d.FileId);
+            FFileUniqueId[i].Add(d.FileUniqueId);
             FMimeType[i].Add(d.MimeType);
             FSize[i].Add(d.FileSize);
             FThumb[i].Add(new TelegramFile(d.Thumb, FBotClient[i].BC));
@@ -510,7 +515,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.AudioMessage;
+            return MessageType.Audio;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -555,7 +560,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.VoiceMessage;
+            return MessageType.Voice;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -602,7 +607,7 @@ namespace VVVV.Nodes
 
         protected override MessageType getMyMessageType()
         {
-            return MessageType.VideoMessage;
+            return MessageType.Video;
         }
 
         protected override void setMessagesSliceCount(int botCount)
@@ -635,7 +640,7 @@ namespace VVVV.Nodes
             FCaption[i].Add(m.Caption);
             FMimeType[i].Add(v.MimeType);
             FDuration[i].Add(v.Duration);
-            FDimensions[i].Add(new Vector2D(Double.Parse(v.Height), Double.Parse(v.Width)));
+            FDimensions[i].Add(new Vector2D(Convert.ToDouble(v.Height), Convert.ToDouble(v.Width)));
             FThumb[i].Add(new TelegramFile(m.Video.Thumb, FBotClient[i].BC));
 
             FFile[i].Add(new TelegramFile(v, FBotClient[i].BC));
@@ -666,11 +671,8 @@ namespace VVVV.Nodes
         [Output("Received", IsBang = true)]
         public ISpread<bool> FReceived;
 
-        readonly byte[] FBuffer = new byte[1024];
-
         private Spread<int> isNew = new Spread<int>();
 		
-
         [Import()]
         public ILogger FLogger;
         #endregion fields & pins
@@ -690,14 +692,7 @@ namespace VVVV.Nodes
             FFileSize.SliceCount = FFile.SliceCount;
             isNew.SliceCount = FFile.SliceCount;
             FFileData.ResizeAndDispose(FFile.SliceCount, () => new MemoryStream());
-            for(int s=0; s<FFileData.SliceCount; s++)
-            {
-                if (FFileData[s] == null)
-                    FFileData[s] = new MemoryStream();
-            }
-
-            //int max = Math.Max(FFile.SliceCount, FGet.SliceCount);
-
+            
             for(int i=0; i < FFile.SliceCount; i++)
             {
                 if(isNew[i] > 0)
@@ -714,49 +709,24 @@ namespace VVVV.Nodes
                 if (f == null || FGet[i] == false)
                     continue;
 
-                DownloadFileAsync(i, f, FFileData[i]);
+                DownloadFileAsync(i, f);
             }
                 
         }
 
-        public async void DownloadFileAsync(int index, TelegramFile f, Stream output)
+        public async void DownloadFileAsync(int index, TelegramFile f)
         {
+            var inputStream = new MemoryStream();
             
-            Telegram.Bot.Types.File thisFile = await f.botClient.GetFileAsync(f.file.FileId);
+            var downloadFile = await f.botClient.GetInfoAndDownloadFileAsync(f.file.FileId, inputStream);
+            FFileId[index] = downloadFile.FileId;
+            FFilePath[index] = downloadFile.FilePath;
+            FFileSize[index] = downloadFile.FileSize;
 
-            FFileId[index] = f.file.FileId;
-            FFilePath[index] = f.file.FilePath;
-            FFileSize[index] = f.file.FileSize;
-
-            var inputStream = thisFile.FileStream;
-            var outputStream = output;
-
-
-            //reset the positions of the streams
             inputStream.Position = 0;
-            outputStream.Position = 0;
-            outputStream.SetLength(inputStream.Length);
+            FFileData[index] = inputStream;
 
-            var numBytesToCopy = inputStream.Length;
-
-            while (numBytesToCopy > 0)
-            {
-                //make sure we don't read more than we need or more than
-                //our byte buffer can hold
-                var chunkSize = (int)Math.Min(numBytesToCopy, FBuffer.Length);
-                //the stream's read method returns how many bytes have actually
-                //been read into the buffer
-                var numBytesRead = inputStream.Read(FBuffer, 0, chunkSize);
-                //in case nothing has been read we need to leave the loop
-                //as we requested more than there was available
-                if (numBytesRead == 0) break;
-                //write the number of bytes read to the output stream
-                outputStream.Write(FBuffer, 0, numBytesRead);
-                //decrease the total amount of bytes we still need to read
-                numBytesToCopy -= numBytesRead;
-            }
-            outputStream.Position = 0;
-            isNew[index]++;
+            isNew[index]++; 
         }
     }
 

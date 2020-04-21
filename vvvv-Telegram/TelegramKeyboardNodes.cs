@@ -19,7 +19,8 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
-using Telegram.Bot.Types.InputMessageContents;
+//using Telegram.Bot.Types.InputMessageContents;
+using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace VVVV.Nodes
@@ -116,7 +117,7 @@ namespace VVVV.Nodes
                     inlineButtons[i] = new InlineKeyboardButton[FText[i].SliceCount];
                     for (int j = 0; j < FText[i].SliceCount; j++)
                     {
-                        inlineButtons[i][j] = new InlineKeyboardButton(FText[i][j]);
+                        inlineButtons[i][j] = InlineKeyboardButton.WithCallbackData(FText[i][j]);   //TODO: Check other types than Text
                         if(FUrl[cnt].Length > 0) 
                             inlineButtons[i][j].Url = FUrl[cnt];
 
